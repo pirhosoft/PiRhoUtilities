@@ -1,2 +1,15 @@
-# PiRhoUtilities
-A suite of UIElement based attributes, drawers, controls, and other helpers to expedite the creation of object inspectors without the need of additional custom editors
+# PiRhoUtilities Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+### Added
+### Removed
+### Changed
+
+## [1.0.0] - 2019-10-07
+### Added
+- First official release
