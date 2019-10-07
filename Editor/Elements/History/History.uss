@@ -1,0 +1,40 @@
+﻿.pirho-history
+{
+}
+
+.pirho-history__header
+{
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.pirho-history__header__button
+{
+	margin: 5px;
+	width: 100px;
+	flex-shrink: 1;
+}
+
+.pirho-history__list
+{
+	flex-grow: 1;
+	flex-shrink: 0;
+	flex-basis: 0;
+}
+
+.pirho-history__list__item
+{
+	flex-direction: row;
+	flex-grow: 1;
+}
+
+.pirho-history__list__item__label
+{
+	padding-left: 6px;
+	align-self: center;
+}
+
+.pirho-history__list__item--current .pirho-history__list__item__label
+{
+	-unity-font-style: bold;
+}

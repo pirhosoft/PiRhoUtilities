@@ -1,0 +1,33 @@
+﻿.pirho-base-picker
+{
+	flex-grow: 1;
+	flex-shrink: 1;
+	flex-direction: row;
+	align-content: center;
+	align-items: center;
+}
+
+.pirho-base-picker__button
+{
+	flex-direction: row;
+	justify-content: center;
+	flex-grow: 1;
+	flex-shrink: 1;
+	margin: 0;
+	padding: 2px 5px;
+}
+
+.pirho-base-picker__button__icon
+{
+	min-height: 14px;
+	max-height: 14px;
+	min-width: 14px;
+	max-width: 14px;
+	margin: 2px 5px 2px 0;
+}
+
+.pirho-base-picker__button__label
+{
+	margin-top: 1px;
+	margin-bottom: 2px;
+}

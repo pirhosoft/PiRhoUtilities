@@ -1,0 +1,115 @@
+﻿.pirho-list
+{
+}
+
+.pirho-list--empty
+{
+}
+
+.pirho-list--add-disabled
+{
+}
+
+.pirho-list--remove-disabled
+{
+}
+
+.pirho-list--move-disabled
+{
+}
+
+.pirho-list__empty-label
+{
+	display: none;
+	margin: 5px;
+	white-space: normal;
+}
+
+.pirho-list--empty .pirho-list__empty-label
+{
+	display: flex;
+}
+
+.pirho-list__items
+{
+	flex-grow: 1;
+	flex-shrink: 1;
+}
+
+.pirho-list__add-button
+{
+	display: flex;
+}
+
+.pirho-list--add-disabled .pirho-list__add-button
+{
+	display: none;
+}
+
+.pirho-list__remove-button
+{
+	display: flex;
+	margin-left: 5px;
+	width: 16px;
+	height: 16px;
+	align-self: flex-start;
+	margin-top: 3px;
+}
+
+.pirho-list--remove-disabled .pirho-list__remove-button
+{
+	display: none;
+}
+
+.pirho-list__drag-handle
+{
+	display: flex;
+	cursor: move-arrow;
+	margin-top: 5px;
+	margin-right: 5px;
+	flex-shrink: 0;
+	align-self: flex-start;
+}
+
+.pirho-list--move-disabled .pirho-list__drag-handle
+{
+	display: none;
+}
+
+.pirho-list__drag-placeholder
+{
+	flex-grow: 1;
+	background-color: #3E7DE7;
+	height: 4px;
+	border-radius: 2px;
+}
+
+.pirho-list__item
+{
+	flex-direction: row;
+	flex-grow: 1;
+	align-items: center;
+	padding: 3px 5px;
+}
+
+.pirho-list__item--dragging
+{
+	position: absolute;
+	background-color: #000;
+}
+
+.pirho-list__item--even
+{
+	background-color: #DFDFDF;
+}
+
+.pirho-list__item--odd
+{
+	background-color: #CBCBCB;
+}
+
+.pirho-list__item__content
+{
+	flex-grow: 1;
+	flex-shrink: 1;
+}

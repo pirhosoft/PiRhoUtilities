@@ -1,0 +1,14 @@
+﻿.pirho-inline
+{
+	flex-direction: row;
+}
+
+.pirho-inline__label
+{
+	margin-right: -3px;
+}
+
+.pirho-inline__children
+{
+	flex-grow: 1;
+}

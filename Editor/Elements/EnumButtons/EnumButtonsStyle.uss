@@ -1,0 +1,18 @@
+﻿.pirho-enum-buttons
+{
+	flex-direction: row;
+	flex-wrap: wrap;
+	flex-grow: 1;
+}
+
+.pirho-enum-buttons__button
+{
+	flex-grow: 1;
+	margin: 0;
+	border-radius: 0px;
+}
+
+.pirho-enum-buttons__button--active
+{
+	background-color: #6B6B6B;
+}

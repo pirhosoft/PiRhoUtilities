@@ -1,0 +1,11 @@
+﻿.pirho-euler
+{
+	flex-direction: row;
+	flex-grow: 1;
+}
+
+.pirho-euler__vector-3
+{
+	flex-grow: 1;
+	margin: 0px;
+}

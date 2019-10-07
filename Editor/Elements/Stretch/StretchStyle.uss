@@ -1,0 +1,9 @@
+﻿.pirho-stretch
+{
+	flex-direction: column;
+}
+
+.pirho-stretch > .unity-label
+{
+	margin-bottom: 2px;
+}

@@ -1,0 +1,20 @@
+﻿.pirho-trait-button
+{
+	flex-direction: column;
+}
+
+.pirho-trait-button--right
+{
+	flex-direction: row;
+}
+
+.pirho-trait-button--right > *
+{
+	flex-grow: 1;
+}
+
+.pirho-trait-button--right > Button
+{
+	margin-top: 2px;
+	flex-grow: 0;
+}
