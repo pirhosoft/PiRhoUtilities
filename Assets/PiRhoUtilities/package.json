@@ -7,8 +7,6 @@
 	"keywords": [ "editor utilities" ],
 	"category": "Editory Utilities",
 	"dependencies": {
-		"com.unity.modules.tilemap": "1.0.0",
-		"com.unity.2d.tilemap": "1.0.0"
 	},
 	"samples": [
 		{
