@@ -1,0 +1,13 @@
+﻿.pirho-object-picker
+{
+}
+
+.pirho-object-picker__inspect
+{
+	min-width: 16px;
+	max-width: 16px;
+	min-height: 14px;
+	max-height: 14px;
+	margin-left: 2px;
+	margin-bottom: 2px;
+}

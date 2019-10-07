@@ -1,0 +1,61 @@
+﻿.pirho-frame
+{
+	background-color: #C2C2C2;
+	border-color: #555555;
+	border-width: 1px;
+	border-radius: 2px;
+	margin: 3px 0;
+}
+
+.pirho-frame__header
+{
+	background-color: #AAA;
+	padding: 5px;
+	flex-direction: row;
+	flex-grow: 1;
+}
+
+.pirho-frame__label
+{
+	flex-grow: 1;
+	-unity-font-style: bold;
+	align-self: center;
+	color: #000000;
+}
+
+
+.pirho-frame__label--none
+{
+	display: none;
+}
+
+.pirho-frame__header-buttons
+{
+}
+
+.pirho-frame__header-button
+{
+	width: 16px;
+	height: 16px;
+	align-self: center;
+}
+
+.pirho-frame__content
+{
+	padding: 5px;
+}
+
+.pirho-frame__footer
+{
+}
+
+.pirho-frame__footer-buttons
+{
+}
+
+.pirho-frame__footer-button
+{
+	width: 16px;
+	height: 16px;
+	align-self: center;
+}

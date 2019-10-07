@@ -1,0 +1,14 @@
+﻿.pirho-rollout
+{
+}
+
+.pirho-rollout__icon
+{
+	margin-right: 5px;
+	align-self: center;
+}
+
+.pirho-rollout--collapsed .pirho-frame__content
+{
+	display: none;
+}

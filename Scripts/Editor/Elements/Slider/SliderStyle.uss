@@ -1,0 +1,15 @@
+﻿.pirho-slider
+{
+	flex-direction: row;
+	flex-grow: 1;
+}
+
+.pirho-slider__slider
+{
+	flex-grow: 1;
+}
+
+.pirho-slider__text
+{
+	width: 50px;
+}

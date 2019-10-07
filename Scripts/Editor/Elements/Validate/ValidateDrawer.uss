@@ -1,0 +1,8 @@
+﻿.pirho-validate
+{
+}
+
+.pirho-validate__message-box
+{
+	margin-bottom: 2px;
+}
