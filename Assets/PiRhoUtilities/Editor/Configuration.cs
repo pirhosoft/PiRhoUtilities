@@ -2,6 +2,6 @@
 {
 	public static class Configuration
 	{
-		internal const string ElementsPath = "Packages/PiRhoUtilities/Editor/Elements/";
+		internal const string ElementsPath = "Packages/PiRho Utilities/Editor/Elements/";
 	}
 }
