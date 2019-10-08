@@ -418,10 +418,6 @@ public float Speed;
 This can be used just like the built in List class but because it isn't the built in List class can be targeted by PropertyDrawers. Because Unity doesn't serialize generic classes, though, it is necessary to subclass this for each type and give the subclass the *Serializable* attribute.
 
 ```c#
-using System;
-using PiRhoSoft.UtilityEngine;
-using UnityEngine;
-
 [Serializable] public class IntList : SerializedList<int> {}
 
 public class ExampleBehaviour : MonoBehaviour
@@ -435,10 +431,6 @@ public class ExampleBehaviour : MonoBehaviour
 This is exactly like *SerializedList* except for Arrays. The exception is *SerializedArray* must be constructed with a length.
 
 ```c#
-using System;
-using PiRhoSoft.UtilityEngine;
-using UnityEngine;
-
 [Serializable] public class IntArray : SerializedArray<int> { public IntArray(int count) : base(count) {} }
 
 public class ExampleBehaviour : MonoBehaviour
@@ -452,10 +444,6 @@ public class ExampleBehaviour : MonoBehaviour
 And again for Dictionary. KeyType must be `string` in order to be targeted by the `DictionaryAttribute`
 
 ```c#
-using System;
-using PiRhoSoft.UtilityEngine;
-using UnityEngine;
-
 [Serializable] public class IntDictionary : SerializedDictionary<string, int> {}
 
 public class ExampleBehaviour : MonoBehaviour
