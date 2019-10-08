@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 ### Changed
 
+## [1.0.1] - 2019-10-08
+- Fixed Configuration path
+
 ## [1.0.0] - 2019-10-07
 ### Added
 - First official release
