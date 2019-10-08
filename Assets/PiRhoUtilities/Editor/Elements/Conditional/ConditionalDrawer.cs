@@ -3,6 +3,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace PiRhoSoft.Utilities.Editor
 {
@@ -12,13 +13,13 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string UssClassName = "pirho-conditional";
 
 		private const string _missingSiblingWarning = "(PUCDMS) invalid property for ConditionalAttribute on field '{0}': the property '{1}' could not be found on type '{2}'";
-		private const string _invalidSiblingWarning = "(PUCDIS) invalid property for ConditionalAttribute on field '{0}': the property '{1}' should be a bool, int, float, or string";
+		private const string _invalidSiblingWarning = "(PUCDIS) invalid property for ConditionalAttribute on field '{0}': the property '{1}' should be a bool, int, float, string, or Object";
 		private const string _missingFieldWarning = "(PUCDMF) invalid field for ConditionalAttribute on field '{0}': the field '{1}' could not be found on type '{2}'";
-		private const string _invalidFieldWarning = "(PUCDIF) invalid field for ConditionalAttribute on field '{0}': the field '{1}' should be a bool, int, float, or string";
+		private const string _invalidFieldWarning = "(PUCDIF) invalid field for ConditionalAttribute on field '{0}': the field '{1}' should be a bool, int, float, string, or Object";
 		private const string _missingPropertyWarning = "(PUCDMP) invalid property for ConditionalAttribute on field '{0}': the property '{1}' could not be found on type '{2}'";
-		private const string _invalidPropertyWarning = "(PUCDIP) invalid property for ConditionalAttribute on field '{0}': the property '{1}' should be a bool, int, float, or string";
+		private const string _invalidPropertyWarning = "(PUCDIP) invalid property for ConditionalAttribute on field '{0}': the property '{1}' should be a bool, int, float, string, or Object";
 		private const string _missingMethodWarning = "(PUCDMM) invalid method for ConditionalAttribute on field '{0}': the method '{1}' could not be found on type '{2}'";
-		private const string _invalidMethodReturnWarning = "(PUCDIMR) invalid method for ConditionalAttribute on field '{0}': the method '{1}' should return a bool, int, float, or string";
+		private const string _invalidMethodReturnWarning = "(PUCDIMR) invalid method for ConditionalAttribute on field '{0}': the method '{1}' should return a bool, int, float, string, or Object";
 		private const string _invalidMethodParametersWarning = "(PUCDIMP) invalid method for ConditionalAttribute on field '{0}': the method '{1}' should take no parameters";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
@@ -84,6 +85,11 @@ namespace PiRhoSoft.Utilities.Editor
 						UpdateVisibility(element, sibling.intValue, conditionalAttribute.IntValue, conditionalAttribute.Test);
 						return new ChangeTriggerControl<Enum>(sibling, (oldValue, newValue) => UpdateVisibility(element, sibling.intValue, conditionalAttribute.IntValue, conditionalAttribute.Test));
 					}
+					case SerializedPropertyType.ObjectReference:
+					{
+						UpdateVisibility(element, sibling.objectReferenceValue, conditionalAttribute.BoolValue, conditionalAttribute.Test);
+						return new ChangeTriggerControl<Object>(sibling, (oldValue, newValue) => UpdateVisibility(element, sibling.objectReferenceValue, conditionalAttribute.BoolValue, conditionalAttribute.Test));
+					}
 				}
 
 				Debug.LogWarningFormat(_invalidSiblingWarning, property.propertyPath, conditionalAttribute.SourceName);
@@ -113,6 +119,8 @@ namespace PiRhoSoft.Utilities.Editor
 					element.schedule.Execute(() => UpdateVisibility(element, (float)field.GetValue(owner), conditionalAttribute.FloatValue, conditionalAttribute.Test)).Every(100);
 				else if (field.FieldType == typeof(string))
 					element.schedule.Execute(() => UpdateVisibility(element, (string)field.GetValue(owner), conditionalAttribute.StringValue, conditionalAttribute.Test)).Every(100);
+				else if (typeof(Object).IsAssignableFrom(field.FieldType))
+					element.schedule.Execute(() => UpdateVisibility(element, (Object)field.GetValue(owner), conditionalAttribute.BoolValue, conditionalAttribute.Test)).Every(100);
 				else
 					Debug.LogWarningFormat(_invalidFieldWarning, property.propertyPath, conditionalAttribute.SourceName);
 			}
@@ -139,6 +147,8 @@ namespace PiRhoSoft.Utilities.Editor
 					element.schedule.Execute(() => UpdateVisibility(element, (float)propertyInfo.GetValue(owner), conditionalAttribute.FloatValue, conditionalAttribute.Test)).Every(100);
 				else if (propertyInfo.PropertyType == typeof(string))
 					element.schedule.Execute(() => UpdateVisibility(element, (string)propertyInfo.GetValue(owner), conditionalAttribute.StringValue, conditionalAttribute.Test)).Every(100);
+				else if (typeof(Object).IsAssignableFrom(propertyInfo.PropertyType))
+					element.schedule.Execute(() => UpdateVisibility(element, (Object)propertyInfo.GetValue(owner), conditionalAttribute.BoolValue, conditionalAttribute.Test)).Every(100);
 				else
 					Debug.LogWarningFormat(_invalidPropertyWarning, property.propertyPath, conditionalAttribute.SourceName);
 			}
@@ -167,6 +177,8 @@ namespace PiRhoSoft.Utilities.Editor
 						element.schedule.Execute(() => UpdateVisibility(element, (float)methodInfo.Invoke(owner, null), conditionalAttribute.FloatValue, conditionalAttribute.Test)).Every(100);
 					else if (methodInfo.ReturnType == typeof(string))
 						element.schedule.Execute(() => UpdateVisibility(element, (string)methodInfo.Invoke(owner, null), conditionalAttribute.StringValue, conditionalAttribute.Test)).Every(100);
+					else if (typeof(Object).IsAssignableFrom(methodInfo.ReturnType))
+						element.schedule.Execute(() => UpdateVisibility(element, (Object)methodInfo.Invoke(owner, null), conditionalAttribute.BoolValue, conditionalAttribute.Test)).Every(100);
 					else
 						Debug.LogWarningFormat(_invalidMethodReturnWarning, property.propertyPath, conditionalAttribute.SourceName);
 				}

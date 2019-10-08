@@ -10,7 +10,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		public const string Stylesheet = "Button/ButtonDrawer.uss";
 		public const string UssClassName = "pirho-trait-button";
-		public const string RightUssClassName = UssClassName + "--right";
+		public const string SideUssClassName = UssClassName + "--side";
 
 		private const string _missingMethodWarning = "(PUBDMM) invalid method for ButtonAttribute on field '{0}': the method '{1}' could not be found on type '{2}'";
 		private const string _invalidMethodWarning = "(PUBDIM) invalid method for ButtonAttribute on field '{0}': the method '{1}' on type '{2}' should not take parameters";
@@ -44,12 +44,24 @@ namespace PiRhoSoft.Utilities.Editor
 					tooltip = buttonAttribute.Tooltip
 				};
 
-				container.Add(button);
-
 				if (buttonAttribute.Location == TraitLocation.Before)
-					button.SendToBack();
+				{
+					container.Insert(0, button);
+				}
+				if (buttonAttribute.Location == TraitLocation.After)
+				{
+					container.Add(button);
+				}
+				else if (buttonAttribute.Location == TraitLocation.Left)
+				{
+					container.Insert(0, button);
+					container.AddToClassList(SideUssClassName);
+				}
 				else if (buttonAttribute.Location == TraitLocation.Right)
-					container.AddToClassList(RightUssClassName);
+				{
+					container.Add(button);
+					container.AddToClassList(SideUssClassName);
+				}
 			}
 
 			return container;

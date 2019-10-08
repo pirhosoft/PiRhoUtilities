@@ -3,12 +3,12 @@
 	flex-direction: column;
 }
 
-.pirho-trait-button--right
+.pirho-trait-button--side
 {
 	flex-direction: row;
 }
 
-.pirho-trait-button--right > *
+.pirho-trait-button--side > *
 {
 	flex-grow: 1;
 }

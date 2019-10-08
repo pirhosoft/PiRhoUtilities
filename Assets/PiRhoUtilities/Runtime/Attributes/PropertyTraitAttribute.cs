@@ -6,6 +6,7 @@ namespace PiRhoSoft.Utilities
 	{
 		Before,
 		After,
+		Left,
 		Right
 	}
 
