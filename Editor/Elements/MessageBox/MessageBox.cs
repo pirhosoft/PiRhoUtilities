@@ -33,7 +33,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public string Message
 		{
 			get	{ return _label.text; }
-			set	{ _label.text = value; }
+			set	{ ((INotifyValueChanged<string>)_label).SetValueWithoutNotify(value); } // Just setting the text property triggers a ChangeEvent which is not desired
 		}
 
 		private Image _image;
