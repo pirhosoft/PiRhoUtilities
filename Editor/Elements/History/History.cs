@@ -9,7 +9,7 @@ namespace PiRhoSoft.Utilities.Editor
 	[InitializeOnLoad]
 	public class History : EditorWindow
 	{
-		public const string Stylesheet = "History/HistoryStyle.uss";
+		public const string Stylesheet = "History/History.uss";
 		public const string UssClassName = "pirho-history";
 		public const string HeaderUssClassName = UssClassName + "__header";
 		public const string HeaderButtonUssClassName = HeaderUssClassName + "__button";
