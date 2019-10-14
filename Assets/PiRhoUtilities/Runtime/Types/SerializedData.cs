@@ -8,142 +8,193 @@ namespace PiRhoSoft.Utilities
 {
 	public interface ISerializableData
 	{
-		void Save(BinaryWriter writer, SerializedData data);
-		void Load(BinaryReader reader, SerializedData data);
+		void Save(SerializedDataWriter writer);
+		void Load(SerializedDataReader reader);
+	}
+
+	public abstract class SerializedData
+	{
+		[SerializeField] public List<Object> _references = new List<Object>();
+
+		public void SetData(byte[] data)
+		{
+			var content = Convert.ToBase64String(data);
+			SetContent(content);
+		}
+
+		public byte[] GetData(int index)
+		{
+			var content = GetContent(index);
+			return Convert.FromBase64String(content);
+		}
+
+		public int AddReference(Object o)
+		{
+			_references.Add(o);
+			return _references.Count - 1;
+		}
+
+		public Object GetReference(int index)
+		{
+			return index >= 0 && index < _references.Count
+				? _references[index]
+				: null;
+		}
+
+		public void Clear()
+		{
+			_references.Clear();
+			ClearContent();
+		}
+
+		#region Abstract Interface
+
+		protected abstract void ClearContent();
+		protected abstract void SetContent(string content);
+		protected abstract string GetContent(int index);
+
+		#endregion
 	}
 
 	[Serializable]
-	public class SerializedData
+	public class SerializedDataItem : SerializedData
 	{
-		public int Version;
-		public string Data;
-		public List<Object> References;
+		public const string ContentProperty = nameof(_content);
 
-		public void SaveData(ISerializableData data, int version)
+		[SerializeField] private string _content = string.Empty;
+
+		protected override void ClearContent() => _content = string.Empty;
+		protected override void SetContent(string content) => _content = content;
+		protected override string GetContent(int index) => _content;
+	}
+
+	[Serializable]
+	public class SerializedDataList : SerializedData
+	{
+		public const string ContentProperty = nameof(_content);
+
+		[SerializeField] private List<string> _content = new List<string>();
+
+		public int Count => _content.Count;
+		protected override void ClearContent() => _content.Clear();
+		protected override void SetContent(string content) => _content.Add(content);
+		protected override string GetContent(int index) => index >= 0 && index < _content.Count ? _content[index] : string.Empty;
+	}
+
+	public class SerializedDataWriter : IDisposable
+	{
+		public MemoryStream Stream;
+		public BinaryWriter Writer;
+		public SerializedData Data;
+
+		public SerializedDataWriter(SerializedData data)
 		{
-			Reset(version);
-
-			using (var stream = new MemoryStream())
-			{
-				using (var writer = new BinaryWriter(stream))
-				{
-					writer.Write(Version);
-					data.Save(writer, this);
-				}
-
-				Data = Convert.ToBase64String(stream.ToArray());
-			}
+			Stream = new MemoryStream();
+			Writer = new BinaryWriter(Stream);
+			Data = data;
 		}
 
-		public void LoadData(ISerializableData data)
+		public void Dispose()
 		{
-			var bytes = Convert.FromBase64String(Data);
+			Data.SetData(Stream.ToArray());
 
-			if (bytes != null && bytes.Length > 0)
-			{
-				using (var stream = new MemoryStream(bytes))
-				{
-					using (var reader = new BinaryReader(stream))
-					{
-						Version = reader.ReadInt32();
-						data.Load(reader, this);
-					}
-				}
-			}
-
-			Reset(-1);
+			Writer.Dispose();
+			Stream.Dispose();
 		}
 
-		public void SaveClass(ISerializableData data, int version)
+		public void SaveReference(Object obj)
 		{
-			Reset(version);
+			// the instance id is written to force the content string to change when the object changes, thus properly
+			// updating any bindings
 
-			if (data != null)
-			{
-				using (var stream = new MemoryStream())
-				{
-					using (var writer = new BinaryWriter(stream))
-					{
-						writer.Write(Version);
-						SaveInstance(writer, data);
-					}
-
-					Data = Convert.ToBase64String(stream.ToArray());
-				}
-			}
-			else
-			{
-				Data = string.Empty;
-			}
+			var index = Data.AddReference(obj);
+			Writer.Write(obj.GetInstanceID());
+			Writer.Write(index);
 		}
 
-		public void LoadClass<T>(out T data) where T : class, ISerializableData
+		public void SaveInstance<T>(T obj)
 		{
-			var bytes = Convert.FromBase64String(Data);
-
-			if (bytes != null && bytes.Length > 0)
-			{
-				using (var stream = new MemoryStream(bytes))
-				{
-					using (var reader = new BinaryReader(stream))
-					{
-						Version = reader.ReadInt32();
-						data = LoadInstance<T>(reader);
-					}
-				}
-			}
-			else
-			{
-				data = null;
-			}
-
-			Reset(-1);
-		}
-
-		public void SaveReference(BinaryWriter writer, Object obj)
-		{
-			if (References == null)
-				References = new List<Object>();
-
-			writer.Write(References.Count);
-			References.Add(obj);
-		}
-
-		public Object LoadReference(BinaryReader reader)
-		{
-			var index = reader.ReadInt32();
-			return References != null && index < References.Count ? References[index] : null;
-		}
-
-		public void SaveInstance<T>(BinaryWriter writer, T obj)
-		{
-			writer.Write(obj != null);
-			writer.Write(obj is ISerializableData);
+			Writer.Write(obj != null);
+			Writer.Write(obj is ISerializableData);
 
 			if (obj != null)
 			{
-				SaveType(writer, obj.GetType());
+				SaveType(obj.GetType());
 
 				if (obj is ISerializableData data)
 				{
-					data.Save(writer, this);
+					data.Save(this);
 				}
 				else
 				{
 					var json = JsonUtility.ToJson(obj);
-					writer.Write(json);
+					Writer.Write(json);
 				}
 			}
 		}
 
-		public T LoadInstance<T>(BinaryReader reader)
+
+		public void SaveType(Type type)
 		{
-			var isValid = reader.ReadBoolean();
-			var isData = reader.ReadBoolean();
+			var name = type != null ? type.AssemblyQualifiedName : string.Empty;
+			Writer.Write(name);
+		}
+
+		public void SaveEnum(Enum e)
+		{
+			// Saving as a string is the simplest way of handling enums with non Int32 underlying type. It also allows
+			// reordering/adding/removing of enum values without affecting saved data.
+
+			SaveType(e.GetType());
+			Writer.Write(e.ToString());
+		}
+	}
+
+	public class SerializedDataReader : IDisposable
+	{
+		public MemoryStream Stream;
+		public BinaryReader Reader;
+		public SerializedData Data;
+
+		public SerializedDataReader(SerializedDataItem data)
+		{
+			var bytes = data.GetData(0);
+
+			Stream = new MemoryStream(bytes);
+			Reader = new BinaryReader(Stream);
+			Data = data;
+		}
+
+		public SerializedDataReader(SerializedDataList data, int index)
+		{
+			var bytes = data.GetData(index);
+
+			Stream = new MemoryStream(bytes);
+			Reader = new BinaryReader(Stream);
+			Data = data;
+		}
+
+		public void Dispose()
+		{
+			Reader.Dispose();
+			Stream.Dispose();
+		}
+
+		public Object LoadReference()
+		{
+			var index = Reader.ReadInt32();
+			var id = Reader.ReadInt32();
+			return Data.GetReference(index);
+		}
+
+		public T LoadInstance<T>()
+		{
+			var isValid = Reader.ReadBoolean();
+			var isData = Reader.ReadBoolean();
 
 			if (isValid)
 			{
-				var type = LoadType(reader);
+				var type = LoadType();
 				var obj = default(T);
 
 				try { obj = (T)Activator.CreateInstance(type); }
@@ -152,11 +203,11 @@ namespace PiRhoSoft.Utilities
 				if (isData)
 				{
 					if (obj is ISerializableData data)
-						data.Load(reader, this);
+						data.Load(this);
 				}
 				else
 				{
-					var json = reader.ReadString();
+					var json = Reader.ReadString();
 
 					if (obj != null)
 						JsonUtility.FromJsonOverwrite(json, obj);
@@ -168,15 +219,9 @@ namespace PiRhoSoft.Utilities
 			return default;
 		}
 
-		public void SaveType(BinaryWriter writer, Type type)
+		public Type LoadType()
 		{
-			var name = type != null ? type.AssemblyQualifiedName : string.Empty;
-			writer.Write(name);
-		}
-
-		public Type LoadType(BinaryReader reader)
-		{
-			var name = reader.ReadString();
+			var name = Reader.ReadString();
 
 			if (!string.IsNullOrEmpty(name))
 			{
@@ -187,31 +232,15 @@ namespace PiRhoSoft.Utilities
 			return null;
 		}
 
-		public void SaveEnum(BinaryWriter writer, Enum e)
+		public Enum LoadEnum()
 		{
-			// Saving as a string is the simplest way of handling enums with non Int32 underlying type. It also allows
-			// reordering/adding/removing of enum values without affecting saved data.
-
-			SaveType(writer, e.GetType());
-			writer.Write(e.ToString());
-		}
-
-		public Enum LoadEnum(BinaryReader reader)
-		{
-			var type = LoadType(reader);
-			var name = reader.ReadString();
+			var type = LoadType();
+			var name = Reader.ReadString();
 
 			try { return (Enum)Enum.Parse(type, name); }
 			catch { }
 
 			return null;
-		}
-
-		private void Reset(int version)
-		{
-			Version = version;
-			Data = null;
-			References = null;
 		}
 	}
 }
