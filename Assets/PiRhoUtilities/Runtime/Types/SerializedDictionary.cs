@@ -7,6 +7,9 @@ namespace PiRhoSoft.Utilities
 	[Serializable]
 	public class SerializedDictionary<KeyType, ValueType> : Dictionary<KeyType, ValueType>, ISerializationCallbackReceiver
 	{
+		public const string KeyProperty = nameof(_keys);
+		public const string ValueProperty = nameof(_values);
+
 		// These are protected so they can be found by the editor.
 		[SerializeField] protected List<KeyType> _keys = new List<KeyType>();
 		[SerializeField] protected List<ValueType> _values = new List<ValueType>();

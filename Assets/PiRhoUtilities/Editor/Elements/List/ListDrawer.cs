@@ -30,7 +30,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
-			var items = property.FindPropertyRelative("_items");
+			var items = property.FindPropertyRelative(SerializedList<string>.ItemsProperty);
 
 			if (items != null && items.isArray)
 			{

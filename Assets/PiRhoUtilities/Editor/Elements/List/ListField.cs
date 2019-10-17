@@ -11,11 +11,6 @@ namespace PiRhoSoft.Utilities.Editor
 		public static readonly string UssClassName = "pirho-list-field";
 
 		private ListControl _control;
-		private ChangeTriggerControl<int> _sizeBinding;
-
-		public ListField()
-		{
-		}
 
 		public void Setup(SerializedProperty property, IListProxy proxy)
 		{
@@ -43,11 +38,8 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				if (property.isArray)
 				{
-					if (_sizeBinding == null)
-						_sizeBinding = new ChangeTriggerControl<int>(null, (oldSize, size) => _control.Refresh());
-
-					Add(_sizeBinding); // setup calls Clear so this always needs to be added
-					_sizeBinding.Watch(property.FindPropertyRelative("Array.size"));
+					var sizeBinding = new ChangeTriggerControl<int>(null, (oldSize, size) => _control.Refresh());
+					sizeBinding.Watch(property.FindPropertyRelative("Array.size"));
 				}
 				else
 				{
