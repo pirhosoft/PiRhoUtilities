@@ -29,8 +29,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
-			var keys = property.FindPropertyRelative("_keys");
-			var values = property.FindPropertyRelative("_values");
+			var keys = property.FindPropertyRelative(SerializedDictionary<string, int>.KeyProperty);
+			var values = property.FindPropertyRelative(SerializedDictionary<string, int>.ValueProperty);
 
 			if (keys != null && keys.isArray && values != null && values.isArray && keys.arrayElementType == "string")
 			{

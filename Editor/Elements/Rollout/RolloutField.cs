@@ -60,7 +60,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			if (this.TryGetPropertyBindEvent(evt, out var property))
 			{
-				// bind to expanded property
+				// TODO: bind to expanded property
 
 				if (property.HasVisibleChildFields())
 					Setup(property.Copy());

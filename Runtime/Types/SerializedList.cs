@@ -11,7 +11,10 @@ namespace PiRhoSoft.Utilities
 	[Serializable]
 	public class SerializedList<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IList<T>, IReadOnlyCollection<T>, IReadOnlyList<T>, ICollection, IList
 	{
-		[SerializeField] protected List<T> _items = new List<T>(); // this is protected so it can be found by the editor
+		public const string ItemsProperty = nameof(_items);
+
+		// This is protected so it can be found by the editor
+		[SerializeField] protected List<T> _items = new List<T>();
 
 		public List<T> List => _items;
 

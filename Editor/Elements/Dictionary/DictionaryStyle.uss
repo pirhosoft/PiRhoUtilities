@@ -120,12 +120,12 @@
 
 .pirho-dictionary__item--even
 {
-	background-color: #DFDFDF;
+	background-color: #DDDDDD;
 }
 
 .pirho-dictionary__item--odd
 {
-	background-color: #CBCBCB;
+	background-color: #CCCCCC;
 }
 
 .pirho-dictionary__item__content

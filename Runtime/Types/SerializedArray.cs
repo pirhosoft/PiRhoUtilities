@@ -10,7 +10,8 @@ namespace PiRhoSoft.Utilities
 	[Serializable]
 	public class SerializedArray<T> : ICloneable, IList, IStructuralComparable, IStructuralEquatable, ICollection, IEnumerable
 	{
-		[SerializeField] protected T[] _items; // this is protected so it can be found by the editor
+		// This is protected so it can be found by the editor
+		[SerializeField] protected T[] _items;
 
 		public T[] Array => _items;
 		public int Length => _items.Length;
