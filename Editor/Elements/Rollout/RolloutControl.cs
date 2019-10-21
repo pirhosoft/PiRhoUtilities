@@ -57,10 +57,10 @@ namespace PiRhoSoft.Utilities.Editor
 			_icon.AddToClassList(IconUssClassName);
 			_icon.style.width = ExpandedIcon.Texture.width;
 			_icon.style.height = ExpandedIcon.Texture.height;
+			_icon.AddManipulator(new Clickable(() => IsExpanded = !IsExpanded));
+
 			Header.Add(_icon);
 			_icon.PlaceBehind(Label);
-
-			Header.AddManipulator(new Clickable(() => IsExpanded = !IsExpanded));
 
 			Refresh();
 		}
