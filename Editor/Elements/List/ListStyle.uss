@@ -50,8 +50,10 @@
 {
 	display: flex;
 	margin-left: 5px;
-	width: 16px;
-	height: 16px;
+	min-width: 16px;
+	min-height: 16px;
+	max-width: 16px;
+	max-height: 16px;
 	align-self: flex-start;
 	margin-top: 3px;
 }
