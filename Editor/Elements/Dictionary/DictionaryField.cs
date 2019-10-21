@@ -40,6 +40,8 @@ namespace PiRhoSoft.Utilities.Editor
 				{
 					var sizeBinding = new ChangeTriggerControl<int>(null, (oldSize, size) => _control.Refresh());
 					sizeBinding.Watch(property.FindPropertyRelative("Array.size"));
+
+					Add(sizeBinding);
 				}
 				else
 				{
