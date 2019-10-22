@@ -10,7 +10,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public static readonly string LabelUssClassName = UssClassName + "__label";
 		public static readonly string InputUssClassName = UssClassName + "__input";
 
-		private EnumButtonsControl _control;
+		public EnumButtonsControl Control { get; private set; }
 
 		public EnumButtonsField(string label, Enum value, bool? useFlags = null) : base(label, null)
 		{
@@ -19,13 +19,13 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void Setup(Enum value, bool? useFlags = null)
 		{
-			_control = new EnumButtonsControl(value, useFlags);
-			_control.AddToClassList(InputUssClassName);
-			_control.RegisterCallback<ChangeEvent<Enum>>(evt => base.value = evt.newValue);
+			Control = new EnumButtonsControl(value, useFlags);
+			Control.AddToClassList(InputUssClassName);
+			Control.RegisterCallback<ChangeEvent<Enum>>(evt => base.value = evt.newValue);
 
 			labelElement.AddToClassList(LabelUssClassName);
 
-			this.SetVisualInput(_control);
+			this.SetVisualInput(Control);
 			AddToClassList(UssClassName);
 			SetValueWithoutNotify(value);
 		}
@@ -33,7 +33,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public override void SetValueWithoutNotify(Enum newValue)
 		{
 			base.SetValueWithoutNotify(newValue);
-			_control.SetValueWithoutNotify(newValue);
+			Control.SetValueWithoutNotify(newValue);
 		}
 
 		protected override void ExecuteDefaultActionAtTarget(EventBase evt)

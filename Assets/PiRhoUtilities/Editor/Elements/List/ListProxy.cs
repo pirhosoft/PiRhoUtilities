@@ -102,9 +102,9 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public override void ReorderItem(int from, int to)
 		{
-			var previous = Items[to];
-			Items[to] = Items[from];
-			Items[from] = previous;
+			var item = Items[from];
+			Items.RemoveAt(from);
+			Items.Insert(to, item);
 		}
 	}
 }

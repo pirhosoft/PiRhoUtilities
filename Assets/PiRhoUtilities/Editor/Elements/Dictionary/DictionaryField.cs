@@ -10,7 +10,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public static readonly string UssClassName = "pirho-dictionary-field";
 
-		private DictionaryControl _control;
+		public DictionaryControl Control { get; private set; }
 
 		public void Setup(SerializedProperty keysProperty, IDictionaryProxy proxy)
 		{
@@ -22,9 +22,9 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			Clear();
 
-			_control = new DictionaryControl(proxy);
+			Control = new DictionaryControl(proxy);
 
-			Add(_control);
+			Add(Control);
 			AddToClassList(UssClassName);
 		}
 
@@ -38,7 +38,7 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				if (property.isArray)
 				{
-					var sizeBinding = new ChangeTriggerControl<int>(null, (oldSize, size) => _control.Refresh());
+					var sizeBinding = new ChangeTriggerControl<int>(null, (oldSize, size) => Control.Refresh());
 					sizeBinding.Watch(property.FindPropertyRelative("Array.size"));
 
 					Add(sizeBinding);

@@ -10,7 +10,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public static readonly string UssClassName = "pirho-list-field";
 
-		private ListControl _control;
+		public ListControl Control { get; private set; }
 
 		public void Setup(SerializedProperty property, IListProxy proxy)
 		{
@@ -22,9 +22,9 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			Clear();
 
-			_control = new ListControl(proxy);
+			Control = new ListControl(proxy);
 
-			Add(_control);
+			Add(Control);
 			AddToClassList(UssClassName);
 		}
 
@@ -38,7 +38,7 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				if (property.isArray)
 				{
-					var sizeBinding = new ChangeTriggerControl<int>(null, (oldSize, size) => _control.Refresh());
+					var sizeBinding = new ChangeTriggerControl<int>(null, (oldSize, size) => Control.Refresh());
 					sizeBinding.Watch(property.FindPropertyRelative("Array.size"));
 
 					Add(sizeBinding);

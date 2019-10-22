@@ -10,7 +10,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public static readonly string LabelUssClassName = UssClassName + "__label";
 		public static readonly string InputUssClassName = UssClassName + "__input";
 
-		protected BaseSliderControl<ValueType> _control;
+		public BaseSliderControl<ValueType> Control { get; protected set; }
 
 		public SliderBaseField(string label) : base(label, null)
 		{
@@ -18,12 +18,12 @@ namespace PiRhoSoft.Utilities.Editor
 
 		protected void Setup(ValueType value)
 		{
-			_control.AddToClassList(InputUssClassName);
-			_control.RegisterCallback<ChangeEvent<ValueType>>(evt => base.value = evt.newValue);
+			Control.AddToClassList(InputUssClassName);
+			Control.RegisterCallback<ChangeEvent<ValueType>>(evt => base.value = evt.newValue);
 
 			labelElement.AddToClassList(LabelUssClassName);
 
-			this.SetVisualInput(_control);
+			this.SetVisualInput(Control);
 			AddToClassList(UssClassName);
 			SetValueWithoutNotify(value);
 		}
@@ -31,7 +31,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public override void SetValueWithoutNotify(ValueType newValue)
 		{
 			base.SetValueWithoutNotify(newValue);
-			_control.SetValueWithoutNotify(newValue);
+			Control.SetValueWithoutNotify(newValue);
 		}
 	}
 
@@ -44,7 +44,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void Setup(int value, int min, int max)
 		{
-			_control = new SliderIntControl(value, min, max);
+			Control = new SliderIntControl(value, min, max);
 
 			Setup(value);
 		}
@@ -87,7 +87,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void Setup(float value, float min, float max)
 		{
-			_control = new SliderFloatControl(value, min, max);
+			Control = new SliderFloatControl(value, min, max);
 
 			Setup(value);
 		}
@@ -129,7 +129,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void Setup(Vector2 value, float min, float max)
 		{
-			_control = new MinMaxSliderControl(value, min, max);
+			Control = new MinMaxSliderControl(value, min, max);
 
 			Setup(value);
 		}
