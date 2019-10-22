@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 ### Changed
 
+## [1.0.5] - 2019-10-22
+### Added
+- Added a public getter for the Control on all BaseField<> classes
+
 ## [1.0.4] - 2019-10-21
 ### Changed
 - Made Rollout button only clickable from the Icon due to UIElements triggering it when clicking on the Add Key text

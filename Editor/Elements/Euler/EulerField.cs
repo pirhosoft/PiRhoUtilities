@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
@@ -10,7 +9,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public static readonly string LabelUssClassName = UssClassName + "__label";
 		public static readonly string InputUssClassName = UssClassName + "__input";
 
-		private SerializedProperty _property;
+		public EulerControl Control { get; private set; }
 
 		public EulerField(string label, Quaternion value) : base(label, null)
 		{
@@ -19,15 +18,21 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void Setup(Quaternion value)
 		{
-			var control = new EulerControl(value);
+			Control = new EulerControl(value);
+			Control.AddToClassList(InputUssClassName);
+			Control.RegisterCallback<ChangeEvent<Quaternion>>(evt => base.value = evt.newValue);
 
-			AddToClassList(UssClassName);
 			labelElement.AddToClassList(LabelUssClassName);
-			control.AddToClassList(InputUssClassName);
 
-			this.SetVisualInput(control);
-			this.RegisterValueChangedCallback(evt => control.SetValueWithoutNotify(evt.newValue));
-			control.RegisterCallback<ChangeEvent<Quaternion>>(evt => base.value = evt.newValue);
+			this.SetVisualInput(Control);
+			AddToClassList(UssClassName);
+			SetValueWithoutNotify(value);
+		}
+
+		public override void SetValueWithoutNotify(Quaternion newValue)
+		{
+			base.SetValueWithoutNotify(newValue);
+			Control.SetValueWithoutNotify(newValue);
 		}
 
 		#region UXML Support
@@ -38,9 +43,9 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public new class UxmlTraits : BaseField<Quaternion>.UxmlTraits
 		{
-			private UxmlFloatAttributeDescription _x = new UxmlFloatAttributeDescription { name = "x" };
-			private UxmlFloatAttributeDescription _y = new UxmlFloatAttributeDescription { name = "y" };
-			private UxmlFloatAttributeDescription _z = new UxmlFloatAttributeDescription { name = "z" };
+			private readonly UxmlFloatAttributeDescription _x = new UxmlFloatAttributeDescription { name = "x" };
+			private readonly UxmlFloatAttributeDescription _y = new UxmlFloatAttributeDescription { name = "y" };
+			private readonly UxmlFloatAttributeDescription _z = new UxmlFloatAttributeDescription { name = "z" };
 
 			public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
 			{

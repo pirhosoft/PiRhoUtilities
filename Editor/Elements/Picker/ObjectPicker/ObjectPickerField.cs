@@ -12,7 +12,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public static readonly string LabelUssClassName = UssClassName + "__label";
 		public static readonly string InputUssClassName = UssClassName + "__input";
 
-		private ObjectPickerControl _control;
+		public ObjectPickerControl Control { get; private set; }
 
 		public ObjectPickerField(string label, Object value, Object owner, Type type) : base(label, null)
 		{
@@ -21,13 +21,13 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void Setup(Object value, Object owner, Type type)
 		{
-			_control = new ObjectPickerControl(value, owner, type);
-			_control.AddToClassList(InputUssClassName);
-			_control.RegisterCallback<ChangeEvent<Object>>(evt => base.value = evt.newValue);
+			Control = new ObjectPickerControl(value, owner, type);
+			Control.AddToClassList(InputUssClassName);
+			Control.RegisterCallback<ChangeEvent<Object>>(evt => base.value = evt.newValue);
 
 			labelElement.AddToClassList(LabelUssClassName);
 
-			this.SetVisualInput(_control);
+			this.SetVisualInput(Control);
 			AddToClassList(UssClassName);
 			SetValueWithoutNotify(value);
 		}
@@ -35,7 +35,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public override void SetValueWithoutNotify(Object newValue)
 		{
 			base.SetValueWithoutNotify(newValue);
-			_control.SetValueWithoutNotify(newValue);
+			Control.SetValueWithoutNotify(newValue);
 		}
 
 		#region UXML Support

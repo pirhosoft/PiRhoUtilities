@@ -10,7 +10,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public static readonly string LabelUssClassName = UssClassName + "__label";
 		public static readonly string InputUssClassName = UssClassName + "__input";
 
-		private ComboBoxControl _control;
+		public ComboBoxControl Control { get; private set; }
 
 		public ComboBoxField(string label, string value, List<string> options) : base(label, null)
 		{
@@ -19,13 +19,13 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void Setup(string value, List<string> options)
 		{
-			_control = new ComboBoxControl(value, options);
-			_control.AddToClassList(InputUssClassName);
-			_control.RegisterCallback<ChangeEvent<string>>(evt => base.value = evt.newValue);
+			Control = new ComboBoxControl(value, options);
+			Control.AddToClassList(InputUssClassName);
+			Control.RegisterCallback<ChangeEvent<string>>(evt => base.value = evt.newValue);
 
 			labelElement.AddToClassList(LabelUssClassName);
 
-			this.SetVisualInput(_control);
+			this.SetVisualInput(Control);
 			AddToClassList(UssClassName);
 			SetValueWithoutNotify(value);
 		}
@@ -33,7 +33,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public override void SetValueWithoutNotify(string newValue)
 		{
 			base.SetValueWithoutNotify(newValue);
-			_control.SetValueWithoutNotify(newValue);
+			Control.SetValueWithoutNotify(newValue);
 		}
 
 		#region UXML Support

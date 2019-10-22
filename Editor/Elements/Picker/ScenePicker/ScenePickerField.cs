@@ -11,7 +11,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public static readonly string LabelUssClassName = UssClassName + "__label";
 		public static readonly string InputUssClassName = UssClassName + "__input";
 
-		private ScenePickerControl _control;
+		public ScenePickerControl Control { get; private set; }
 
 		public ScenePickerField(string label, AssetReference value, Action onCreate) : base(label, null)
 		{
@@ -20,13 +20,13 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void Setup(AssetReference value, Action onCreate)
 		{
-			_control = new ScenePickerControl(value, onCreate);
-			_control.AddToClassList(InputUssClassName);
-			_control.RegisterCallback<ChangeEvent<AssetReference>>(evt => base.value = evt.newValue);
+			Control = new ScenePickerControl(value, onCreate);
+			Control.AddToClassList(InputUssClassName);
+			Control.RegisterCallback<ChangeEvent<AssetReference>>(evt => base.value = evt.newValue);
 
 			labelElement.AddToClassList(LabelUssClassName);
 
-			this.SetVisualInput(_control);
+			this.SetVisualInput(Control);
 			AddToClassList(UssClassName);
 			SetValueWithoutNotify(value);
 		}
@@ -34,7 +34,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public override void SetValueWithoutNotify(AssetReference newValue)
 		{
 			base.SetValueWithoutNotify(newValue);
-			_control.SetValueWithoutNotify(newValue);
+			Control.SetValueWithoutNotify(newValue);
 		}
 
 		#region UXML Support
