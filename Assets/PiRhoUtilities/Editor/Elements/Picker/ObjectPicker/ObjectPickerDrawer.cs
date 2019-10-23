@@ -18,15 +18,9 @@ namespace PiRhoSoft.Utilities.Editor
 				var baseType = (attribute as ObjectPickerAttribute)?.BaseType ?? fieldType;
 
 				if (fieldType.IsCreatableAs(baseType))
-				{
-					var tooltip = this.GetTooltip();
-					var field = new ObjectPickerField(property.displayName, property.objectReferenceValue, property.serializedObject.targetObject, baseType);
-					return field.ConfigureProperty(property, tooltip);
-				}
+					return new ObjectPickerField(property, baseType);
 				else
-				{
-					Debug.LogWarningFormat(_invalidPropertyTypeWarning, property.propertyPath);
-				}
+					Debug.LogWarningFormat(_invalidBaseTypeWarning, property.propertyPath);
 			}
 			else
 			{

@@ -2,10 +2,11 @@
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace PiRhoSoft.Utilities.Editor
 {
-	public class TypePickerControl : BasePickerControl<string>
+	public class TypePickerControl : BasePickerControl<string>, IDragReceiver
 	{
 		private class TypeProvider : PickerProvider<Type> { }
 
@@ -34,6 +35,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			Setup(provider, value);
 
+			this.MakeDragReceiver();
 			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
 			AddToClassList(UssClassName);
 		}
@@ -58,5 +60,29 @@ namespace PiRhoSoft.Utilities.Editor
 
 			SetLabel(icon, text);
 		}
+
+		#region IDragReceiver Implementation
+
+		public bool IsDragValid(Object[] objects, object data)
+		{
+			if (objects.Length > 0)
+			{
+				var obj = objects[0];
+				if (obj != null)
+				{
+					var drag = obj.GetType();
+					return Type.IsAssignableFrom(drag);
+				}
+			}
+
+			return false;
+		}
+
+		public void AcceptDrag(Object[] objects, object data)
+		{
+			OnSelected(objects[0].GetType());
+		}
+
+		#endregion
 	}
 }

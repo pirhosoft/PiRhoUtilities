@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,6 +12,11 @@ namespace PiRhoSoft.Utilities.Editor
 		public static readonly string InputUssClassName = UssClassName + "__input";
 
 		public TypePickerControl Control { get; private set; }
+
+		public TypePickerField(SerializedProperty property, Type type, bool showAbstract) : this(property.displayName, property.stringValue, type, showAbstract)
+		{
+			this.ConfigureProperty(property, property.GetTooltip());
+		}
 
 		public TypePickerField(string label, string value, Type type, bool showAbstract) : base(label, null)
 		{

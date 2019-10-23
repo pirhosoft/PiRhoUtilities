@@ -57,6 +57,14 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Extension Methods
 
+		public static string GetTooltip(this SerializedProperty property)
+		{
+			var obj = property.GetOwner<object>();
+			var type = obj?.GetType();
+			var field = type?.GetField(property.name);
+			return field?.GetTooltip();
+		}
+
 		public static IEnumerable<SerializedProperty> Children(this SerializedProperty property)
 		{
 			if (property.isArray)

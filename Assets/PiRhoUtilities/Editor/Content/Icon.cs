@@ -12,7 +12,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public static readonly Icon Inspect = BuiltIn("UnityEditor.InspectorWindow");
 		public static readonly Icon Expanded = BuiltIn("IN foldout focus on");
 		public static readonly Icon Collapsed = BuiltIn("IN foldout focus");
-		public static readonly Icon Refresh = BuiltIn("d_preAudioLoopOff");
+		public static readonly Icon Refresh = BuiltIn("preAudioLoopOff");
 		public static readonly Icon Load = BuiltIn("SceneLoadIn");
 		public static readonly Icon Unload = BuiltIn("SceneLoadOut");
 		public static readonly Icon Close = BuiltIn("winbtn_win_close");

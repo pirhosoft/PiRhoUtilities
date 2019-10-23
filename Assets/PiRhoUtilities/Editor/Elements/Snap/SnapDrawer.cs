@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System;
+using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,6 +10,11 @@ namespace PiRhoSoft.Utilities.Editor
 	class SnapDrawer : PropertyDrawer
 	{
 		private const string _invalidTypeWarning = "(PUSDIT) invalid type for SnapAttribute on field {0}: Snap can only be applied to int, float, vector, rect, or bounds fields";
+		private const string _missingCompareWarning = "(PUSDMC) invalid method, field, or property for SnapAttribute on field '{0}': '{1}' could not be found on type '{2}'";
+		private const string _invalidMethodReturnWarning = "(PUSDIMR) invalid method for SnapAttribute on field '{0}': the method '{1}' should return a '{2}'";
+		private const string _invalidMethodParametersWarning = "(PUSDIMP) invalid method for SnapAttribute on field '{0}': the method '{1}' should take no parameters";
+		private const string _invalidFieldReturnWarning = "(PUSDIFR) invalid field for SnapAttribute on field '{0}': the method '{1}' should return an {2}";
+		private const string _invalidPropertyReturnWarning = "(PUSDIPR) invalid property for SnapAttribute on field '{0}': the method '{1}' should return an {2}";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -18,68 +25,90 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				case SerializedPropertyType.Integer:
 				{
-					Snap(property, Mathf.RoundToInt(snapAttribute.Number));
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, Mathf.RoundToInt(snapAttribute.Number)));
+					var snap = GetSnap(property, snapAttribute, Mathf.RoundToInt(snapAttribute.Number));
+
+					Snap(property, snap());
+					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
 					break;
 				}
 				case SerializedPropertyType.Float:
 				{
-					Snap(property, snapAttribute.Number);
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snapAttribute.Number));
+					var snap = GetSnap(property, snapAttribute, snapAttribute.Number);
+
+					Snap(property, snap());
+					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
 					break;
 				}
 				case SerializedPropertyType.Vector2:
 				{
-					Snap(property, (Vector2)snapAttribute.Vector);
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, (Vector2)snapAttribute.Vector));
+					var snap = GetSnap(property, snapAttribute, (Vector2)snapAttribute.Vector);
+
+					Snap(property, snap());
+					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
 					break;
 				}
 				case SerializedPropertyType.Vector2Int:
 				{
-					Snap(property, Vector2Int.RoundToInt(snapAttribute.Vector));
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, Vector2Int.RoundToInt(snapAttribute.Vector)));
+					var snap = GetSnap(property, snapAttribute, Vector2Int.RoundToInt(snapAttribute.Vector));
+
+					Snap(property, snap());
+					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
 					break;
 				}
 				case SerializedPropertyType.Vector3:
 				{
-					Snap(property, (Vector3)snapAttribute.Vector);
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, (Vector3)snapAttribute.Vector));
+					var snap = GetSnap(property, snapAttribute, (Vector3)snapAttribute.Vector);
+
+					Snap(property, snap());
+					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
 					break;
 				}
 				case SerializedPropertyType.Vector3Int:
 				{
-					Snap(property, Vector3Int.RoundToInt(snapAttribute.Vector));
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, Vector3Int.RoundToInt(snapAttribute.Vector)));
+					var snap = GetSnap(property, snapAttribute, Vector3Int.RoundToInt(snapAttribute.Vector));
+
+					Snap(property, snap());
+					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
 					break;
 				}
 				case SerializedPropertyType.Vector4:
 				{
-					Snap(property, snapAttribute.Vector);
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snapAttribute.Number));
+					var snap = GetSnap(property, snapAttribute, snapAttribute.Vector);
+
+					Snap(property, snap());
+					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
 					break;
 				}
 				case SerializedPropertyType.Rect:
 				{
-					Snap(property, new Rect(snapAttribute.Vector.x, snapAttribute.Vector.y, snapAttribute.Vector.y, snapAttribute.Vector.w));
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, new Rect(snapAttribute.Vector.x, snapAttribute.Vector.y, snapAttribute.Vector.y, snapAttribute.Vector.w)));
+					var snap = GetSnap(property, snapAttribute, new Rect(snapAttribute.Vector.x, snapAttribute.Vector.y, snapAttribute.Vector.y, snapAttribute.Vector.w));
+
+					Snap(property, snap());
+					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
 					break;
 				}
 				case SerializedPropertyType.RectInt:
 				{
-					Snap(property, new RectInt(Mathf.RoundToInt(snapAttribute.Vector.x), Mathf.RoundToInt(snapAttribute.Vector.y), Mathf.RoundToInt(snapAttribute.Vector.y), Mathf.RoundToInt(snapAttribute.Vector.w)));
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snapAttribute.Number));
+					var snap = GetSnap(property, snapAttribute, new RectInt(Mathf.RoundToInt(snapAttribute.Vector.x), Mathf.RoundToInt(snapAttribute.Vector.y), Mathf.RoundToInt(snapAttribute.Vector.y), Mathf.RoundToInt(snapAttribute.Vector.w)));
+
+					Snap(property, snap());
+					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
 					break;
 				}
 				case SerializedPropertyType.Bounds:
 				{
-					Snap(property, snapAttribute.Bounds);
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snapAttribute.Bounds));
+					var snap = GetSnap(property, snapAttribute, snapAttribute.Bounds);
+
+					Snap(property, snap());
+					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
 					break;
 				}
 				case SerializedPropertyType.BoundsInt:
 				{
-					Snap(property, new BoundsInt(Vector3Int.RoundToInt(snapAttribute.Bounds.center), Vector3Int.RoundToInt(snapAttribute.Bounds.extents)));
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, new BoundsInt(Vector3Int.RoundToInt(snapAttribute.Bounds.center), Vector3Int.RoundToInt(snapAttribute.Bounds.extents))));
+					var snap = GetSnap(property, snapAttribute, new BoundsInt(Vector3Int.RoundToInt(snapAttribute.Bounds.center), Vector3Int.RoundToInt(snapAttribute.Bounds.extents)));
+
+					Snap(property, snap());
+					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
 					break;
 				}
 				default:
@@ -209,6 +238,46 @@ namespace PiRhoSoft.Utilities.Editor
 		private float Snap(float value, float snap)
 		{
 			return snap > 0.0f ? Mathf.Round(value / snap) * snap : value;
+		}
+
+		private Func<FieldType> GetSnap<FieldType>(SerializedProperty property, SnapAttribute snapAttribute, FieldType defaultValue)
+		{
+			if (!string.IsNullOrEmpty(snapAttribute.Snap))
+			{
+				var method = fieldInfo.DeclaringType.GetMethod(snapAttribute.Snap, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+				var field = fieldInfo.DeclaringType.GetField(snapAttribute.Snap, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+				var prop = fieldInfo.DeclaringType.GetProperty(snapAttribute.Snap, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+				if (method != null)
+				{
+					if (method.ReturnType != typeof(FieldType))
+						Debug.LogWarningFormat(_invalidMethodReturnWarning, property.propertyPath, snapAttribute.Snap, property.type);
+					else if (!method.HasSignature(null))
+						Debug.LogWarningFormat(_invalidMethodParametersWarning, property.propertyPath, snapAttribute.Snap);
+					else
+						return () => (FieldType)method.Invoke(method.IsStatic ? null : property.GetOwner<object>(), null);
+				}
+				else if (field != null)
+				{
+					if (field.FieldType != typeof(FieldType))
+						Debug.LogWarningFormat(_invalidFieldReturnWarning, property.propertyPath, snapAttribute.Snap, property.type);
+					else
+						return () => (FieldType)field.GetValue(field.IsStatic ? null : property.GetOwner<object>());
+				}
+				else if (prop != null)
+				{
+					if (prop.PropertyType != typeof(FieldType) || !prop.CanRead)
+						Debug.LogWarningFormat(_invalidPropertyReturnWarning, property.propertyPath, snapAttribute.Snap, property.type);
+					else
+						return () => (FieldType)prop.GetValue(prop.GetGetMethod().IsStatic ? null : property.GetOwner<object>());
+				}
+				else
+				{
+					Debug.LogWarningFormat(_missingCompareWarning, property.propertyPath, snapAttribute.Snap, fieldInfo.DeclaringType.Name);
+				}
+			}
+
+			return () => defaultValue;
 		}
 	}
 }

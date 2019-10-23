@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 ### Changed
 
+## [1.1.0] - 2010-10-23
+### Added
+- Added a NoLabel attribute which removes the label from a BaseField<> or PropertyField
+- Added SerializedProperty constructors for each of the controls so that they can be created and automatically be bound to properties
+- Added DragAndDrop functionality for Pickers and the History window
+- Added an extension method for SerializedProperty to retreive the tooltip attribute defined it's field
+- Added the ability to declary maximums and minimums for various attributes as defined in fields, methods, or properties
+### Changed
+- Custom label now affects all class names defined in the drawer. This includes Frame's label so that Lists and Dictionaries are now affected
+
 ## [1.0.5] - 2019-10-22
 ### Added
 - Added a public getter for the Control on all BaseField<> classes
@@ -27,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made setting the text of a MessageBox not trigger a change event (Label does this internally for bindings it seems)
 
 ## [1.0.1] - 2019-10-08
+### Changed
 - Fixed Configuration path
 
 ## [1.0.0] - 2019-10-07

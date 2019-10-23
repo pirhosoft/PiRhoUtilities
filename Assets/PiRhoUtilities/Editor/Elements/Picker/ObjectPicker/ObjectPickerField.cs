@@ -14,6 +14,11 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public ObjectPickerControl Control { get; private set; }
 
+		public ObjectPickerField(SerializedProperty property, Type type) : this(property.displayName, property.objectReferenceValue, property.serializedObject.targetObject, type)
+		{
+			this.ConfigureProperty(property, property.GetTooltip());
+		}
+
 		public ObjectPickerField(string label, Object value, Object owner, Type type) : base(label, null)
 		{
 			Setup(value, owner, type);

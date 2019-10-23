@@ -14,25 +14,15 @@ namespace PiRhoSoft.Utilities.Editor
 			var sliderAttribute = attribute as SliderAttribute;
 
 			if (property.propertyType == SerializedPropertyType.Integer)
-			{
-				var element = new SliderIntField(property.displayName, property.intValue, (int)sliderAttribute.Minimum, (int)sliderAttribute.Maximum);
-				return element.ConfigureProperty(property, this.GetTooltip());
-			}
+				return new SliderIntField(property, (int)sliderAttribute.Minimum, (int)sliderAttribute.Maximum);
 			else if (property.propertyType == SerializedPropertyType.Float)
-			{
-				var element = new SliderFloatField(property.displayName, property.floatValue, sliderAttribute.Minimum, sliderAttribute.Maximum);
-				return element.ConfigureProperty(property, this.GetTooltip());
-			}
+				return new SliderFloatField(property, sliderAttribute.Minimum, sliderAttribute.Maximum);
 			else if (property.propertyType == SerializedPropertyType.Vector2)
-			{
-				var element = new MinMaxSliderField(property.displayName, property.vector2Value, sliderAttribute.Minimum, sliderAttribute.Maximum);
-				return element.ConfigureProperty(property, this.GetTooltip());
-			}
+				return new MinMaxSliderField(property.displayName, property.vector2Value, sliderAttribute.Minimum, sliderAttribute.Maximum);
 			else
-			{
 				Debug.LogWarningFormat(_invalidTypeWarning, property.propertyPath);
-				return new FieldContainer(property.displayName);
-			}
+
+			return new FieldContainer(property.displayName);
 		}
 	}
 }

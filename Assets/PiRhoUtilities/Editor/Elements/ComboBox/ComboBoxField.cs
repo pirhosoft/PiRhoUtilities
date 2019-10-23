@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
@@ -11,6 +12,11 @@ namespace PiRhoSoft.Utilities.Editor
 		public static readonly string InputUssClassName = UssClassName + "__input";
 
 		public ComboBoxControl Control { get; private set; }
+
+		public ComboBoxField(SerializedProperty property, List<string> options) : this(property.displayName, property.stringValue, options)
+		{
+			this.ConfigureProperty(property, property.GetTooltip());
+		}
 
 		public ComboBoxField(string label, string value, List<string> options) : base(label, null)
 		{

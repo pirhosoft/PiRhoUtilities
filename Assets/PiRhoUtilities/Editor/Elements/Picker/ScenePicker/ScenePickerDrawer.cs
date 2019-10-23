@@ -13,20 +13,13 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
-			var tooltip = this.GetTooltip();
 			var method = fieldInfo.DeclaringType.GetMethod((attribute as ScenePickerAttribute)?.CreateMethod, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			void onCreate() => method?.Invoke(method.IsStatic ? null : property.serializedObject.targetObject, null);
 
 			if (this.GetFieldType() == typeof(AssetReference))
-			{
-				var scene = property.GetObject<AssetReference>();
-				var picker = new ScenePickerField(property.displayName, scene, onCreate);
-				return picker.ConfigureProperty(property, tooltip);
-			}
+				return new ScenePickerField(property, onCreate);
 			else
-			{
 				Debug.LogWarningFormat(_invalidTypeWarning, property.propertyPath);
-			}
 
 			return new FieldContainer(property.displayName);
 		}

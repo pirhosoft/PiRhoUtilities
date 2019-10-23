@@ -69,25 +69,13 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private VisualElement MakeItem()
 		{
-			var item = new VisualElement();
-			item.AddToClassList(ListItemUssClassName);
-
-			var label = new Label();
-			label.AddToClassList(ListItemLabelUssClassName);
-
-			item.Add(label);
-			return item;
+			return new HistoryItem();
 		}
 
-		private void BindItem(VisualElement container, int index)
+		private void BindItem(VisualElement item, int index)
 		{
-			var label = container.ElementAt(0) as Label;
-			label.text = HistoryList.GetName(index);
-
-			if (index == HistoryList.Current)
-				label.AddToClassList(CurrentListItemUssClassName);
-			else
-				label.RemoveFromClassList(CurrentListItemUssClassName);
+			if (item is HistoryItem history)
+				history.Bind(index);
 		}
 
 		private void Select()
@@ -103,6 +91,36 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			if (_listView.selectedItem is Object[] obj && obj.Length > 0)
 				EditorGUIUtility.PingObject(obj[0]);
+		}
+
+		private class HistoryItem : VisualElement, IDraggable
+		{
+			public DragState DragState { get; set; }
+			public string DragText => _label.text;
+			public Object[] DragObjects => HistoryList.History[_index];
+			public object DragData => DragObjects;
+
+			private readonly Label _label;
+			private int _index;
+
+			public HistoryItem()
+			{
+				_label = new Label();
+				_label.pickingMode = PickingMode.Ignore;
+				_label.AddToClassList(ListItemLabelUssClassName);
+				
+				Add(_label);
+				AddToClassList(ListItemUssClassName);
+
+				this.MakeDraggable();
+			}
+
+			public void Bind(int index)
+			{
+				_index = index;
+				_label.text = HistoryList.GetName(index);
+				_label.EnableInClassList(CurrentListItemUssClassName, index == HistoryList.Current);
+			}
 		}
 
 		private static class HistoryList

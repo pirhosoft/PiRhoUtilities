@@ -12,15 +12,11 @@ namespace PiRhoSoft.Utilities.Editor
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
 			if (property.propertyType == SerializedPropertyType.Quaternion)
-			{
-				var field = new EulerField(property.displayName, property.quaternionValue);
-				return field.ConfigureProperty(property, this.GetTooltip());
-			}
+				return new EulerField(property.displayName, property.quaternionValue);
 			else
-			{
 				Debug.LogWarningFormat(_invalidTypeWarning, property.propertyPath);
-				return new FieldContainer(property.displayName);
-			}
+
+			return new FieldContainer(property.displayName);
 		}
 	}
 }

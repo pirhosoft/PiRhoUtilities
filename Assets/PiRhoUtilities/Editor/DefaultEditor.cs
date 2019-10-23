@@ -19,7 +19,7 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				do
 				{
-					var propertyField = new PropertyField(iterator) { name = "PropertyField:" + iterator.propertyPath };
+					var propertyField = new PropertyField(iterator.Copy()) { name = "PropertyField:" + iterator.propertyPath };
 
 					if (iterator.propertyPath == "m_Script" && serializedObject.targetObject != null)
 						propertyField.SetEnabled(value: false);

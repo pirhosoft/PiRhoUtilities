@@ -64,6 +64,7 @@ namespace PiRhoSoft.Utilities.Editor
 			Setup(provider, value);
 			Add(_inspect);
 
+			this.MakeDragReceiver();
 			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
 			AddToClassList(UssClassName);
 		}
@@ -71,7 +72,7 @@ namespace PiRhoSoft.Utilities.Editor
 		private Texture GetIcon(Object asset)
 		{
 			var icon = AssetPreview.GetMiniThumbnail(asset);
-			return icon == null && asset ? AssetPreview.GetMiniTypeThumbnail(asset.GetType()) : icon;
+			return !icon && asset ? AssetPreview.GetMiniTypeThumbnail(asset.GetType()) : icon;
 		}
 
 		private void OnSelected(Object selected)
@@ -111,7 +112,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 			}
 
-			return true;
+			return false;
 		}
 
 		public void AcceptDrag(Object[] objects, object data)

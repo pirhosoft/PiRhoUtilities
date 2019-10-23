@@ -74,7 +74,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public static string GetTooltip(this PropertyDrawer drawer)
 		{
-			return drawer.fieldInfo.GetCustomAttribute<TooltipAttribute>()?.tooltip ?? string.Empty;
+			return drawer.fieldInfo.GetTooltip();
 		}
 
 		public static VisualElement CreateNextElement(this PropertyDrawer drawer, SerializedProperty property)
