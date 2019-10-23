@@ -24,7 +24,6 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		private static Dictionary<string, AssetList> _assetLists = new Dictionary<string, AssetList>();
 		private const string _invalidPathError = "(UAHIP) failed to create asset at path {0}: the path must be inside the 'Assets' folder for this project";
-		private const string _missingEditorPathError = "(UAHMEP) failed to determine editor path for type {0} and path {1}";
 
 		static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
 		{
@@ -224,10 +223,12 @@ namespace PiRhoSoft.Utilities.Editor
 			return prefix;
 		}
 
-		public static string FindEditorPath(string typename, string editorFolder)
+		public static string FindEditorPath(string typename, string editorFolder, string packagePath)
 		{
 			// Packages might be added as a subfolder of a different project so this determines the
 			// actual path to the editor scripts by finding the asset representing the desired script file
+			// If they cannot be found in the AssetDatabase it likely means that they are in a embedded package
+			// so return the given path to that instead.
 
 			var ids = AssetDatabase.FindAssets(typename);
 
@@ -240,8 +241,7 @@ namespace PiRhoSoft.Utilities.Editor
 					return path.Substring(0, index) + editorFolder;
 			}
 
-			Debug.LogErrorFormat(_missingEditorPathError, typename, editorFolder);
-			return "Assets/" + editorFolder;
+			return packagePath;
 		}
 
 		#endregion
