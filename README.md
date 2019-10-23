@@ -226,7 +226,7 @@ public Vector2 MinMaxSlider;
 
 #### EnumButtons
 
-Apply to an *Enum* field to show selectable buttons instead of a dropdown list. An optional bool can be specified to override the default behavior of the enum being selectable as flags or not.
+Apply to an *Enum* field to show selectable buttons instead of a dropdown list. An optional bool can be specified to override the default behavior of the enum being selectable as flags or not (the default is based on whether the _[Flags]_ attribute is set on the declared enum type).
 
 ```c#
 public enum TestEnum
@@ -293,7 +293,7 @@ private void Inspect() => Debug.Log("Object selected", this);
 
 #### Required
 
-Apply this to a *string* or *UnityEngine.Object* derived type to display a message box warning if they `null`.
+Apply this to a *string* or *UnityEngine.Object* derived type to display a message box warning if they are `null`.
 
 ```c#
 [Required("A string must be entered")]
@@ -331,7 +331,7 @@ private void Clicked() => Debug.Log("Clicked", this);
 
 #### Minimum
 
-Add this to an *int* or *float* field to disallow selecting of a value lower than a specified value. Set the minimum value in the attribute constructor.
+Add this to an *int* or *float* field to disallow selecting of a value lower than a specified value. Set the minimum value in the attribute constructor. The string name of a method, field, or property can instead be specified to retrieve the maximum value from.
 
 ```c#
 [Minimum(0.0f)]
@@ -340,7 +340,7 @@ public float MinimumFloat;
 
 #### Maximum
 
-Add this to an *int* or *float* field to disallow selecting of a value higher than a specified value. Set the maximum value in the attribute constructor.
+Add this to an *int* or *float* field to disallow selecting of a value higher than a specified value. Set the maximum value in the attribute constructor. The string name of a method, field, or property can instead be specified to retrieve the maximum value from.
 
 ```c#
 [Maximum(100.0f)]
@@ -349,7 +349,7 @@ public float MaximumFloat;
 
 #### Snap
 
-Add this to an *int* or *float* field to round the selected value to be a multiple of a specified value. Set the snap value in the attribute constructor.
+Add this to an *int* or *float* field to round the selected value to be a multiple of a specified value. Set the snap value in the attribute constructor. The string name of a method, field, or property can be instead be specified to retreive the snap value from.
 
 ```c#
 [Snap(0.5f)]
@@ -412,18 +412,27 @@ public string MultilineStretch;
 
 #### CustomLabel
 
-Add this to any field to change the display of the label. This is useful to give more info in the inspector without changing the name of the field to something over verbose or invalid in code.
+Add this to any field to change the display of the label. This is useful to give more info in the inspector without changing the name of the field to something over verbose or invalid in code. The name of a string method, field, or property can be specified as the _resolve_ parameter to retreive the label from the resolved value
 
 ```c#
 [CustomLabel("Speed (m/s)")]
 public float Speed;
 ```
 
+#### NoLabel
+
+Add this to any field to make it display in the inspector without a label.
+
+```c#
+[NoLabel]
+public string NoLabel = "I don't have a label";
+```
+
 ### Wrapper Classes
 
 #### SerializedList&lt;T&gt;
 
-This can be used just like the built in List class but because it isn't the built in List class can be targeted by PropertyDrawers. Because Unity doesn't serialize generic classes, though, it is necessary to subclass this for each type and give the subclass the *Serializable* attribute.
+This can be used just like the built in List class but because it isn't the built in List class can be targeted by PropertyDrawers. Because Unity doesn't serialize generic classes, though, it is necessary to subclass this for each type and give the subclass the *[Serializable]* attribute.
 
 ```c#
 [Serializable] public class IntList : SerializedList<int> {}
