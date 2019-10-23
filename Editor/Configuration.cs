@@ -2,7 +2,18 @@
 {
 	public static class Configuration
 	{
-		internal const string ElementsPath = "Packages/com.pirho.utilities/Editor/Elements/";
-		//internal const string ElementsPath = "Assets/PiRhoUtilities/Editor/Elements/";
+		private const string _packagePath = "Packages/com.pirho.utilities/Editor/";
+		private static string _elementsPath = null;
+		internal static string ElementsPath
+		{
+			get
+			{
+				if (_elementsPath != null)
+					return _elementsPath;
+
+				_elementsPath = AssetHelper.FindEditorPath(nameof(Configuration), "PiRhoUtilities/Editor/", _packagePath) + "Elements/";
+				return _elementsPath;
+			}
+		}
 	}
 }
