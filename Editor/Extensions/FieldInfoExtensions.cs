@@ -46,6 +46,11 @@ namespace PiRhoSoft.Utilities.Editor
 			return attribute != null;
 		}
 
+		public static string GetTooltip(this FieldInfo field)
+		{
+			return field.GetCustomAttribute<TooltipAttribute>()?.tooltip ?? string.Empty;
+		}
+
 		#endregion
 
 		public static bool IsSerializable(this FieldInfo field)

@@ -25,11 +25,11 @@ namespace PiRhoSoft.Utilities.Editor
 		void AcceptDrag(Object[] objects, object data);
 	}
 
-	public static class DragHelper
+	public static class DragExtensions
 	{
 		private const string _dragData = "DragData";
 
-		public static void MakeDraggable<Draggable>(Draggable draggable) where Draggable : VisualElement, IDraggable
+		public static void MakeDraggable<Draggable>(this Draggable draggable) where Draggable : VisualElement, IDraggable
 		{
 			draggable.DragState = DragState.Idle;
 			draggable.RegisterCallback<MouseDownEvent>(OnMouseDown);
@@ -37,8 +37,11 @@ namespace PiRhoSoft.Utilities.Editor
 			draggable.RegisterCallback<MouseUpEvent>(OnMouseUp);
 		}
 
-		public static void MakeDragReceiver<Receiver>(Receiver receiver) where Receiver : VisualElement, IDragReceiver
+		public static void MakeDragReceiver<Receiver>(this Receiver receiver) where Receiver : VisualElement, IDragReceiver
 		{
+			receiver.RegisterCallback<DragEnterEvent>(OnDragEnter);
+			receiver.RegisterCallback<DragLeaveEvent>(OnDragLeave);
+			receiver.RegisterCallback<DragExitedEvent>(OnDragExited);
 			receiver.RegisterCallback<DragUpdatedEvent>(OnDragUpdated);
 			receiver.RegisterCallback<DragPerformEvent>(OnDragPerform);
 		}
@@ -64,8 +67,20 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private static void OnMouseUp(MouseUpEvent evt)
 		{
-			if (evt.target is IDraggable draggable && draggable.DragState == DragState.Dragging && evt.button == (int)MouseButton.LeftMouse)
+			if (evt.target is IDraggable draggable && draggable.DragState != DragState.Idle && evt.button == (int)MouseButton.LeftMouse)
 				draggable.DragState = DragState.Idle;
+		}
+
+		private static void OnDragEnter(DragEnterEvent evt)
+		{
+		}
+
+		private static void OnDragExited(DragExitedEvent evt)
+		{
+		}
+
+		private static void OnDragLeave(DragLeaveEvent evt)
+		{
 		}
 
 		private static void OnDragUpdated(DragUpdatedEvent evt)

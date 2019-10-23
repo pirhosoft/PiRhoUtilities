@@ -45,6 +45,7 @@ namespace PiRhoSoft.Utilities.Editor
 			Add(_create);
 			Add(_buildWarning);
 
+			this.MakeDragReceiver();
 			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
 			AddToClassList(UssClassName);
 		}

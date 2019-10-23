@@ -14,10 +14,7 @@ namespace PiRhoSoft.Utilities.Editor
 			if (property.propertyType == SerializedPropertyType.String)
 			{
 				var typeAttribute = attribute as TypePickerAttribute;
-				var picker = new TypePickerField(property.displayName, property.stringValue, typeAttribute.BaseType, typeAttribute.ShowAbstract);
-				var tooltip = this.GetTooltip();
-
-				return picker.ConfigureProperty(property, tooltip);
+				return new TypePickerField(property, typeAttribute.BaseType, typeAttribute.ShowAbstract);
 			}
 			else
 			{

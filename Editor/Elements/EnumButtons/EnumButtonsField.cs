@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,6 +12,11 @@ namespace PiRhoSoft.Utilities.Editor
 		public static readonly string InputUssClassName = UssClassName + "__input";
 
 		public EnumButtonsControl Control { get; private set; }
+
+		public EnumButtonsField(SerializedProperty property, bool? useFlags = null) : this(property.displayName, property.GetEnumValue(), useFlags)
+		{
+			this.ConfigureProperty(property, property.GetTooltip());
+		}
 
 		public EnumButtonsField(string label, Enum value, bool? useFlags = null) : base(label, null)
 		{

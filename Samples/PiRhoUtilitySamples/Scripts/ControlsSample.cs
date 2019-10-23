@@ -15,11 +15,11 @@ namespace PiRhoSoft.Utilities
 			Eight = 0x8
 		}
 
-		[TypePicker(typeof(MonoBehaviour), false)]
+		[TypePicker(typeof(Component), false)]
 		public string Type;
 
 		[ObjectPicker]
-		public Object Object;
+		public GameObject GameObject;
 
 		[ScenePicker]
 		public AssetReference Scene;

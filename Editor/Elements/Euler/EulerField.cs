@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
@@ -10,6 +11,11 @@ namespace PiRhoSoft.Utilities.Editor
 		public static readonly string InputUssClassName = UssClassName + "__input";
 
 		public EulerControl Control { get; private set; }
+
+		public EulerField(SerializedProperty property) : this(property.displayName, property.quaternionValue)
+		{
+			this.ConfigureProperty(property, property.GetTooltip());
+		}
 
 		public EulerField(string label, Quaternion value) : base(label, null)
 		{

@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 
-  Object: {fileID: 0}
+  GameObject: {fileID: 0}
   Scene:
     m_AssetGUID: 
     m_SubObjectName: 
@@ -381,6 +381,7 @@ MonoBehaviour:
   MultilineStretch: 
   Placeholder: 
   DelayValidation: 
+  NoLabel: I don't have a label
   Toggle: 1
   ConditionalInt: 0
 --- !u!1 &1725971736

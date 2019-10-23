@@ -26,6 +26,9 @@ namespace PiRhoSoft.Utilities
 		public string DelayValidation;
 		private void Changed() => Debug.Log("Changed", this);
 
+		[NoLabel]
+		public string NoLabel = "I don't have a label";
+
 		[CustomLabel("Show/Hide")]
 		public bool Toggle;
 

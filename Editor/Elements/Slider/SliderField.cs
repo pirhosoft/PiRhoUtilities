@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -37,6 +38,11 @@ namespace PiRhoSoft.Utilities.Editor
 
 	public class SliderIntField : SliderBaseField<int>
 	{
+		public SliderIntField(SerializedProperty property, int min, int max) : this(property.displayName, property.intValue, min, max)
+		{
+			this.ConfigureProperty(property, property.GetTooltip());
+		}
+
 		public SliderIntField(string label, int value, int min, int max) : base(label)
 		{
 			Setup(value, min, max);
@@ -80,6 +86,11 @@ namespace PiRhoSoft.Utilities.Editor
 
 	public class SliderFloatField : SliderBaseField<float>
 	{
+		public SliderFloatField(SerializedProperty property, float min, float max) : this(property.displayName, property.floatValue, min, max)
+		{
+			this.ConfigureProperty(property, property.GetTooltip());
+		}
+
 		public SliderFloatField(string label, float value, float min, float max) : base(label)
 		{
 			Setup(value, min, max);
@@ -122,6 +133,11 @@ namespace PiRhoSoft.Utilities.Editor
 
 	public class MinMaxSliderField : SliderBaseField<Vector2>
 	{
+		public MinMaxSliderField(SerializedProperty property, float min, float max) : this(property.displayName, property.vector2Value, min, max)
+		{
+			this.ConfigureProperty(property, property.GetTooltip());
+		}
+
 		public MinMaxSliderField(string label, Vector2 value, float min, float max) : base(label)
 		{
 			Setup(value, min, max);

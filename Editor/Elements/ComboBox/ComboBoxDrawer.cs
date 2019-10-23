@@ -15,14 +15,9 @@ namespace PiRhoSoft.Utilities.Editor
 			if (attribute is ComboBoxAttribute popup && property.propertyType == SerializedPropertyType.String)
 			{
 				if (popup.Options != null && popup.Options.Count > 0)
-				{
-					var field = new ComboBoxField(property.displayName, property.stringValue, popup.Options);
-					return field.ConfigureProperty(property, this.GetTooltip());
-				}
+					return new ComboBoxField(property, popup.Options);
 				else
-				{
 					Debug.LogErrorFormat(_invalidOptionsError, property.propertyPath);
-				}
 			}
 			else
 			{

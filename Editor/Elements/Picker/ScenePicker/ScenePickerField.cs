@@ -13,6 +13,11 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public ScenePickerControl Control { get; private set; }
 
+		public ScenePickerField(SerializedProperty property, Action onCreate) : this(property.displayName, property.GetObject<AssetReference>(), onCreate)
+		{
+			this.ConfigureProperty(property, property.GetTooltip());
+		}
+
 		public ScenePickerField(string label, AssetReference value, Action onCreate) : base(label, null)
 		{
 			Setup(value, onCreate);

@@ -10,8 +10,10 @@ namespace PiRhoSoft.Utilities.Editor
 		public PlaceholderControl(string text)
 		{
 			this.text = text;
-			AddToClassList(UssClassName);
 			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			AddToClassList(UssClassName);
+
+			pickingMode = PickingMode.Ignore;
 		}
 
 		public void AddToField(TextField textField)

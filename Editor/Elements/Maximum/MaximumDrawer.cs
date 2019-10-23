@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System;
+using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,22 +10,30 @@ namespace PiRhoSoft.Utilities.Editor
 	class MaximumDrawer : PropertyDrawer
 	{
 		private const string _invalidTypeWarning = "(PUMXDIT) invalid type for MaximumAttribute on field {0}: Maximum can only be applied to int or float fields";
+		private const string _missingCompareWarning = "(PUMXDMC) invalid method, field, or property for MaximumAttribute on field '{0}': '{1}' could not be found on type '{2}'";
+		private const string _invalidMethodReturnWarning = "(PUMXIMR) invalid method for MaximumAttribute on field '{0}': the method '{1}' should return a '{2}'";
+		private const string _invalidMethodParametersWarning = "(PUMXIMP) invalid method for MaximumAttribute on field '{0}': the method '{1}' should take no parameters";
+		private const string _invalidFieldReturnWarning = "(PUMXIFR) invalid field for MaximumAttribute on field '{0}': the method '{1}' should return an {2}";
+		private const string _invalidPropertyReturnWarning = "(PUMXIPR) invalid property for MaximumAttribute on field '{0}': the method '{1}' should return an {2}";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
-			var maximum = (attribute as MaximumAttribute).Maximum;
+			var maximumAttribute = attribute as MaximumAttribute;
 			var element = this.CreateNextElement(property);
-			var clone = property.Copy();
 
 			if (property.propertyType == SerializedPropertyType.Integer)
 			{
-				Clamp(property, Mathf.RoundToInt(maximum));
-				element.RegisterCallback<FocusOutEvent>(e => Clamp(clone, Mathf.RoundToInt(maximum)));
+				var max = GetMax(property, maximumAttribute, Mathf.RoundToInt(maximumAttribute.Maximum));
+
+				Clamp(property, max());
+				element.RegisterCallback<FocusOutEvent>(e => Clamp(property, max()));
 			}
 			else if (property.propertyType == SerializedPropertyType.Float)
 			{
-				Clamp(property, maximum);
-				element.RegisterCallback<FocusOutEvent>(e => Clamp(clone, maximum));
+				var max = GetMax(property, maximumAttribute, maximumAttribute.Maximum);
+
+				Clamp(property, max());
+				element.RegisterCallback<FocusOutEvent>(e => Clamp(property, max()));
 			}
 			else
 			{
@@ -43,6 +53,46 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			property.floatValue = Mathf.Min(maximum, property.floatValue);
 			property.serializedObject.ApplyModifiedProperties();
+		}
+
+		private Func<FieldType> GetMax<FieldType>(SerializedProperty property, MaximumAttribute maximumAttribute, FieldType defaultValue)
+		{
+			if (!string.IsNullOrEmpty(maximumAttribute.Compare))
+			{
+				var method = fieldInfo.DeclaringType.GetMethod(maximumAttribute.Compare, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+				var field = fieldInfo.DeclaringType.GetField(maximumAttribute.Compare, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+				var prop = fieldInfo.DeclaringType.GetProperty(maximumAttribute.Compare, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+				if (method != null)
+				{
+					if (method.ReturnType != typeof(FieldType))
+						Debug.LogWarningFormat(_invalidMethodReturnWarning, property.propertyPath, maximumAttribute.Compare, property.type);
+					else if (!method.HasSignature(null))
+						Debug.LogWarningFormat(_invalidMethodParametersWarning, property.propertyPath, maximumAttribute.Compare);
+					else
+						return () => (FieldType)method.Invoke(method.IsStatic ? null : property.GetOwner<object>(), null);
+				}
+				else if (field != null)
+				{
+					if (field.FieldType != typeof(FieldType))
+						Debug.LogWarningFormat(_invalidFieldReturnWarning, property.propertyPath, maximumAttribute.Compare, property.type);
+					else
+						return () => (FieldType)field.GetValue(field.IsStatic ? null : property.GetOwner<object>());
+				}
+				else if (prop != null)
+				{
+					if (prop.PropertyType != typeof(FieldType) || !prop.CanRead)
+						Debug.LogWarningFormat(_invalidPropertyReturnWarning, property.propertyPath, maximumAttribute.Compare, property.type);
+					else
+						return () => (FieldType)prop.GetValue(prop.GetGetMethod().IsStatic ? null : property.GetOwner<object>());
+				}
+				else
+				{
+					Debug.LogWarningFormat(_missingCompareWarning, property.propertyPath, maximumAttribute.Compare, fieldInfo.DeclaringType.Name);
+				}
+			}
+
+			return () => defaultValue;
 		}
 	}
 }
