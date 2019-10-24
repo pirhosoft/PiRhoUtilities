@@ -14,13 +14,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
-			var inlineAttribute = attribute as InlineAttribute;
+			var showMemberLabels = (attribute as InlineAttribute).ShowMemberLabels;
 
-			return CreatePropertyGUI(property, inlineAttribute.ShowMemberLabels);
-		}
-
-		protected VisualElement CreatePropertyGUI(SerializedProperty property, bool showMemberLabels)
-		{
 			var container = new VisualElement();
 			var childContainer = new VisualElement();
 			childContainer.AddToClassList(ChildrenUssClassName);

@@ -22,9 +22,6 @@ namespace PiRhoSoft.Utilities
 		void ISerializationCallbackReceiver.OnAfterDeserialize()
 		{
 			ConvertFromLists();
-
-			_keys.Clear();
-			_values.Clear();
 		}
 
 		private void ConvertToLists()

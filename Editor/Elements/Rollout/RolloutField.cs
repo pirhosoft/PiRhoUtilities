@@ -38,10 +38,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public bool value
 		{
-			get
-			{
-				return Control.IsExpanded;
-			}
+			get => Control.IsExpanded;
 			set
 			{
 				var previous = Control.IsExpanded;
