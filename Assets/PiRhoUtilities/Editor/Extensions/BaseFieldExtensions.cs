@@ -73,7 +73,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public static void SetLabel<T>(this BaseField<T> field, string label)
 		{
-			SetLabel(field, label);
+			SetLabel((VisualElement)field, label);
 		}
 
 		public static VisualElement GetVisualInput<T>(this BaseField<T> field)
