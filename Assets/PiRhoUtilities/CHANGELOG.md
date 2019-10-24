@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an generic extension method for SetLabel on BaseField
 ### Changed
 - Make it so SerializedDictionary lists stay in memory during runtime so that they can be accessed by serialized properties
+- Changed so the ConfigureProperty call automatically gets the tooltip instead of having to pass it in
 
 ## [1.1.0] - 2010-10-23
 ### Added

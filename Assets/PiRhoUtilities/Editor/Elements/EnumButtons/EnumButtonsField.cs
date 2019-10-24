@@ -15,7 +15,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public EnumButtonsField(SerializedProperty property, bool? useFlags = null) : this(property.displayName, property.GetEnumValue(), useFlags)
 		{
-			this.ConfigureProperty(property, property.GetTooltip());
+			this.ConfigureProperty(property);
 		}
 
 		public EnumButtonsField(string label, Enum value, bool? useFlags = null) : base(label, null)

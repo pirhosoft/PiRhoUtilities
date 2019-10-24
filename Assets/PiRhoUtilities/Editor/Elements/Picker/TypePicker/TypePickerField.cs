@@ -15,7 +15,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public TypePickerField(SerializedProperty property, Type type, bool showAbstract) : this(property.displayName, property.stringValue, type, showAbstract)
 		{
-			this.ConfigureProperty(property, property.GetTooltip());
+			this.ConfigureProperty(property);
 		}
 
 		public TypePickerField(string label, string value, Type type, bool showAbstract) : base(label, null)

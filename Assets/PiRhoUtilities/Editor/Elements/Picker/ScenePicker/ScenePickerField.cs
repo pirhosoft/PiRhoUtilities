@@ -15,7 +15,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public ScenePickerField(SerializedProperty property, Action onCreate) : this(property.displayName, property.GetObject<AssetReference>(), onCreate)
 		{
-			this.ConfigureProperty(property, property.GetTooltip());
+			this.ConfigureProperty(property);
 		}
 
 		public ScenePickerField(string label, AssetReference value, Action onCreate) : base(label, null)
