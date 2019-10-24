@@ -15,7 +15,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public ComboBoxField(SerializedProperty property, List<string> options) : this(property.displayName, property.stringValue, options)
 		{
-			this.ConfigureProperty(property, property.GetTooltip());
+			this.ConfigureProperty(property);
 		}
 
 		public ComboBoxField(string label, string value, List<string> options) : base(label, null)

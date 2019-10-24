@@ -40,7 +40,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		public SliderIntField(SerializedProperty property, int min, int max) : this(property.displayName, property.intValue, min, max)
 		{
-			this.ConfigureProperty(property, property.GetTooltip());
+			this.ConfigureProperty(property);
 		}
 
 		public SliderIntField(string label, int value, int min, int max) : base(label)
@@ -88,7 +88,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		public SliderFloatField(SerializedProperty property, float min, float max) : this(property.displayName, property.floatValue, min, max)
 		{
-			this.ConfigureProperty(property, property.GetTooltip());
+			this.ConfigureProperty(property);
 		}
 
 		public SliderFloatField(string label, float value, float min, float max) : base(label)
@@ -135,7 +135,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		public MinMaxSliderField(SerializedProperty property, float min, float max) : this(property.displayName, property.vector2Value, min, max)
 		{
-			this.ConfigureProperty(property, property.GetTooltip());
+			this.ConfigureProperty(property);
 		}
 
 		public MinMaxSliderField(string label, Vector2 value, float min, float max) : base(label)

@@ -14,7 +14,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public EulerField(SerializedProperty property) : this(property.displayName, property.quaternionValue)
 		{
-			this.ConfigureProperty(property, property.GetTooltip());
+			this.ConfigureProperty(property);
 		}
 
 		public EulerField(string label, Quaternion value) : base(label, null)

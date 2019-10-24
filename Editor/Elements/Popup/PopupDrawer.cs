@@ -17,7 +17,6 @@ namespace PiRhoSoft.Utilities.Editor
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
 			var popup = attribute as PopupAttribute;
-			var tooltip = this.GetTooltip();
 
 			if (property.propertyType == SerializedPropertyType.Integer)
 			{
@@ -27,7 +26,7 @@ namespace PiRhoSoft.Utilities.Editor
 						Debug.LogWarningFormat(_invalidOptionsWarning, property.propertyPath);
 
 					var field = new PopupField<int>(property.displayName, popup.IntValues, defaultIndex: 0, FormatInt, FormatInt);
-					return field.ConfigureProperty(property, tooltip);
+					return field.ConfigureProperty(property);
 				}
 				else
 				{
@@ -42,7 +41,7 @@ namespace PiRhoSoft.Utilities.Editor
 						Debug.LogWarningFormat(_invalidOptionsWarning, property.propertyPath);
 
 					var field = new PopupField<float>(property.displayName, popup.FloatValues, defaultIndex: 0, FormatFloat, FormatFloat);
-					return field.ConfigureProperty(property, tooltip);
+					return field.ConfigureProperty(property);
 				}
 				else
 				{
@@ -54,7 +53,7 @@ namespace PiRhoSoft.Utilities.Editor
 				if (popup.Options != null && popup.Options.Count > 0)
 				{
 					var field = new PopupField<string>(property.displayName, popup.Options, 0);
-					return field.ConfigureProperty(property, tooltip);
+					return field.ConfigureProperty(property);
 				}
 				else
 				{
