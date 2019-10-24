@@ -60,7 +60,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Helper Methods
 
-		public static void SetLabel<T>(VisualElement element, string label)
+		public static void SetLabel(VisualElement element, string label)
 		{
 			// label is public but this allows access without knowing the generic type of the BaseField
 
