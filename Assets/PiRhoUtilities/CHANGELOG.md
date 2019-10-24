@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 ### Changed
 
+## [1.1.1] - 2010-10-24
+### Added
+- Added an generic extension method for SetLabel on BaseField
+### Changed
+- Make it so SerializedDictionary lists stay in memory during runtime so that they can be accessed by serialized properties
+
 ## [1.1.0] - 2010-10-23
 ### Added
 - Added a NoLabel attribute which removes the label from a BaseField<> or PropertyField
