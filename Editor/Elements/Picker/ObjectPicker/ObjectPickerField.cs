@@ -8,9 +8,9 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class ObjectPickerField : BaseField<Object>
 	{
-		public static readonly string UssClassName = "pirho-object-picker-field";
-		public static readonly string LabelUssClassName = UssClassName + "__label";
-		public static readonly string InputUssClassName = UssClassName + "__input";
+		public const string UssClassName = "pirho-object-picker-field";
+		public const string LabelUssClassName = UssClassName + "__label";
+		public const string InputUssClassName = UssClassName + "__input";
 
 		public ObjectPickerControl Control { get; private set; }
 

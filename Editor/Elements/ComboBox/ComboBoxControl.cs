@@ -11,9 +11,9 @@ namespace PiRhoSoft.Utilities.Editor
 		private const string _invalidTypeWarning = "(PUCBCIT) failed to set value on EnumButtonsControl: attempted to set value '{0}' of enum '{1}' but the control is using enum type '{2}'";
 
 		public const string Stylesheet = "ComboBox/ComboBoxStyle.uss";
-		public static readonly string UssClassName = "pirho-combo-box";
-		public static readonly string TextUssClassName = UssClassName + "__text";
-		public static readonly string ButtonUssClassName = UssClassName + "__button";
+		public const string UssClassName = "pirho-combo-box";
+		public const string TextUssClassName = UssClassName + "__text";
+		public const string ButtonUssClassName = UssClassName + "__button";
 
 		public string Value { get; private set; }
 		public List<string> Options { get; private set; }

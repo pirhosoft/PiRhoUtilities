@@ -7,9 +7,9 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class TypePickerField : BaseField<string>
 	{
-		public static readonly string UssClassName = "pirho-scene-picker-field";
-		public static readonly string LabelUssClassName = UssClassName + "__label";
-		public static readonly string InputUssClassName = UssClassName + "__input";
+		public const string UssClassName = "pirho-scene-picker-field";
+		public const string LabelUssClassName = UssClassName + "__label";
+		public const string InputUssClassName = UssClassName + "__input";
 
 		public TypePickerControl Control { get; private set; }
 

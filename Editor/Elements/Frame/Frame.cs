@@ -6,18 +6,17 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class Frame : VisualElement
 	{
-		private const string Stylesheet = "Frame/Frame.uss";
-
-		public static readonly string UssClassName = "pirho-frame";
-		public static readonly string HeaderUssClassName = UssClassName + "__header";
-		public static readonly string LabelUssClassName = UssClassName + "__label";
-		public static readonly string NoLabelUssClassName = UssClassName + "__label--none";
-		public static readonly string ContentUssClassName = UssClassName + "__content";
-		public static readonly string FooterUssClassName = UssClassName + "__footer";
-		public static readonly string HeaderButtonsUssClassName = UssClassName + "__header-buttons";
-		public static readonly string FooterButtonsUssClassName = UssClassName + "__footer-buttons";
-		public static readonly string HeaderButtonUssClassName = UssClassName + "__header-button";
-		public static readonly string FooterButtonUssClassName = UssClassName + "__footer-button";
+		public const string Stylesheet = "Frame/Frame.uss";
+		public const string UssClassName = "pirho-frame";
+		public const string HeaderUssClassName = UssClassName + "__header";
+		public const string LabelUssClassName = UssClassName + "__label";
+		public const string NoLabelUssClassName = UssClassName + "__label--none";
+		public const string ContentUssClassName = UssClassName + "__content";
+		public const string FooterUssClassName = UssClassName + "__footer";
+		public const string HeaderButtonsUssClassName = UssClassName + "__header-buttons";
+		public const string FooterButtonsUssClassName = UssClassName + "__footer-buttons";
+		public const string HeaderButtonUssClassName = UssClassName + "__header-button";
+		public const string FooterButtonUssClassName = UssClassName + "__footer-button";
 
 		public VisualElement Header { get; private set; }
 		public VisualElement Content { get; private set; }

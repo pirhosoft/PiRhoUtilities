@@ -7,9 +7,9 @@ namespace PiRhoSoft.Utilities.Editor
 	public abstract class BaseSliderControl<ValueType> : VisualElement
 	{
 		public const string Stylesheet = "Slider/SliderStyle.uss";
-		public static readonly string UssClassName = "pirho-slider";
-		public static readonly string SliderUssClassName = UssClassName + "__slider";
-		public static readonly string TextUssClassName = UssClassName + "__text";
+		public const string UssClassName = "pirho-slider";
+		public const string SliderUssClassName = UssClassName + "__slider";
+		public const string TextUssClassName = UssClassName + "__text";
 
 		public ValueType Value;
 

@@ -4,11 +4,11 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class RolloutControl : Frame
 	{
-		public const string Stylesheet = "Rollout/RolloutStyle.uss";
-		public new static readonly string UssClassName = "pirho-rollout";
-		public static readonly string ExpandedUssClassName = UssClassName + "--expanded";
-		public static readonly string CollapsedUssClassName = UssClassName + "--collapsed";
-		public static readonly string IconUssClassName = UssClassName + "__icon";
+		public new const string Stylesheet = "Rollout/RolloutStyle.uss";
+		public new const string UssClassName = "pirho-rollout";
+		public const string ExpandedUssClassName = UssClassName + "--expanded";
+		public const string CollapsedUssClassName = UssClassName + "--collapsed";
+		public const string IconUssClassName = UssClassName + "__icon";
 
 		public static readonly Icon ExpandedIcon = Icon.Expanded;
 		public static readonly Icon CollapsedIcon = Icon.Collapsed;

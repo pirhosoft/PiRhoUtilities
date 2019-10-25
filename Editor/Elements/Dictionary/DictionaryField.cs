@@ -8,7 +8,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		private const string _invalidBindingError = "(PUEBEIB) invalid binding '{0}' for DictionaryField: property '{1}' is type '{2}' but should be an array";
 
-		public static readonly string UssClassName = "pirho-dictionary-field";
+		public const string UssClassName = "pirho-dictionary-field";
 
 		public DictionaryControl Control { get; private set; }
 

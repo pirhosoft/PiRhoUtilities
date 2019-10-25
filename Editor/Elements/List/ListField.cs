@@ -8,7 +8,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		private const string _invalidBindingError = "(PUEBEIB) invalid binding '{0}' for ListField: property '{1}' is type '{2}' but should be an array";
 
-		public static readonly string UssClassName = "pirho-list-field";
+		public const string UssClassName = "pirho-list-field";
 
 		public ListControl Control { get; private set; }
 
