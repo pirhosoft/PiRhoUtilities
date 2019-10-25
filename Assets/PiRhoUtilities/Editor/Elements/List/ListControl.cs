@@ -4,26 +4,25 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class ListControl : RolloutControl
 	{
-		public new const string Stylesheet = "List/ListStyle.uss";
-
 		#region Class Names
 
-		public new static readonly string UssClassName = "pirho-list";
-		public static readonly string EmptyUssClassName = UssClassName + "--empty";
-		public static readonly string AddDisabledUssClassName = UssClassName + "--add-disabled";
-		public static readonly string RemoveDisabledUssClassName = UssClassName + "--remove-disabled";
-		public static readonly string MoveDisabledUssClassName = UssClassName + "--move-disabled";
-		public static readonly string EmptyLabelUssClassName = UssClassName + "__empty-label";
-		public static readonly string ItemsUssClassName = UssClassName + "__items";
-		public static readonly string AddButtonUssClassName = UssClassName + "__add-button";
-		public static readonly string RemoveButtonUssClassName = UssClassName + "__remove-button";
-		public static readonly string DragHandleUssClassName = UssClassName + "__drag-handle";
-		public static readonly string DragPlaceholderUssClassName = UssClassName + "__drag-placeholder";
-		public static readonly string ItemUssClassName = UssClassName + "__item";
-		public static readonly string ItemDraggingUssClassName = ItemUssClassName + "--dragging";
-		public static readonly string ItemEvenUssClassName = ItemUssClassName + "--even";
-		public static readonly string ItemOddUssClassName = ItemUssClassName + "--odd";
-		public static readonly string ItemContentUssClassName = ItemUssClassName + "__content";
+		public new const string Stylesheet = "List/ListStyle.uss";
+		public new const string UssClassName = "pirho-list";
+		public const string EmptyUssClassName = UssClassName + "--empty";
+		public const string AddDisabledUssClassName = UssClassName + "--add-disabled";
+		public const string RemoveDisabledUssClassName = UssClassName + "--remove-disabled";
+		public const string MoveDisabledUssClassName = UssClassName + "--move-disabled";
+		public const string EmptyLabelUssClassName = UssClassName + "__empty-label";
+		public const string ItemsUssClassName = UssClassName + "__items";
+		public const string AddButtonUssClassName = UssClassName + "__add-button";
+		public const string RemoveButtonUssClassName = UssClassName + "__remove-button";
+		public const string DragHandleUssClassName = UssClassName + "__drag-handle";
+		public const string DragPlaceholderUssClassName = UssClassName + "__drag-placeholder";
+		public const string ItemUssClassName = UssClassName + "__item";
+		public const string ItemDraggingUssClassName = ItemUssClassName + "--dragging";
+		public const string ItemEvenUssClassName = ItemUssClassName + "--even";
+		public const string ItemOddUssClassName = ItemUssClassName + "--odd";
+		public const string ItemContentUssClassName = ItemUssClassName + "__content";
 
 		#endregion
 

@@ -9,9 +9,9 @@ namespace PiRhoSoft.Utilities.Editor
 		private const string _invalidTypeWarning = "(PUEBCIT) failed to set value on EnumButtonsControl: attempted to set value '{0}' of enum '{1}' but the control is using enum type '{2}'";
 
 		public const string Stylesheet = "EnumButtons/EnumButtonsStyle.uss";
-		public static readonly string UssClassName = "pirho-enum-buttons";
-		public static readonly string ButtonUssClassName = UssClassName + "__button";
-		public static readonly string ActiveButtonUssClassName = ButtonUssClassName + "--active";
+		public const string UssClassName = "pirho-enum-buttons";
+		public const string ButtonUssClassName = UssClassName + "__button";
+		public const string ActiveButtonUssClassName = ButtonUssClassName + "--active";
 
 		public Enum Value { get; private set; }
 		public Type Type { get; private set; }

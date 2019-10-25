@@ -6,9 +6,9 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class EulerField : BaseField<Quaternion>
 	{
-		public static readonly string UssClassName = "pirho-euler-field";
-		public static readonly string LabelUssClassName = UssClassName + "__label";
-		public static readonly string InputUssClassName = UssClassName + "__input";
+		public const string UssClassName = "pirho-euler-field";
+		public const string LabelUssClassName = UssClassName + "__label";
+		public const string InputUssClassName = UssClassName + "__input";
 
 		public EulerControl Control { get; private set; }
 

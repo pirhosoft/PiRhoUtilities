@@ -7,8 +7,8 @@ namespace PiRhoSoft.Utilities.Editor
 	public class EulerControl : VisualElement
 	{
 		public const string Stylesheet = "Euler/EulerStyle.uss";
-		public static readonly string UssClassName = "pirho-euler";
-		public static readonly string Vector3UssClassName = UssClassName + "__vector-3";
+		public const string UssClassName = "pirho-euler";
+		public const string Vector3UssClassName = UssClassName + "__vector-3";
 
 		public Quaternion Value => Quaternion.Euler(Field.value);
 		public Vector3Field Field { get; private set; }

@@ -7,9 +7,9 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class EnumButtonsField : BaseField<Enum>
 	{
-		public static readonly string UssClassName = "pirho-enum-buttons-field";
-		public static readonly string LabelUssClassName = UssClassName + "__label";
-		public static readonly string InputUssClassName = UssClassName + "__input";
+		public const string UssClassName = "pirho-enum-buttons-field";
+		public const string LabelUssClassName = UssClassName + "__label";
+		public const string InputUssClassName = UssClassName + "__input";
 
 		public EnumButtonsControl Control { get; private set; }
 

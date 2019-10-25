@@ -7,9 +7,9 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public abstract class SliderBaseField<ValueType> : BaseField<ValueType>
 	{
-		public static readonly string UssClassName = "pirho-slider-field";
-		public static readonly string LabelUssClassName = UssClassName + "__label";
-		public static readonly string InputUssClassName = UssClassName + "__input";
+		public const string UssClassName = "pirho-slider-field";
+		public const string LabelUssClassName = UssClassName + "__label";
+		public const string InputUssClassName = UssClassName + "__input";
 
 		public BaseSliderControl<ValueType> Control { get; protected set; }
 

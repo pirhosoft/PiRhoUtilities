@@ -5,7 +5,7 @@ namespace PiRhoSoft.Utilities.Editor
 	public class PlaceholderControl : Label
 	{
 		public const string Stylesheet = "Placeholder/PlaceholderStyle.uss";
-		public static readonly string UssClassName = "pirho-placeholder";
+		public const string UssClassName = "pirho-placeholder";
 
 		public PlaceholderControl(string text)
 		{
