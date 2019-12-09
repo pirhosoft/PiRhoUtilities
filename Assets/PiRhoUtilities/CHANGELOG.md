@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed Placeholders with delayed TextFields
 - Fixed ComboBox styling
 - Fixed Foldout icon on high DPI monitors
+- Fixed Samples.meta warning when installing package via git
 
 ## [1.1.1] - 2019-10-24
 ### Added
