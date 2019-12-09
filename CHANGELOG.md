@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.0] - 2019-12-?
 ### Added
 - Added the ability to specify a method, property, or field as the values and options for PopupAttribute
+- Added Tests
 ### Changed
 - Fixed situations for multiple attributes where callbacks on private properties would throw a null reference
 - Fixed Placeholders with delayed TextFields
