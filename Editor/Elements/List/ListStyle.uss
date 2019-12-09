@@ -115,3 +115,9 @@
 	flex-grow: 1;
 	flex-shrink: 1;
 }
+
+.pirho-list__item .unity-foldout
+{
+	margin-left: 15px;
+	margin-top: 2px;
+}

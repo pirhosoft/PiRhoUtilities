@@ -10,14 +10,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 ### Changed
 
-## [1.1.1] - 2010-10-24
+## [1.2.0] - 2019-12-?
+### Added
+- Added the ability to specify a method, property, or field as the values and options for PopupAttribute
+### Changed
+- Fixed situations for multiple attributes where callbacks on private properties would throw a null reference
+- Fixed Placeholders with delayed TextFields
+- Fixed ComboBox styling
+- Fixed Foldout icon on high DPI monitors
+
+## [1.1.1] - 2019-10-24
 ### Added
 - Added an generic extension method for SetLabel on BaseField
 ### Changed
 - Make it so SerializedDictionary lists stay in memory during runtime so that they can be accessed by serialized properties
 - Changed so the ConfigureProperty call automatically gets the tooltip instead of having to pass it in
 
-## [1.1.0] - 2010-10-23
+## [1.1.0] - 2019-10-23
 ### Added
 - Added a NoLabel attribute which removes the label from a BaseField<> or PropertyField
 - Added SerializedProperty constructors for each of the controls so that they can be created and automatically be bound to properties

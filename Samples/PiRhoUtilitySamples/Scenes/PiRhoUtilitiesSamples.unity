@@ -214,6 +214,9 @@ MonoBehaviour:
   IntPopup: 0
   FloatPopup: 0
   StringPopup: 
+  DynamicIntPopup: 0
+  DynamicFloatPopup: 0
+  DynamicStringPopup: 
   ComboBox: 
   Euler: {x: 0, y: 0, z: 0, w: 0}
   Buttons: 0
@@ -322,7 +325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   List:
-    _items: 0000000000000000000000000000000000000000
+    _items: 0400000000000000010000000000000000000000
   Array:
     _items:
     - 0
@@ -330,8 +333,27 @@ MonoBehaviour:
     - 0
     - 0
   Dictionary:
-    _keys: []
-    _values: []
+    _keys:
+    - Hello
+    - Work
+    _values:
+    - 
+    - 
+  ClassList:
+    _keys:
+    - Hello
+    - Food
+    - What
+    - Odd
+    _values:
+    - First: 0
+      Second: 
+    - First: 0
+      Second: 
+    - First: 0
+      Second: 
+    - First: 0
+      Second: 
 --- !u!1 &1714043357
 GameObject:
   m_ObjectHideFlags: 0

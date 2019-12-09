@@ -9,6 +9,8 @@ namespace PiRhoSoft.Utilities
 		[Serializable] public class TestList : SerializedList<int> { }
 		[Serializable] public class TestArray : SerializedArray<float> { public TestArray(int count) : base(count) { } }
 		[Serializable] public class TestDictionary : SerializedDictionary<string, string> { }
+		[Serializable] public class TestClass { public int First; public string Second; }
+		[Serializable] public class TestClassDictionary : SerializedDictionary<string, TestClass> { }
 
 		[Tooltip("A test list with a max of 5 items")]
 		[List(AllowAdd = nameof(ListCanAdd))]
@@ -24,6 +26,10 @@ namespace PiRhoSoft.Utilities
 		[Dictionary(AddCallback = nameof(DictionaryItemAdded), RemoveCallback = nameof(DictionaryItemRemoved))]
 		[Stretch]
 		public TestDictionary Dictionary;
+
+		[Tooltip("A test dictionary with an inline class")]
+		[Dictionary]
+		public TestClassDictionary ClassDictionary;
 
 		private bool ListCanAdd()
 		{

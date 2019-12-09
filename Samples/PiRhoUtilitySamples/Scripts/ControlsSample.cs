@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace PiRhoSoft.Utilities
@@ -33,6 +34,15 @@ namespace PiRhoSoft.Utilities
 		[Popup(new string[] { "", "Hello", "Hola", "Bonjour" })]
 		public string StringPopup;
 
+		[Popup(nameof(IntValues))]
+		public int DynamicIntPopup;
+
+		[Popup(nameof(FloatValues))]
+		public float DynamicFloatPopup;
+
+		[Popup(nameof(StringValues))]
+		public string DynamicStringPopup;
+
 		[ComboBox(new string[] { "One Fish", "Two Fish", "Red Fish", "Blue Fish" })]
 		public string ComboBox;
 
@@ -50,5 +60,9 @@ namespace PiRhoSoft.Utilities
 
 		[Slider(0, 10)]
 		public Vector2 MinMaxSlider;
+
+		private List<int> IntValues { get => new List<int> { 0, 1, 2, 3, 4 }; }
+		private List<float> FloatValues() => new List<float> { 0, 0.1f, 0.4f, 0.8f, 1.6f };
+		private List<string> StringValues = new List<string> { "", "Hello", "Hola", "Bonjour" };
 	}
 }
