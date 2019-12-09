@@ -7,11 +7,15 @@ namespace PiRhoSoft.Utilities
 	{
 		public List<int> IntValues { get; private set; }
 		public List<float> FloatValues { get; private set; }
+		public List<string> StringValues { get; private set; }
 		public List<string> Options { get; private set; }
+		public string ValuesMethod { get; private set; }
+		public string OptionsMethod { get; private set; }
 
-		public PopupAttribute(string[] options) : base(ContainerPhase, 0)
+		public PopupAttribute(string[] values, string[] options = null) : base(ContainerPhase, 0)
 		{
-			Options = options.ToList();
+			StringValues = values.ToList();
+			Options = options?.ToList();
 		}
 
 		public PopupAttribute(int[] values, string[] options = null) : base(ContainerPhase, 0)
@@ -24,6 +28,12 @@ namespace PiRhoSoft.Utilities
 		{
 			FloatValues = values.ToList();
 			Options = options?.ToList();
+		}
+
+		public PopupAttribute(string valuesMethod, string optionsMethod = null) : base(ContainerPhase, 0)
+		{
+			ValuesMethod = valuesMethod;
+			OptionsMethod = optionsMethod;
 		}
 	}
 }

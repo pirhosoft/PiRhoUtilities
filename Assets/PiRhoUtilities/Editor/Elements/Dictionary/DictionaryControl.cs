@@ -13,6 +13,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string AddDisabledUssClassName = UssClassName + "--add-disabled";
 		public const string RemoveDisabledUssClassName = UssClassName + "--remove-disabled";
 		public const string MoveDisabledUssClassName = UssClassName + "--move-disabled";
+		public const string AddKeyValidUssClassName = UssClassName + "--add-key-valid";
 		public const string AddKeyInvalidUssClassName = UssClassName + "--add-key-invalid";
 		public const string EmptyLabelUssClassName = UssClassName + "__empty-label";
 		public const string ItemsUssClassName = UssClassName + "__items";
@@ -166,9 +167,11 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void AddKeyChanged(string newValue)
 		{
-			// Separately check for empty because we don't want empty to be addable but we also don't want it be show as invalid
-			var valid = IsKeyValid(newValue) || string.IsNullOrEmpty(newValue);
+			// Separately check for empty because we don't want empty to be addable but we also don't want it be shown as invalid
+			var empty = string.IsNullOrEmpty(newValue);
+			var valid = IsKeyValid(newValue) || empty;
 			EnableInClassList(AddKeyInvalidUssClassName, !valid);
+			EnableInClassList(AddKeyValidUssClassName, valid && !empty);
 			_addButton.SetEnabled(valid && !string.IsNullOrEmpty(newValue));
 		}
 

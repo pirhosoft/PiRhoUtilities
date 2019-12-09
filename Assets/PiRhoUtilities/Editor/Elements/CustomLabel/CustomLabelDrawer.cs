@@ -66,7 +66,7 @@ namespace PiRhoSoft.Utilities.Editor
 					if (prop.PropertyType != typeof(string) || !prop.CanRead)
 						Debug.LogWarningFormat(_invalidPropertyReturnWarning, property.propertyPath, labelAttribute.Resolve, property.type);
 					else
-						return (string)prop.GetValue(prop.GetGetMethod().IsStatic ? null : property.GetOwner<object>());
+						return (string)prop.GetValue(prop.GetGetMethod(true).IsStatic ? null : property.GetOwner<object>());
 				}
 				else
 				{

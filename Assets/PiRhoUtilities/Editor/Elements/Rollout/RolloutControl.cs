@@ -1,4 +1,4 @@
-﻿using UnityEngine.UIElements;
+﻿using UnityEngine;
 
 namespace PiRhoSoft.Utilities.Editor
 {
@@ -13,8 +13,11 @@ namespace PiRhoSoft.Utilities.Editor
 		public static readonly Icon ExpandedIcon = Icon.Expanded;
 		public static readonly Icon CollapsedIcon = Icon.Collapsed;
 
+		private Texture _iconTexture => IsExpanded ? ExpandedIcon.Texture : CollapsedIcon.Texture;
+		private string _tooltip => IsExpanded ? "Collapse this view" : "Expand this view";
+
 		private bool _isExpanded;
-		private Image _icon;
+		private IconButton _icon;
 
 		public bool IsExpanded
 		{
@@ -35,10 +38,10 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			_isExpanded = isExpanded;
 
+			Setup();
+
 			AddToClassList(UssClassName);
 			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
-
-			Setup();
 		}
 
 		public void SetValueWithoutNotify(bool isExpanded)
@@ -52,21 +55,18 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void Setup()
 		{
-			_icon = new Image();
+			_icon = new IconButton(_iconTexture, _tooltip, () => IsExpanded = !IsExpanded);
 			_icon.AddToClassList(IconUssClassName);
-			_icon.style.width = ExpandedIcon.Texture.width;
-			_icon.style.height = ExpandedIcon.Texture.height;
-			_icon.AddManipulator(new Clickable(() => IsExpanded = !IsExpanded));
 
-			Header.Add(_icon);
-			_icon.PlaceBehind(Label);
+			Header.Insert(0, _icon);
 
 			Refresh();
 		}
 
 		private void Refresh()
 		{
-			_icon.image = IsExpanded ? ExpandedIcon.Texture : CollapsedIcon.Texture;
+			_icon.image = _iconTexture;
+			_icon.tooltip = _tooltip;
 
 			EnableInClassList(ExpandedUssClassName, IsExpanded);
 			EnableInClassList(CollapsedUssClassName, !IsExpanded);
