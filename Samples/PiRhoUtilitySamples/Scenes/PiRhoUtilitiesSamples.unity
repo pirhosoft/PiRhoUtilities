@@ -437,8 +437,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c7b0193cbd3304eaf76d89ef6aa877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Int1: 1
-  Float1: 1
+  Int1: 0
+  Float1: 0
   Float2: 0
   Bool1: 0
   Bool2: 0
@@ -449,7 +449,7 @@ MonoBehaviour:
   Second1: 1
   Third1: 1
   Second2: 0
-  First4: 5
+  First4: 13
   Third2: 0
   Third3: 0
 --- !u!1 &2127791320
