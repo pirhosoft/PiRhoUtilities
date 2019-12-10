@@ -14,7 +14,6 @@ namespace PiRhoSoft.Utilities
 
 		[Tooltip("A test list with a max of 5 items")]
 		[List(AllowAdd = nameof(ListCanAdd))]
-		[Slider(0, 10)]
 		public TestList List;
 
 		[Tooltip("A 4 item test array")]
