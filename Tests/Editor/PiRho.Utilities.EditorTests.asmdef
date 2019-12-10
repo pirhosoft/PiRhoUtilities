@@ -4,10 +4,23 @@
         "GUID:3715f24fc38286044b48d4ff45a54a39",
         "GUID:e9f8ee77fa5328c449d211d7bc75379b"
     ],
-    "includePlatforms": [],
-    "excludePlatforms": [
-        "Editor"
+    "includePlatforms": [
+        "Android",
+        "iOS",
+        "LinuxStandalone64",
+        "Lumin",
+        "macOSStandalone",
+        "PS4",
+        "Stadia",
+        "Switch",
+        "tvOS",
+        "WSA",
+        "WebGL",
+        "WindowsStandalone32",
+        "WindowsStandalone64",
+        "XboxOne"
     ],
+    "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],

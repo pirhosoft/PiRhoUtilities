@@ -211,6 +211,9 @@ MonoBehaviour:
   Scene:
     m_AssetGUID: 
     m_SubObjectName: 
+  Asset:
+    m_AssetGUID: 
+    m_SubObjectName: 
   IntPopup: 0
   FloatPopup: 0
   StringPopup: 
@@ -333,15 +336,20 @@ MonoBehaviour:
     - 0
     - 0
   Dictionary:
-    _keys:
-    - Hello
-    - Work
-    _values:
-    - 
-    - 
-  ClassDictionary:
     _keys: []
     _values: []
+  ClassDictionary:
+    _keys:
+    - Hello
+    - Why
+    - Work
+    _values:
+    - First: 12
+      Second: Hello
+    - First: 0
+      Second: 
+    - First: 0
+      Second: 
 --- !u!1 &1714043357
 GameObject:
   m_ObjectHideFlags: 0
