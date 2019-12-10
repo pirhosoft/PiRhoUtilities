@@ -18,7 +18,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public Type Type { get; private set; }
 
-		private IconButton _inspect;
+		private readonly IconButton _inspect;
 
 		public ObjectPickerControl(Object value, Object owner, Type type)
 		{

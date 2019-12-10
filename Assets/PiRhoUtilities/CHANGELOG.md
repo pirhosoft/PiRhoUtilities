@@ -14,8 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added the ability to specify a method, property, or field as the values and options for PopupAttribute
 - Added Test Assemblies
-- Added TabsAttribute
+- Added TabsAttribute and corresponding control to show and hide fields via tabs groups
+- Added AssetReferenceAttribute to show a search of all addressable assets based on type
 ### Changed
+- Updated to Addressables package 1.4.0
 - Fixed situations for multiple attributes where callbacks on private properties would throw a null reference
 - Fixed Placeholders with delayed TextFields
 - Fixed ComboBox styling

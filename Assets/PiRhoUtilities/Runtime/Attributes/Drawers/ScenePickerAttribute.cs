@@ -8,7 +8,7 @@
 		{
 		}
 
-		public ScenePickerAttribute(string createMethod) : base(ContainerPhase, 0)
+		public ScenePickerAttribute(string createMethod) : base(FieldPhase, 0)
 		{
 			CreateMethod = createMethod;
 		}

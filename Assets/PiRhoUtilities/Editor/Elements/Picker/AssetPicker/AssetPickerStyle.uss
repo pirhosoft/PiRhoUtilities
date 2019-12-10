@@ -1,0 +1,18 @@
+﻿.pirho-asset-picker
+{
+}
+
+.pirho-asset-picker__load
+{
+	min-width: 17px;
+	max-width: 17px;
+	min-height: 15px;
+	max-height: 15px;
+	margin-left: 2px;
+}
+
+.pirho-asset-picker__create
+{
+	margin-left: 2px;
+	margin-bottom: 2px;
+}

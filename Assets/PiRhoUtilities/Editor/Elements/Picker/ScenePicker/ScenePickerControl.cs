@@ -19,10 +19,9 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string LoadUssClassName = UssClassName + "__load";
 		public const string CreateUssClassName = UssClassName + "__create";
 
-		private IconButton _load;
-		private IconButton _create;
-
-		private MessageBox _buildWarning;
+		private readonly IconButton _load;
+		private readonly IconButton _create;
+		private readonly MessageBox _buildWarning;
 
 		public ScenePickerControl(AssetReference value, Action onCreate)
 		{

@@ -7,7 +7,7 @@
 	"keywords": [ "editor utilities" ],
 	"category": "Editory Utilities",
 	"dependencies": {
-		"com.unity.addressables": "1.2.4"
+		"com.unity.addressables": "1.4.0"
 	},
 	"samples": [
 		{
