@@ -6,9 +6,6 @@
 	"description": "A suite of UIElement based attributes, drawers, and controls to expedite the creation of object inspectors without the need of additional custom editors",
 	"keywords": [ "editor utilities" ],
 	"category": "Editory Utilities",
-	"dependencies": {
-		"com.unity.addressables": "1.2.4"
-	},
 	"samples": [
 		{
 			"displayName": "PiRhoUtility Samples",

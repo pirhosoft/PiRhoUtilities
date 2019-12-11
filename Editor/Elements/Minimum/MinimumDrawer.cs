@@ -13,8 +13,8 @@ namespace PiRhoSoft.Utilities.Editor
 		private const string _missingCompareWarning = "(PUMNDMC) invalid method, field, or property for MinimumAttribute on field '{0}': '{1}' could not be found on type '{2}'";
 		private const string _invalidMethodReturnWarning = "(PUMNIMR) invalid method for MinimumAttribute on field '{0}': the method '{1}' should return a '{2}'";
 		private const string _invalidMethodParametersWarning = "(PUMNIMP) invalid method for MinimumAttribute on field '{0}': the method '{1}' should take no parameters";
-		private const string _invalidFieldReturnWarning = "(PUMNIFR) invalid field for MinimumAttribute on field '{0}': the method '{1}' should return an {2}";
-		private const string _invalidPropertyReturnWarning = "(PUMNIPR) invalid property for MinimumAttribute on field '{0}': the method '{1}' should return an {2}";
+		private const string _invalidFieldReturnWarning = "(PUMNIFR) invalid field for MinimumAttribute on field '{0}': the method '{1}' should be a {2}";
+		private const string _invalidPropertyReturnWarning = "(PUMNIPR) invalid property for MinimumAttribute on field '{0}': the method '{1}' should be a {2}";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -84,7 +84,7 @@ namespace PiRhoSoft.Utilities.Editor
 					if (prop.PropertyType != typeof(FieldType) || !prop.CanRead)
 						Debug.LogWarningFormat(_invalidPropertyReturnWarning, property.propertyPath, minimumAttribute.Compare, property.type);
 					else
-						return () => (FieldType)prop.GetValue(prop.GetGetMethod().IsStatic ? null : property.GetOwner<object>());
+						return () => (FieldType)prop.GetValue(prop.GetGetMethod(true).IsStatic ? null : property.GetOwner<object>());
 				}
 				else
 				{

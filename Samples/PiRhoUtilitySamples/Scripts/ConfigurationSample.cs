@@ -22,6 +22,7 @@ namespace PiRhoSoft.Utilities
 		public string Placeholder;
 
 		[ChangeTrigger(nameof(Changed))]
+		[Placeholder("validates on enter")]
 		[Delay]
 		public string DelayValidation;
 		private void Changed() => Debug.Log("Changed", this);

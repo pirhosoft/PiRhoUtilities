@@ -269,7 +269,7 @@ namespace PiRhoSoft.Utilities.Editor
 					if (prop.PropertyType != typeof(FieldType) || !prop.CanRead)
 						Debug.LogWarningFormat(_invalidPropertyReturnWarning, property.propertyPath, snapAttribute.Snap, property.type);
 					else
-						return () => (FieldType)prop.GetValue(prop.GetGetMethod().IsStatic ? null : property.GetOwner<object>());
+						return () => (FieldType)prop.GetValue(prop.GetGetMethod(true).IsStatic ? null : property.GetOwner<object>());
 				}
 				else
 				{

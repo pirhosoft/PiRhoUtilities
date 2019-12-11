@@ -207,13 +207,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 
-  GameObject: {fileID: 0}
-  Scene:
-    m_AssetGUID: 
-    m_SubObjectName: 
+  GameObject: {fileID: 124499908}
   IntPopup: 0
-  FloatPopup: 0
+  FloatPopup: 0.4
   StringPopup: 
+  DynamicIntPopup: 0
+  DynamicFloatPopup: 0
+  DynamicStringPopup: 
   ComboBox: 
   Euler: {x: 0, y: 0, z: 0, w: 0}
   Buttons: 0
@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   List:
-    _items: 0000000000000000000000000000000000000000
+    _items: 0400000000000000010000000000000000000000
   Array:
     _items:
     - 0
@@ -330,6 +330,9 @@ MonoBehaviour:
     - 0
     - 0
   Dictionary:
+    _keys: []
+    _values: []
+  ClassDictionary:
     _keys: []
     _values: []
 --- !u!1 &1714043357
@@ -433,6 +436,15 @@ MonoBehaviour:
   Bool1: 0
   Bool2: 0
   Int2: 0
+  First1: 10
+  First2: 0
+  First3: 1
+  Second1: 1
+  Third1: 1
+  Second2: 0
+  First4: 13
+  Third2: 0
+  Third3: 0
 --- !u!1 &2127791320
 GameObject:
   m_ObjectHideFlags: 0
@@ -483,8 +495,8 @@ MonoBehaviour:
     String: 
   Rollout:
     Bool: 0
-    Int: 0
-    Float: 0
+    Int: 15
+    Float: 10
     String: 
   Wrapper:
-    Value: 0
+    Value: 15

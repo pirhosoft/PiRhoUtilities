@@ -4,11 +4,28 @@
 
 .pirho-rollout__icon
 {
+	min-width: 13px;
+	max-width: 13px;
+	min-height: 13px;
+	max-height: 13px;
 	margin-right: 5px;
 	align-self: center;
+	--unity-image-tint-color: #E0E0E0;
 }
 
 .pirho-rollout--collapsed .pirho-frame__content
 {
 	display: none;
+}
+
+.pirho-icon-button.pirho-rollout__icon:hover
+{
+	background-color: rgba(0, 0, 0, 0);
+	--unity-image-tint-color: #FFFFFF;
+}
+
+.pirho-icon-button.pirho-rollout__icon:active
+{
+	background-color: rgba(0, 0, 0, 0);
+	--unity-image-tint-color: #6B6B6B;
 }

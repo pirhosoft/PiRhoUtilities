@@ -22,8 +22,9 @@ namespace PiRhoSoft.Utilities.Editor
 
 	public class AssetHelper : AssetPostprocessor
 	{
-		private static Dictionary<string, AssetList> _assetLists = new Dictionary<string, AssetList>();
 		private const string _invalidPathError = "(UAHIP) failed to create asset at path {0}: the path must be inside the 'Assets' folder for this project";
+
+		private static readonly Dictionary<string, AssetList> _assetLists = new Dictionary<string, AssetList>();
 
 		static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
 		{
