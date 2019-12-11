@@ -207,13 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 
-  GameObject: {fileID: 0}
-  Scene:
-    m_AssetGUID: 
-    m_SubObjectName: 
-  Asset:
-    m_AssetGUID: 
-    m_SubObjectName: 
+  GameObject: {fileID: 124499908}
   IntPopup: 0
   FloatPopup: 0
   StringPopup: 
