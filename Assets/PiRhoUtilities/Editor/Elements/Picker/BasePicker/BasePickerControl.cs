@@ -1,4 +1,5 @@
 ﻿using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -16,12 +17,14 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private Image _icon;
 		private TextElement _label;
+		private VisualElement _arrow;
 
 		protected void Setup<PickerType>(PickerProvider<PickerType> provider, ValueType value) where PickerType : class
 		{
 			var button = new Button();
 			button.AddToClassList(ButtonUssClassName);
-			button.clickable.clicked += () => SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(new Vector2(button.worldBound.center.x, button.worldBound.yMax + button.worldBound.height * 0.5f)), button.worldBound.width), provider);
+			button.AddToClassList(BasePopupField<ValueType, ValueType>.inputUssClassName);
+			button.clickable.clicked += () => SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(new Vector2(button.worldBound.center.x, button.worldBound.yMax + button.worldBound.height - 4)), button.worldBound.width), provider);
 			// this position to open isn't perfect because they positioned the search window origin from the middle of it's search box instead of the top like a sane person.
 
 			_icon = new Image();
@@ -30,8 +33,12 @@ namespace PiRhoSoft.Utilities.Editor
 			_label = new TextElement();
 			_label.AddToClassList(LabelUssClassName);
 
+			_arrow = new VisualElement();
+			_arrow.AddToClassList(BasePopupField<ValueType, ValueType>.arrowUssClassName);
+
 			button.Add(_icon);
 			button.Add(_label);
+			button.Add(_arrow);
 
 			Add(button);
 			SetValueWithoutNotify(value);

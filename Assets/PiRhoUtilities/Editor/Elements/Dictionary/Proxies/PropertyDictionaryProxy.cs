@@ -16,9 +16,9 @@ namespace PiRhoSoft.Utilities.Editor
 		public Action<string> ReorderCallback;
 
 		private SerializedProperty _property;
-		private SerializedProperty _keysProperty;
-		private SerializedProperty _valuesProperty;
-		private PropertyDrawer _drawer;
+		private readonly SerializedProperty _keysProperty;
+		private readonly SerializedProperty _valuesProperty;
+		private readonly PropertyDrawer _drawer;
 
 		public int KeyCount => _keysProperty.arraySize;
 
@@ -54,12 +54,14 @@ namespace PiRhoSoft.Utilities.Editor
 
 			field.userData = index;
 			field.Bind(_property.serializedObject);
-			
+
 			if (field is PropertyField propertyField)
 				propertyField.SetLabel(key.stringValue);
 			else if (field is FieldContainer fieldContainer)
 				fieldContainer.SetLabel(key.stringValue);
-			if (field.GetType().InheritsGeneric(typeof(BaseField<>)))
+			else if (field is Foldout foldout)
+				foldout.text = key.stringValue;
+			else if (field.GetType().InheritsGeneric(typeof(BaseField<>)))
 				BaseFieldExtensions.SetLabel(field, key.stringValue);
 
 			return field;

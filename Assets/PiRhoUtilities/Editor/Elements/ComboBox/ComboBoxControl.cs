@@ -51,11 +51,15 @@ namespace PiRhoSoft.Utilities.Editor
 
 			var enabled = Options.Count > 0;
 
+			var arrow = new VisualElement();
+			arrow.AddToClassList(BasePopupField<string, string>.arrowUssClassName);
+
 			_dropdownButton = new VisualElement { tooltip = enabled ? "Show the combo box options" : "No preset options available" };
 			_dropdownButton.AddToClassList(BasePopupField<string, string>.inputUssClassName);
 			_dropdownButton.AddToClassList(ButtonUssClassName);
 			_dropdownButton.AddManipulator(new Clickable(OpenDropdown));
 			_dropdownButton.SetEnabled(enabled);
+			_dropdownButton.Add(arrow);
 
 			_menu = new GenericMenu();
 

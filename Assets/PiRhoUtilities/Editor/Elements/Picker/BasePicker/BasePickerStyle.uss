@@ -9,25 +9,25 @@
 
 .pirho-base-picker__button
 {
-	flex-direction: row;
-	justify-content: center;
 	flex-grow: 1;
 	flex-shrink: 1;
 	margin: 0;
-	padding: 2px 5px;
+	padding: 0px 3px 1px 3px;
 }
 
 .pirho-base-picker__button__icon
 {
-	min-height: 14px;
-	max-height: 14px;
-	min-width: 14px;
-	max-width: 14px;
-	margin: 2px 5px 2px 0;
+	min-height: 12px;
+	max-height: 12px;
+	min-width: 12px;
+	max-width: 12px;
+	margin: 1px 5px 0px 0px;
+	align-self: center;
 }
 
 .pirho-base-picker__button__label
 {
+	flex-grow: 1;
 	margin-top: 1px;
-	margin-bottom: 2px;
+	margin-bottom: 0px;
 }

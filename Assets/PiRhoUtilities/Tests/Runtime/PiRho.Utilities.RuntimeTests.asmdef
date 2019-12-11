@@ -1,0 +1,15 @@
+{
+    "name": "PiRho.Utilities.RuntimeTests",
+    "references": [
+        "GUID:3715f24fc38286044b48d4ff45a54a39"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

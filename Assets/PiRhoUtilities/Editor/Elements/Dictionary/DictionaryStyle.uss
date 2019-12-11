@@ -40,7 +40,6 @@
 {
 	display: flex;
 	flex-grow: 1;
-	background-color: #99FF99;
 	margin: 0px;
 	align-self: stretch;
 }
@@ -48,6 +47,11 @@
 .pirho-dictionary--add-disabled .pirho-dictionary__key-text
 {
 	display: none;
+}
+
+.pirho-dictionary--add-key-valid .pirho-dictionary__key-text > .unity-text-field__input
+{
+	background-color: #99FF99;
 }
 
 .pirho-dictionary--add-key-invalid .pirho-dictionary__key-text > .unity-text-field__input
@@ -134,4 +138,10 @@
 {
 	flex-grow: 1;
 	flex-shrink: 1;
+}
+
+.pirho-dictionary__item .unity-foldout
+{
+	margin-left: 15px;
+	margin-top: 2px;
 }

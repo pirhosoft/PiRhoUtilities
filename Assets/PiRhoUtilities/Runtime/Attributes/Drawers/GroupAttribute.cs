@@ -11,7 +11,7 @@
 		public string Name { get; private set; }
 		public GroupStyle Style { get; set; }
 
-		public GroupAttribute(string name) : base(ContainerPhase, 0)
+		public GroupAttribute(string name, int drawOrder = 0) : base(ContainerPhase, drawOrder)
 		{
 			Name = name;
 		}

@@ -13,8 +13,8 @@ namespace PiRhoSoft.Utilities.Editor
 		private const string _missingCompareWarning = "(PUMXDMC) invalid method, field, or property for MaximumAttribute on field '{0}': '{1}' could not be found on type '{2}'";
 		private const string _invalidMethodReturnWarning = "(PUMXIMR) invalid method for MaximumAttribute on field '{0}': the method '{1}' should return a '{2}'";
 		private const string _invalidMethodParametersWarning = "(PUMXIMP) invalid method for MaximumAttribute on field '{0}': the method '{1}' should take no parameters";
-		private const string _invalidFieldReturnWarning = "(PUMXIFR) invalid field for MaximumAttribute on field '{0}': the method '{1}' should return an {2}";
-		private const string _invalidPropertyReturnWarning = "(PUMXIPR) invalid property for MaximumAttribute on field '{0}': the method '{1}' should return an {2}";
+		private const string _invalidFieldReturnWarning = "(PUMXIFR) invalid field for MaximumAttribute on field '{0}': the field '{1}' should be a {2}";
+		private const string _invalidPropertyReturnWarning = "(PUMXIPR) invalid property for MaximumAttribute on field '{0}': the property '{1}' should be a {2}";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -84,7 +84,7 @@ namespace PiRhoSoft.Utilities.Editor
 					if (prop.PropertyType != typeof(FieldType) || !prop.CanRead)
 						Debug.LogWarningFormat(_invalidPropertyReturnWarning, property.propertyPath, maximumAttribute.Compare, property.type);
 					else
-						return () => (FieldType)prop.GetValue(prop.GetGetMethod().IsStatic ? null : property.GetOwner<object>());
+						return () => (FieldType)prop.GetValue(prop.GetGetMethod(true).IsStatic ? null : property.GetOwner<object>());
 				}
 				else
 				{

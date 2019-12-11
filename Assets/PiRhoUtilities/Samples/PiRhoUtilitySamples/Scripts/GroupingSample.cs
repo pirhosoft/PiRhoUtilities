@@ -11,5 +11,15 @@ namespace PiRhoSoft.Utilities
 		[Group("One")] public bool Bool1;
 		[Group("Two")] public bool Bool2;
 		[Group("Two")] public int Int2;
+
+		[Tabs("Tabs", "First")] [Group("Sliders", 1, Style = GroupStyle.Rollout)] [Slider(0, 10)] public int First1;
+		[Tabs("Tabs", "First")] [Group("Sliders", 1, Style = GroupStyle.Rollout)] [Slider(0, 10)] public int First2;
+		[Tabs("Tabs", "First")] [Group("Sliders", 1, Style = GroupStyle.Rollout)] [Slider(0, 10)] public int First3;
+		[Tabs("Tabs", "Second")] public int Second1;
+		[Tabs("Tabs", "Third")] public int Third1;
+		[Tabs("Tabs", "Second")] public int Second2;
+		[Tabs("Tabs", "First")] public int First4;
+		[Tabs("Tabs", "Third")] [Slider(0, 10)] public int Third2;
+		[Tabs("Tabs", "Third")] public int Third3;
 	}
 }
