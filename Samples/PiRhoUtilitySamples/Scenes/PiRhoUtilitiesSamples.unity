@@ -209,7 +209,7 @@ MonoBehaviour:
   Type: 
   GameObject: {fileID: 124499908}
   IntPopup: 0
-  FloatPopup: 0
+  FloatPopup: 0.4
   StringPopup: 
   DynamicIntPopup: 0
   DynamicFloatPopup: 0
