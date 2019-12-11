@@ -1,4 +1,8 @@
-﻿using UnityEngine.UIElements;
+﻿using System;
+using UnityEditor;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
 {
@@ -34,7 +38,10 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#endregion
 
+		private class TypeProvider : PickerProvider<Type> { }
+
 		public IListProxy Proxy { get; private set; }
+		public Type ReferenceType { get; private set; }
 
 		private VisualElement _itemsContainer;
 		private IconButton _addButton;
@@ -45,9 +52,10 @@ namespace PiRhoSoft.Utilities.Editor
 		private VisualElement _dragElement;
 		private VisualElement _dragPlaceholder;
 
-		public ListControl(IListProxy proxy) : base(true)
+		public ListControl(IListProxy proxy, Type referenceType) : base(true)
 		{
 			Proxy = proxy;
+			ReferenceType = referenceType;
 
 			CreateFrame();
 			SetupDragging();
@@ -90,7 +98,9 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			SetLabel(Proxy.Label, Proxy.Tooltip);
 
-			_addButton = AddHeaderButton(_addIcon.Texture, Proxy.AddTooltip, AddButtonUssClassName, AddItem);
+			var addFunction = ReferenceType == null ? (Action)AddItem : (Action)SelectType;
+
+			_addButton = AddHeaderButton(_addIcon.Texture, Proxy.AddTooltip, AddButtonUssClassName, addFunction);
 			_removeButtons = Content.Query<IconButton>(className: RemoveButtonUssClassName).Build();
 
 			var empty = new TextElement { text = Proxy.EmptyLabel, tooltip = Proxy.EmptyTooltip };
@@ -142,6 +152,32 @@ namespace PiRhoSoft.Utilities.Editor
 		#endregion
 
 		#region Item Management
+
+		private void SelectType()
+		{
+			if (Proxy.AllowAdd && Proxy.CanAdd())
+			{
+				var types = TypeHelper.GetTypeList(ReferenceType, false); // TODO: cache and only include Serializable
+				var provider = ScriptableObject.CreateInstance<TypeProvider>();
+				provider.Setup(ReferenceType.Name, types.Paths, types.Types, GetIcon, OnTypeSelected);
+
+				var position = new Vector2(_addButton.worldBound.center.x, _addButton.worldBound.yMax + _addButton.worldBound.height * 0.5f);
+
+				SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(position)), provider);
+			}
+		}
+
+		private Texture GetIcon(Type type)
+		{
+			return AssetPreview.GetMiniTypeThumbnail(type);
+		}
+
+		private void OnTypeSelected(Type selected)
+		{
+			var item = Activator.CreateInstance(selected);
+			Proxy.AddItem(item);
+			Refresh();
+		}
 
 		private void AddItem()
 		{

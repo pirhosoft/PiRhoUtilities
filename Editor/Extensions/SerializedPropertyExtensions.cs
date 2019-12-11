@@ -119,8 +119,9 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				property.ClearArray();
 			}
-			else if (property.hasChildren)
+			else if (property.propertyType != SerializedPropertyType.ManagedReference && property.hasChildren)
 			{
+				// TODO: probably needs to be more robust or the iteration fixed or something
 				var end = property.GetEndProperty();
 				property.NextVisible(true);
 
@@ -159,6 +160,7 @@ namespace PiRhoSoft.Utilities.Editor
 					case SerializedPropertyType.Vector3Int: property.vector3IntValue = default; break;
 					case SerializedPropertyType.RectInt: property.rectIntValue = default; break;
 					case SerializedPropertyType.BoundsInt: property.boundsIntValue = default; break;
+					case SerializedPropertyType.ManagedReference: property.managedReferenceValue = null; break;
 				}
 			}
 		}
@@ -214,6 +216,7 @@ namespace PiRhoSoft.Utilities.Editor
 			// to null instead of removing it. If the entry is already null it will be removed as expected.
 			var item = arrayProperty.GetArrayElementAtIndex(index);
 
+			// TODO: check how this behaves with managedReferenceValue
 			if (item.propertyType == SerializedPropertyType.ObjectReference && item.objectReferenceValue != null)
 				item.objectReferenceValue = null;
 
@@ -285,6 +288,11 @@ namespace PiRhoSoft.Utilities.Editor
 			}
 
 			return obj as T;
+		}
+
+		public static Type GetType(this SerializedProperty property)
+		{
+			return GetObject<object>(property).GetType();
 		}
 
 		private static object GetIndexed(object obj, int index)

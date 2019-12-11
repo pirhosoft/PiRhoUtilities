@@ -87,7 +87,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 
 				// prepend all parent type names up to but not including the root type
-				while (type != rootType)
+				while (type != rootType && type != typeof(object)) // check against object in case rootType is an interface
 				{
 					Path = type.Name + "/" + Path;
 					type = type.BaseType;
