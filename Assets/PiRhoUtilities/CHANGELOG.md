@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 ### Changed
 
-## [1.2.0] - 2019-12-?
+## [1.2.0] - 2019-12-11
 ### Added
 - Added the ability to specify a method, property, or field as the values and options for PopupAttribute
 - Added Test Assemblies
