@@ -16,9 +16,9 @@ namespace PiRhoSoft.Utilities.Editor
 		public Action<string> ReorderCallback;
 
 		private SerializedProperty _property;
-		private SerializedProperty _keysProperty;
-		private SerializedProperty _valuesProperty;
-		private PropertyDrawer _drawer;
+		private readonly SerializedProperty _keysProperty;
+		private readonly SerializedProperty _valuesProperty;
+		private readonly PropertyDrawer _drawer;
 
 		public int KeyCount => _keysProperty.arraySize;
 

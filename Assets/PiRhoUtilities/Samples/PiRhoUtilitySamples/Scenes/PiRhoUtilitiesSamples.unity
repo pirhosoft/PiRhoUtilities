@@ -333,17 +333,8 @@ MonoBehaviour:
     _keys: []
     _values: []
   ClassDictionary:
-    _keys:
-    - Hello
-    - Why
-    - Work
-    _values:
-    - First: 12
-      Second: Hello
-    - First: 0
-      Second: 
-    - First: 0
-      Second: 
+    _keys: []
+    _values: []
 --- !u!1 &1714043357
 GameObject:
   m_ObjectHideFlags: 0
