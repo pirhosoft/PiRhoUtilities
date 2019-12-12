@@ -1,57 +1,141 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
 {
 	public class ComboBoxField : BaseField<string>
 	{
+		public const string Stylesheet = "ComboBox/ComboBoxStyle.uss";
 		public const string UssClassName = "pirho-combo-box-field";
 		public const string LabelUssClassName = UssClassName + "__label";
 		public const string InputUssClassName = UssClassName + "__input";
 
-		public ComboBoxControl Control { get; private set; }
-
-		public ComboBoxField(SerializedProperty property, List<string> options) : this(property.displayName, property.stringValue, options)
+		public bool IsDelayed
 		{
-			this.ConfigureProperty(property);
+			get => _comboBox.TextField.isDelayed;
+			set => _comboBox.TextField.isDelayed = value;
 		}
 
-		public ComboBoxField(string label, string value, List<string> options) : base(label, null)
+		public List<string> Options
 		{
-			Setup(value, options);
+			get => _comboBox.Options;
+			set => _comboBox.Options = value;
 		}
 
-		private void Setup(string value, List<string> options)
+		private readonly ComboBoxControl _comboBox;
+
+		public ComboBoxField(string label) : base(label, null)
 		{
-			Control = new ComboBoxControl(value, options);
-			Control.AddToClassList(InputUssClassName);
-			Control.RegisterCallback<ChangeEvent<string>>(evt => base.value = evt.newValue);
+			_comboBox = new ComboBoxControl();
+			_comboBox.AddToClassList(InputUssClassName);
+			_comboBox.RegisterCallback<ChangeEvent<string>>(evt =>
+			{
+				base.value = evt.newValue;
+				evt.StopImmediatePropagation();
+			});
 
 			labelElement.AddToClassList(LabelUssClassName);
 
-			this.SetVisualInput(Control);
 			AddToClassList(UssClassName);
-			SetValueWithoutNotify(value);
+			this.SetVisualInput(_comboBox);
+			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+		}
+
+		public ComboBoxField(string label, List<string> options) : this(label)
+		{
+			_comboBox.Options = options;
+		}
+
+		public ComboBoxField(List<string> options) : this(null, options)
+		{
 		}
 
 		public override void SetValueWithoutNotify(string newValue)
 		{
 			base.SetValueWithoutNotify(newValue);
-			Control.SetValueWithoutNotify(newValue);
+			_comboBox.SetValueWithoutNotify(newValue);
+		}
+
+		private class ComboBoxControl : VisualElement
+		{
+			public const string InputTextUssClassName = InputUssClassName + "__text";
+			public const string InputButtonUssClassName = InputUssClassName + "__button";
+
+			public TextField TextField { get; private set; }
+
+			private List<string> _options;
+			public List<string> Options
+			{ 
+				get => _options;
+				set
+				{
+					_options = value;
+					_menu = new GenericMenu();
+
+					if (Options != null)
+					{
+						foreach (var option in Options)
+							_menu.AddItem(new GUIContent(option), false, () => SelectItem(option));
+					}
+
+					_dropdownButton.SetEnabled(Options != null && Options.Count > 0);
+				}
+			}
+
+			private readonly VisualElement _dropdownButton;
+
+			private GenericMenu _menu;
+
+			public ComboBoxControl()
+			{
+				TextField = new TextField();
+				TextField.AddToClassList(InputTextUssClassName);
+
+				var arrow = new VisualElement();
+				arrow.AddToClassList(BasePopupField<string, string>.arrowUssClassName);
+
+				_dropdownButton = new VisualElement();
+				_dropdownButton.AddToClassList(BasePopupField<string, string>.inputUssClassName);
+				_dropdownButton.AddToClassList(InputButtonUssClassName);
+				_dropdownButton.AddManipulator(new Clickable(OpenDropdown));
+				_dropdownButton.SetEnabled(false);
+				_dropdownButton.Add(arrow);
+
+				Add(TextField);
+				Add(_dropdownButton);
+			}
+
+			public void SetValueWithoutNotify(string value)
+			{
+				TextField.SetValueWithoutNotify(value);
+			}
+
+			private void OpenDropdown()
+			{
+				_menu?.DropDown(_dropdownButton.worldBound);
+			}
+
+			private void SelectItem(string option)
+			{
+				var previous = TextField.value;
+				SetValueWithoutNotify(option);
+				this.SendChangeEvent(previous, option);
+			}
 		}
 
 		#region UXML Support
 
-		public ComboBoxField() : base(null, null) { }
+		public ComboBoxField() : this(null, null) { }
 
 		public new class UxmlFactory : UxmlFactory<ComboBoxField, UxmlTraits> { }
 
 		public new class UxmlTraits : BaseField<string>.UxmlTraits
 		{
-			private UxmlStringAttributeDescription _options = new UxmlStringAttributeDescription { name = "options", use = UxmlAttributeDescription.Use.Required };
-			private UxmlStringAttributeDescription _value = new UxmlStringAttributeDescription { name = "value" };
+			private readonly UxmlStringAttributeDescription _options = new UxmlStringAttributeDescription { name = "options" };
 
 			public override void Init(VisualElement element, IUxmlAttributes bag, CreationContext cc)
 			{
@@ -59,9 +143,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 				var field = element as ComboBoxField;
 				var options = _options.GetValueFromBag(bag, cc);
-				var value = _value.GetValueFromBag(bag, cc);
 
-				field.Setup(value, options.Split(',').ToList());
+				field.Options = options.Split(',').ToList();
 			}
 		}
 
