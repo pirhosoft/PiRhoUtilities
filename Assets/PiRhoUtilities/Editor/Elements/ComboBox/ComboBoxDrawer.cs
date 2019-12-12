@@ -16,19 +16,17 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
-			var comboBox = attribute as ComboBoxAttribute;
-
 			if (property.propertyType == SerializedPropertyType.String)
 			{
+				var comboBox = attribute as ComboBoxAttribute;
 				var options = GetOptions(property, comboBox.OptionsMethod, comboBox.Options);
 				return new ComboBoxField(options).ConfigureProperty(property);
 			}
 			else
 			{
 				Debug.LogErrorFormat(_invalidTypeError, property.propertyPath);
+				return new FieldContainer(property.displayName);
 			}
-
-			return new FieldContainer(property.displayName);
 		}
 
 		private List<string> GetOptions(SerializedProperty property, string methodName, List<string> defaultValues)

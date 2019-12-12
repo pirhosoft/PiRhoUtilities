@@ -33,17 +33,19 @@ namespace PiRhoSoft.Utilities.Editor
 		public string Message
 		{
 			get	{ return _label.text; }
-			set	{ ((INotifyValueChanged<string>)_label).SetValueWithoutNotify(value); } // Just setting the text property triggers a ChangeEvent which is not desired
+			set	{ ((INotifyValueChanged<string>)_label).SetValueWithoutNotify(value); }
 		}
 
-		private Image _image;
-		private TextElement _label;
+		private readonly Image _image;
+		private readonly TextElement _label;
+
 		private MessageBoxType _type;
 
 		public MessageBox(MessageBoxType type, string message)
 		{
 			_image = new Image();
 			_image.AddToClassList(ImageUssClassName);
+
 			_label = new TextElement();
 			_label.AddToClassList(LabelUssClassName);
 
@@ -64,9 +66,8 @@ namespace PiRhoSoft.Utilities.Editor
 				case MessageBoxType.Info: return Icon.Info.Texture;
 				case MessageBoxType.Warning: return Icon.Warning.Texture;
 				case MessageBoxType.Error: return Icon.Error.Texture;
+				default: return null;
 			}
-
-			return null;
 		}
 	}
 }
