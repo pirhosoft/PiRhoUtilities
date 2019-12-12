@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
 {
-	public class ListControl : RolloutControl
+	public class ListControl : Frame
 	{
 		#region Class Names
 
@@ -52,7 +52,7 @@ namespace PiRhoSoft.Utilities.Editor
 		private VisualElement _dragElement;
 		private VisualElement _dragPlaceholder;
 
-		public ListControl(IListProxy proxy, Type referenceType) : base(true)
+		public ListControl(IListProxy proxy, Type referenceType) : base()
 		{
 			Proxy = proxy;
 			ReferenceType = referenceType;
@@ -96,7 +96,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void CreateFrame()
 		{
-			SetLabel(Proxy.Label, Proxy.Tooltip);
+			Label = Proxy.Label;
+			Tooltip = Proxy.Tooltip;
 
 			var addFunction = ReferenceType == null ? (Action)AddItem : (Action)SelectType;
 

@@ -24,7 +24,10 @@ namespace PiRhoSoft.Utilities
 		[Inline]
 		public Subclass Inline;
 
-		[Rollout]
+		[Frame(IsCollapsable = false)]
+		public Subclass Frame;
+
+		[Frame]
 		public Subclass Rollout;
 
 		[Inline(false)]
