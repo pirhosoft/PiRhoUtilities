@@ -100,22 +100,6 @@ namespace PiRhoSoft.Utilities.Editor
 			_value = value;
 		}
 
-		#region UI
-
-		private void Setup()
-		{
-			AddToClassList(UssClassName);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
-
-			_typeProvider = ScriptableObject.CreateInstance<TypeProvider>();
-
-			_frame = new Frame();
-			_setButton = _frame.AddHeaderButton(_setIcon.Texture, _setButtonLabel, SetButtonUssClassName, SelectType);
-			_clearButton = _frame.AddHeaderButton(_clearIcon.Texture, _clearButtonLabel, ClearButtonUssClassName, SetNull);
-
-			Add(_frame);
-		}
-
 		private void SetLabel(string label)
 		{
 			_label = label;
@@ -153,6 +137,22 @@ namespace PiRhoSoft.Utilities.Editor
 			Rebuild();
 		}
 
+		#region UI
+
+		private void Setup()
+		{
+			AddToClassList(UssClassName);
+			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+
+			_typeProvider = ScriptableObject.CreateInstance<TypeProvider>();
+
+			_frame = new Frame();
+			_setButton = _frame.AddHeaderButton(_setIcon.Texture, _setButtonLabel, SetButtonUssClassName, SelectType);
+			_clearButton = _frame.AddHeaderButton(_clearIcon.Texture, _clearButtonLabel, ClearButtonUssClassName, SetNull);
+
+			Add(_frame);
+		}
+
 		private void Rebuild()
 		{
 			UpdateLabel();
@@ -170,11 +170,9 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			var type = _value?.GetType() ?? _referenceType;
 
-			var label = _label != null && type != null
+			_frame.Label = _label != null && type != null
 				? $"{_label} ({type.Name})"
 				: _label;
-
-			_frame.SetLabel(label);
 
 			EnableInClassList(SetUssClassName, _value != null);
 			EnableInClassList(NullUssClassName, _value == null);
@@ -244,7 +242,7 @@ namespace PiRhoSoft.Utilities.Editor
 					if (Drawer == null)
 						Drawer = new PropertyReferenceDrawer(property, null);
 
-					BindingExtensions.DefaultManagedReferenceBind(this, property, GetReference, SetReference);
+					BindingExtensions.CreateBind(this, property, GetReference, SetReference, CompareReferences);
 				}
 				else
 				{
@@ -255,7 +253,7 @@ namespace PiRhoSoft.Utilities.Editor
 			}
 		}
 
-		private object GetReference(SerializedProperty property)
+		private static object GetReference(SerializedProperty property)
 		{
 			return property.GetObject<object>(); // PENDING: slow but property.managedReferenceValue is write only
 		}
@@ -272,6 +270,12 @@ namespace PiRhoSoft.Utilities.Editor
 			Undo.FlushUndoRecordObjects();
 
 			Rebuild();
+		}
+
+		private static bool CompareReferences(object value, SerializedProperty property, Func<SerializedProperty, object> getter)
+		{
+			var currentValue = getter(property);
+			return ReferenceEquals(value, currentValue);
 		}
 
 		#endregion

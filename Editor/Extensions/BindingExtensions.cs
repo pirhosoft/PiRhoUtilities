@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -22,7 +23,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private const string _serializedObjectBindingName = "SerializedObjectBinding`1";
 		private const string _createBindName = "CreateBind";
-		private static MethodInfo _createBindMethod;
+		private static Type _serializedObjectBindingType;
+		private static Dictionary<Type, MethodInfo> _createBindMethods = new Dictionary<Type, MethodInfo>();
 
 		static BindingExtensions()
 		{
@@ -52,14 +54,29 @@ namespace PiRhoSoft.Utilities.Editor
 			if (_serializedObjectUpdateWrapperType == null || _defaultBindEnumMethod == null)
 				Debug.LogError(_changedInternalsError);
 
-			var serializedObjectBindingType = type?.GetNestedType(_serializedObjectBindingName, BindingFlags.NonPublic);
-			var serializedObjectBindingObjectType = serializedObjectBindingType?.MakeGenericType(typeof(object));
-			_createBindMethod = serializedObjectBindingObjectType?.GetMethod(_createBindName, BindingFlags.Public | BindingFlags.Static); // TODO: check signature
+			_serializedObjectBindingType = type?.GetNestedType(_serializedObjectBindingName, BindingFlags.NonPublic);
+			var serializedObjectBindingObjectType = _serializedObjectBindingType?.MakeGenericType(typeof(object));
+			var createBindMethod = serializedObjectBindingObjectType?.GetMethod(_createBindName, BindingFlags.Public | BindingFlags.Static);
+			
+			// TODO: check CreateBind signature
 		}
 
 		#endregion
 
 		#region Helper Methods
+
+		public static void CreateBind<ValueType>(INotifyValueChanged<ValueType> field, SerializedProperty property, Func<SerializedProperty, ValueType> getter, Action<SerializedProperty, ValueType> setter, Func<ValueType, SerializedProperty, Func<SerializedProperty, ValueType>, bool> comparer)
+		{
+			if (!_createBindMethods.TryGetValue(typeof(ValueType), out var createBindMethod))
+			{
+				var serializedObjectBindingType = _serializedObjectBindingType?.MakeGenericType(typeof(ValueType));
+				createBindMethod = serializedObjectBindingType?.GetMethod(_createBindName, BindingFlags.Public | BindingFlags.Static);
+				_createBindMethods.Add(typeof(ValueType), createBindMethod);
+			}
+
+			var wrapper = Activator.CreateInstance(_serializedObjectUpdateWrapperType, property.serializedObject);
+			createBindMethod.Invoke(null, new object[] { field, wrapper, property, getter, setter, comparer });
+		}
 
 		public static void DefaultEnumBind(INotifyValueChanged<Enum> field, SerializedProperty property)
 		{
@@ -73,25 +90,6 @@ namespace PiRhoSoft.Utilities.Editor
 			Func<Enum, SerializedProperty, Func<SerializedProperty, Enum>, bool> comparer = (v, p, g) => g(p).Equals(v);
 
 			_defaultBindEnumMethod.Invoke(null, new object[] { field, wrapper, property, getter, setter, comparer });
-		}
-
-		public static void DefaultManagedReferenceBind(INotifyValueChanged<object> field, SerializedProperty property, Func<SerializedProperty, object> getter, Action<SerializedProperty, object> setter)
-		{
-			var type = Type.GetType(_typeName);
-			var serializedObjectBindingType = type?.GetNestedType(_serializedObjectBindingName, BindingFlags.NonPublic);
-			var serializedObjectBindingObjectType = serializedObjectBindingType?.MakeGenericType(typeof(object));
-			_createBindMethod = serializedObjectBindingObjectType?.GetMethod(_createBindName, BindingFlags.Public | BindingFlags.Static); // TODO: check signature
-
-			var wrapper = Activator.CreateInstance(_serializedObjectUpdateWrapperType, property.serializedObject);
-			Func<object, SerializedProperty, Func<SerializedProperty, object>, bool> comparer = ManagedReferenceEquals;
-
-			_createBindMethod.Invoke(null, new object[] { field, wrapper, property, getter, setter, comparer });
-		}
-
-		private static bool ManagedReferenceEquals(object value, SerializedProperty property, Func<SerializedProperty, object> getter)
-		{
-			var currentValue = getter(property);
-			return ReferenceEquals(value, currentValue);
 		}
 
 		#endregion

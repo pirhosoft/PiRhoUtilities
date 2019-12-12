@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace PiRhoSoft.Utilities
+﻿namespace PiRhoSoft.Utilities
 {
 	public class ListAttribute : PropertyTraitAttribute
 	{
