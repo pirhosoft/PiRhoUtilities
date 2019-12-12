@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -18,6 +19,10 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private const string _defaultBindName = "DefaultBind";
 		private static MethodInfo _defaultBindEnumMethod;
+
+		private const string _serializedObjectBindingName = "SerializedObjectBinding`1";
+		private const string _createBindName = "CreateBind";
+		private static MethodInfo _createBindMethod;
 
 		static BindingExtensions()
 		{
@@ -46,6 +51,10 @@ namespace PiRhoSoft.Utilities.Editor
 
 			if (_serializedObjectUpdateWrapperType == null || _defaultBindEnumMethod == null)
 				Debug.LogError(_changedInternalsError);
+
+			var serializedObjectBindingType = type?.GetNestedType(_serializedObjectBindingName, BindingFlags.NonPublic);
+			var serializedObjectBindingObjectType = serializedObjectBindingType?.MakeGenericType(typeof(object));
+			_createBindMethod = serializedObjectBindingObjectType?.GetMethod(_createBindName, BindingFlags.Public | BindingFlags.Static); // TODO: check signature
 		}
 
 		#endregion
@@ -64,6 +73,25 @@ namespace PiRhoSoft.Utilities.Editor
 			Func<Enum, SerializedProperty, Func<SerializedProperty, Enum>, bool> comparer = (v, p, g) => g(p).Equals(v);
 
 			_defaultBindEnumMethod.Invoke(null, new object[] { field, wrapper, property, getter, setter, comparer });
+		}
+
+		public static void DefaultManagedReferenceBind(INotifyValueChanged<object> field, SerializedProperty property, Func<SerializedProperty, object> getter, Action<SerializedProperty, object> setter)
+		{
+			var type = Type.GetType(_typeName);
+			var serializedObjectBindingType = type?.GetNestedType(_serializedObjectBindingName, BindingFlags.NonPublic);
+			var serializedObjectBindingObjectType = serializedObjectBindingType?.MakeGenericType(typeof(object));
+			_createBindMethod = serializedObjectBindingObjectType?.GetMethod(_createBindName, BindingFlags.Public | BindingFlags.Static); // TODO: check signature
+
+			var wrapper = Activator.CreateInstance(_serializedObjectUpdateWrapperType, property.serializedObject);
+			Func<object, SerializedProperty, Func<SerializedProperty, object>, bool> comparer = ManagedReferenceEquals;
+
+			_createBindMethod.Invoke(null, new object[] { field, wrapper, property, getter, setter, comparer });
+		}
+
+		private static bool ManagedReferenceEquals(object value, SerializedProperty property, Func<SerializedProperty, object> getter)
+		{
+			var currentValue = getter(property);
+			return ReferenceEquals(value, currentValue);
 		}
 
 		#endregion

@@ -34,6 +34,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 			if (items != null && items.isArray)
 			{
+				var isReference = fieldInfo.FieldType.BaseType.GetGenericTypeDefinition() == typeof(ReferenceList<>);
+				var referenceType = isReference ? fieldInfo.GetFieldType() : null;
 				var listAttribute = attribute as ListAttribute;
 				var parent = property.GetOwner<object>();
 				var proxy = CreateProxy(property.displayName, items, listAttribute);
@@ -99,7 +101,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 
 				var field = new ListField();
-				field.Setup(items, proxy);
+				field.Setup(items, proxy, referenceType);
 
 				return field;
 			}

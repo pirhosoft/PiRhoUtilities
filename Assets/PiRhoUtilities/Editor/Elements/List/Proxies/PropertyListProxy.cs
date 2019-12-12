@@ -73,6 +73,15 @@ namespace PiRhoSoft.Utilities.Editor
 			AddCallback?.Invoke();
 		}
 
+		public void AddItem(object item)
+		{
+			_property.ResizeArray(_property.arraySize + 1);
+			_property.GetArrayElementAtIndex(_property.arraySize - 1).managedReferenceValue = item; // TODO: add an extension for setting the value that works with all property types (similar to SetToDefault)
+			_property.serializedObject.ApplyModifiedProperties();
+
+			AddCallback?.Invoke();
+		}
+
 		public void RemoveItem(int index)
 		{
 			RemoveCallback?.Invoke(index);

@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -12,17 +13,17 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public ListControl Control { get; private set; }
 
-		public void Setup(SerializedProperty property, IListProxy proxy)
+		public void Setup(SerializedProperty property, IListProxy proxy, Type referenceType)
 		{
 			bindingPath = property.propertyPath;
-			Setup(proxy);
+			Setup(proxy, referenceType);
 		}
 
-		public void Setup(IListProxy proxy)
+		public void Setup(IListProxy proxy, Type referenceType)
 		{
 			Clear();
 
-			Control = new ListControl(proxy);
+			Control = new ListControl(proxy, referenceType);
 
 			Add(Control);
 			AddToClassList(UssClassName);
