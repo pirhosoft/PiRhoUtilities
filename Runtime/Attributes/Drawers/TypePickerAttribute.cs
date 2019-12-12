@@ -7,7 +7,7 @@ namespace PiRhoSoft.Utilities
 		public Type BaseType { get; private set; }
 		public bool ShowAbstract { get; private set; }
 
-		public TypePickerAttribute(Type baseType, bool showAbstract = false) : base(FieldPhase, 0)
+		public TypePickerAttribute(Type baseType, bool showAbstract = false) : base(ControlPhase, 0)
 		{
 			BaseType = baseType;
 			ShowAbstract = showAbstract;

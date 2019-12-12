@@ -5,10 +5,8 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class SliderFloatField : SliderField<float>
 	{
-		public SliderFloatField(string label) : base(label)
+		public SliderFloatField(string label) : base(label, new SliderFloatControl())
 		{
-			_control = new SliderFloatControl();
-			Setup(_control);
 		}
 
 		public SliderFloatField(string label, float min, float max) : this(label)

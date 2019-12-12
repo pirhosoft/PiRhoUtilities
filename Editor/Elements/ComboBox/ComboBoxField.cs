@@ -76,13 +76,13 @@ namespace PiRhoSoft.Utilities.Editor
 					_options = value;
 					_menu = new GenericMenu();
 
-					if (Options != null)
+					if (_options != null)
 					{
-						foreach (var option in Options)
+						foreach (var option in _options)
 							_menu.AddItem(new GUIContent(option), false, () => SelectItem(option));
 					}
 
-					_dropdownButton.SetEnabled(Options != null && Options.Count > 0);
+					_dropdownButton.SetEnabled(_options != null && _options.Count > 0);
 				}
 			}
 
@@ -121,9 +121,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			private void SelectItem(string option)
 			{
-				var previous = TextField.value;
-				SetValueWithoutNotify(option);
-				this.SendChangeEvent(previous, option);
+				this.SendChangeEvent(TextField.value, option);
 			}
 		}
 
@@ -132,8 +130,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public ComboBoxField() : this(null, null) { }
 
 		public new class UxmlFactory : UxmlFactory<ComboBoxField, UxmlTraits> { }
-
-		public new class UxmlTraits : BaseField<string>.UxmlTraits
+		public new class UxmlTraits : BaseFieldTraits<string, UxmlStringAttributeDescription>
 		{
 			private readonly UxmlStringAttributeDescription _options = new UxmlStringAttributeDescription { name = "options" };
 
