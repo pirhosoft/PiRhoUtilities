@@ -1,22 +1,26 @@
-﻿.pirho-combo-box
+﻿.pirho-combo-box-field
+{
+}
+
+.pirho-combo-box-field__input
 {
 	flex-direction: row;
 	flex-grow: 1;
 }
 
-.pirho-combo-box__text
+.pirho-combo-box-field__input__text
 {
 	flex-grow: 1;
 	margin: 0px 0px 1px 0px;
 }
 
-.pirho-combo-box__text .unity-base-text-field__input
+.pirho-combo-box-field__input__text .unity-base-text-field__input
 {
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
 }
 
-.pirho-combo-box__button
+.pirho-combo-box-field__input__button
 {
 	min-width: 20px;
 	max-width: 20px;
@@ -29,12 +33,12 @@
 	border-bottom-left-radius: 0px;
 }
 
-.pirho-combo-box__button:hover
+.pirho-combo-box-field__input__button:hover
 {
 	background-color: #E8E8E8;
 }
 
-.pirho-combo-box__button:active
+.pirho-combo-box-field__input__button:active
 {
 	background-color: #6B6B6B;
 }

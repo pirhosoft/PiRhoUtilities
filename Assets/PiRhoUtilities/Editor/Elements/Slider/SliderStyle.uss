@@ -1,15 +1,19 @@
-﻿.pirho-slider
+﻿.pirho-slider-field
+{
+}
+
+.pirho-slider-field__input
 {
 	flex-direction: row;
 	flex-grow: 1;
 }
 
-.pirho-slider__slider
+.pirho-slider-field__input__slider
 {
 	flex-grow: 1;
 }
 
-.pirho-slider__text
+.pirho-slider-field__input__text
 {
 	width: 50px;
 }

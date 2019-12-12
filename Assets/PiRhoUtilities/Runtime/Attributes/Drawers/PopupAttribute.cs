@@ -12,25 +12,25 @@ namespace PiRhoSoft.Utilities
 		public string ValuesMethod { get; private set; }
 		public string OptionsMethod { get; private set; }
 
-		public PopupAttribute(string[] values, string[] options = null) : base(ContainerPhase, 0)
+		public PopupAttribute(string[] values, string[] options = null) : base(ControlPhase, 0)
 		{
 			StringValues = values.ToList();
 			Options = options?.ToList();
 		}
 
-		public PopupAttribute(int[] values, string[] options = null) : base(ContainerPhase, 0)
+		public PopupAttribute(int[] values, string[] options = null) : base(ControlPhase, 0)
 		{
 			IntValues = values.ToList();
 			Options = options?.ToList();
 		}
 
-		public PopupAttribute(float[] values, string[] options = null) : base(ContainerPhase, 0)
+		public PopupAttribute(float[] values, string[] options = null) : base(ControlPhase, 0)
 		{
 			FloatValues = values.ToList();
 			Options = options?.ToList();
 		}
 
-		public PopupAttribute(string valuesMethod, string optionsMethod = null) : base(ContainerPhase, 0)
+		public PopupAttribute(string valuesMethod, string optionsMethod = null) : base(ControlPhase, 0)
 		{
 			ValuesMethod = valuesMethod;
 			OptionsMethod = optionsMethod;

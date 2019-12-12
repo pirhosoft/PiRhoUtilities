@@ -210,16 +210,17 @@ MonoBehaviour:
   GameObject: {fileID: 124499908}
   IntPopup: 0
   FloatPopup: 0.4
-  StringPopup: 
+  StringPopup: Hola
   DynamicIntPopup: 0
   DynamicFloatPopup: 0
-  DynamicStringPopup: 
-  ComboBox: 
-  Euler: {x: 0, y: 0, z: 0, w: 0}
-  Buttons: 0
+  DynamicStringPopup: Hola
+  ComboBox: This doesn't have to be in the options
+  Euler: {x: 0, y: 0, z: 0.42261827, w: 0.90630776}
+  Buttons: 2
   Flags: 0
-  Slider: 0
-  MinMaxSlider: {x: 0, y: 0}
+  Slider: 3
+  FloatSlider: 0
+  MinMaxSlider: {x: 0, y: 8.777778}
 --- !u!4 &155533742
 Transform:
   m_ObjectHideFlags: 0

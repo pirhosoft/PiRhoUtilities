@@ -1,10 +1,10 @@
-﻿.pirho-euler
+﻿.pirho-euler-field
 {
 	flex-direction: row;
 	flex-grow: 1;
 }
 
-.pirho-euler__vector-3
+.pirho-euler-field__input
 {
 	flex-grow: 1;
 	margin: 0px;
