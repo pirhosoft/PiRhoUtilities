@@ -65,6 +65,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 				var list = ve as ListField;
 
+				// one of binding-path, proxy-type, or item-type is required
+
 				// TODO: attributes for proxy properties
 				// TODO: if !bindingPath, call Setup with a proxy that owns a list holding objects of type specified as an attribute
 			}

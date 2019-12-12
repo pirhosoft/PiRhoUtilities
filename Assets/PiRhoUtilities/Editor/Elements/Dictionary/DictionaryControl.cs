@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
 {
-	public class DictionaryControl : RolloutControl
+	public class DictionaryControl : Frame
 	{
 		#region Class Names
 
@@ -50,7 +50,7 @@ namespace PiRhoSoft.Utilities.Editor
 		private VisualElement _dragElement;
 		private VisualElement _dragPlaceholder;
 
-		public DictionaryControl(IDictionaryProxy proxy) : base(true)
+		public DictionaryControl(IDictionaryProxy proxy)
 		{
 			Proxy = proxy;
 
@@ -91,7 +91,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void CreateFrame()
 		{
-			SetLabel(Proxy.Label, Proxy.Tooltip);
+			Label = Proxy.Label;
+			Tooltip = Proxy.Tooltip;
 
 			_addButton = AddHeaderButton(_addIcon.Texture, Proxy.AddTooltip, AddButtonUssClassName, AddItem);
 			_addButton.SetEnabled(false);
@@ -106,7 +107,7 @@ namespace PiRhoSoft.Utilities.Editor
 			keyPlaceholder.AddToField(_keyField);
 
 			Header.Add(_keyField);
-			_keyField.PlaceInFront(Label);
+			_keyField.PlaceBehind(HeaderButtons);
 
 			var empty = new TextElement { text = Proxy.EmptyLabel, tooltip = Proxy.EmptyTooltip };
 			empty.AddToClassList(EmptyLabelUssClassName);
