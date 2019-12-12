@@ -17,24 +17,54 @@ namespace PiRhoSoft.Utilities.Editor
 		private const string _missingWarning = "(PUPDDMC) invalid {0} method, field, or property for PopupAttribute on field '{1}': '{2}' could not be found on type '{3}'";
 		private const string _invalidReturnWarning = "(PUPDIMR) invalid {0} method, field, or property for PopupAttribute on field '{0}': '{1}' should return a '{2}'";
 		private const string _invalidParametersWarning = "(PUPDIMP) invalid {0} method for PopupAttribute on field '{1}': '{2}' should take no parameters";
+		private const string _missingValueWarning = "(PUPDMV) the value of field '{0}' did not exsist in the list of values: Changing to the first valid value";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
 			var popup = attribute as PopupAttribute;
 
 			if (property.propertyType == SerializedPropertyType.Integer)
-				return CreatePopup(property, popup, popup.IntValues);
+			{
+				var value = property.intValue;
+				var field = CreatePopup(property, popup, popup.IntValues, ref value);
+				if (field != null)
+				{
+					property.intValue = value;
+					property.serializedObject.ApplyModifiedProperties();
+					return field.ConfigureProperty(property);
+				}
+			}
 			else if (property.propertyType == SerializedPropertyType.Float)
-				return CreatePopup(property, popup, popup.FloatValues);
+			{
+				var value = property.floatValue;
+				var field = CreatePopup(property, popup, popup.FloatValues, ref value);
+				if (field != null)
+				{
+					property.floatValue = value;
+					property.serializedObject.ApplyModifiedProperties();
+					return field.ConfigureProperty(property);
+				}
+			}
 			else if (property.propertyType == SerializedPropertyType.String)
-				return CreatePopup(property, popup, popup.StringValues);
+			{
+				var value = property.stringValue;
+				var field = CreatePopup(property, popup, popup.StringValues, ref value);
+				if (field != null)
+				{
+					property.stringValue = value;
+					property.serializedObject.ApplyModifiedProperties();
+					return field.ConfigureProperty(property);
+				}
+			}
 			else
+			{
 				Debug.LogErrorFormat(_invalidTypeError, property.propertyPath);
+			}
 
 			return new FieldContainer(property.displayName);
 		}
 
-		private VisualElement CreatePopup<T>(SerializedProperty property, PopupAttribute popup, List<T> defaultValues)
+		private BaseField<T> CreatePopup<T>(SerializedProperty property, PopupAttribute popup, List<T> defaultValues, ref T defaultValue)
 		{
 			var values = GetList(property, popup.ValuesMethod, defaultValues, "values");
 			var options = GetList(property, popup.OptionsMethod, popup.Options, "options");
@@ -44,13 +74,18 @@ namespace PiRhoSoft.Utilities.Editor
 				if (options != null && options.Count != values.Count)
 					Debug.LogWarningFormat(_invalidOptionsWarning, property.propertyPath);
 
-				var field = new PopupField<T>(property.displayName, values, defaultIndex: 0, value => Format(value, values, options), value => Format(value, values, options));
-				return field.ConfigureProperty(property);
+				if (!values.Contains(defaultValue))
+				{
+					defaultValue = values[0];
+					Debug.LogWarningFormat(_missingValueWarning, property.propertyPath);
+				}
+
+				return new PopupField<T>(property.displayName, values, defaultIndex: 0, value => Format(value, values, options), value => Format(value, values, options));
 			}
 			else
 			{
 				Debug.LogErrorFormat(_invalidValuesError, property.propertyPath, nameof(T));
-				return new FieldContainer(property.displayName);
+				return null;
 			}
 		}
 
