@@ -1,0 +1,18 @@
+﻿.pirho-reference-field
+{
+}
+
+.pirho-reference-field--set .pirho-reference-field__set-button
+{
+	display: none;
+}
+
+.pirho-reference-field--null .pirho-reference-field__clear-button
+{
+	display: none;
+}
+
+.pirho-reference-field--missing .pirho-reference-field__set-button
+{
+	display: none;
+}

@@ -27,6 +27,7 @@ namespace PiRhoSoft.Utilities.Editor
 		bool CanReorder(int from, int to);
 
 		void AddItem();
+		void AddItem(object item);
 		void RemoveItem(int index);
 		void ReorderItem(int from, int to);
 	}
@@ -55,6 +56,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public abstract VisualElement CreateElement(int index);
 		public abstract bool NeedsUpdate(VisualElement item, int index);
 		public abstract void AddItem();
+		public abstract void AddItem(object item);
 		public abstract void RemoveItem(int index);
 		public abstract void ReorderItem(int from, int to);
 
@@ -93,6 +95,11 @@ namespace PiRhoSoft.Utilities.Editor
 		public override void AddItem()
 		{
 			Items.Add(default);
+		}
+
+		public override void AddItem(object item)
+		{
+			Items.Add((T)item);
 		}
 
 		public override void RemoveItem(int index)
