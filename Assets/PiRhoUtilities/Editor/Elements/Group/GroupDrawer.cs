@@ -28,8 +28,8 @@ namespace PiRhoSoft.Utilities.Editor
 					else if (SerializedProperty.EqualContents(property, sibling))
 					{
 						// this property is first and is responsible for drawing
-						frame = group.Style == GroupStyle.Frame ? new Frame() : new RolloutControl(true);
-						frame.Label.text = group.Name;
+						frame = new Frame();
+						frame.Label = group.Name;
 
 						var element = this.CreateNextElement(sibling);
 						frame.Content.Add(element);

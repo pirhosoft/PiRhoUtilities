@@ -59,3 +59,37 @@
 	height: 16px;
 	align-self: center;
 }
+
+.pirho-frame__collapse-button
+{
+	display: none;
+	min-width: 13px;
+	max-width: 13px;
+	min-height: 13px;
+	max-height: 13px;
+	margin-right: 5px;
+	align-self: center;
+	--unity-image-tint-color: #E0E0E0;
+}
+
+.pirho-frame--collapsable .pirho-frame__collapse-button
+{
+	display: flex;
+}
+
+.pirho-frame--collapsed .pirho-frame__content
+{
+	display: none;
+}
+
+.pirho-frame__collapse-button:hover
+{
+	background-color: rgba(0, 0, 0, 0);
+	--unity-image-tint-color: #FFFFFF;
+}
+
+.pirho-frame__collapse-button:active
+{
+	background-color: rgba(0, 0, 0, 0);
+	--unity-image-tint-color: #6B6B6B;
+}
