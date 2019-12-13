@@ -18,6 +18,7 @@ namespace PiRhoSoft.Utilities
 		[Serializable] public class TestDictionary : SerializedDictionary<string, string> { }
 		[Serializable] public class TestClass { public int First; public string Second; }
 		[Serializable] public class TestClassDictionary : SerializedDictionary<string, TestClass> { }
+		[Serializable] public class TestReferenceDictionary : ReferenceDictionary<string, ITestReference> { }
 
 		[Tooltip("A test list with a max of 5 items")]
 		[List(AllowAdd = nameof(ListCanAdd))]
@@ -44,6 +45,10 @@ namespace PiRhoSoft.Utilities
 		[Tooltip("A test dictionary with an inline class")]
 		[Dictionary]
 		public TestClassDictionary ClassDictionary;
+
+		[Tooltip("A test dictionary of references")]
+		[Dictionary]
+		public TestReferenceDictionary ReferenceDictionary;
 
 		private bool ListCanAdd()
 		{
