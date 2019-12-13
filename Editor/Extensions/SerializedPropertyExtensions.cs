@@ -180,7 +180,7 @@ namespace PiRhoSoft.Utilities.Editor
 			else if (property.hasChildren && property.propertyType != SerializedPropertyType.ManagedReference)
 			{
 				foreach (var child in property.Children())
-					property.SetToDefault();
+					child.SetToDefault();
 			}
 			else
 			{

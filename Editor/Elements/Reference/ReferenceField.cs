@@ -53,9 +53,9 @@ namespace PiRhoSoft.Utilities.Editor
 		private IReferenceDrawer _drawer;
 		private object _value;
 
-		private readonly Frame _frame;
-		private readonly IconButton _setButton;
-		private readonly IconButton _clearButton;
+		private Frame _frame;
+		private IconButton _setButton;
+		private IconButton _clearButton;
 
 		private class TypeProvider : PickerProvider<Type> { }
 		private TypeProvider _typeProvider;
@@ -88,31 +88,25 @@ namespace PiRhoSoft.Utilities.Editor
 			set => SetValue(value);
 		}
 
-		public ReferenceField(string label)
+		public ReferenceField()
 		{
-			_typeProvider = ScriptableObject.CreateInstance<TypeProvider>();
+			BuildUi();
+		}
 
-			_frame = new Frame();
-			_setButton = _frame.AddHeaderButton(_setIcon.Texture, _setButtonLabel, SetButtonUssClassName, SelectType);
-			_clearButton = _frame.AddHeaderButton(_clearIcon.Texture, _clearButtonLabel, ClearButtonUssClassName, SetNull);
-
-			Add(_frame);
-
-			AddToClassList(UssClassName);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
-
+		public ReferenceField(string label) : this()
+		{
 			Label = label;
 		}
 
-		public ReferenceField(string label, Type type) : this(label, type, null)
+		public ReferenceField(string label, Type referenceType) : this(label, referenceType, null)
 		{
 		}
 
-		public ReferenceField(Type type) : this(null, type, null)
+		public ReferenceField(Type referenceType) : this(null, referenceType, null)
 		{
 		}
 
-		public ReferenceField(Type type, IReferenceDrawer drawer) : this(null, type, drawer)
+		public ReferenceField(Type referenceType, IReferenceDrawer drawer) : this(null, referenceType, drawer)
 		{
 		}
 
@@ -171,6 +165,20 @@ namespace PiRhoSoft.Utilities.Editor
 		#endregion
 
 		#region UI
+
+		private void BuildUi()
+		{
+			_typeProvider = ScriptableObject.CreateInstance<TypeProvider>();
+
+			_frame = new Frame();
+			_setButton = _frame.AddHeaderButton(_setIcon.Texture, _setButtonLabel, SetButtonUssClassName, SelectType);
+			_clearButton = _frame.AddHeaderButton(_clearIcon.Texture, _clearButtonLabel, ClearButtonUssClassName, SetNull);
+
+			Add(_frame);
+
+			AddToClassList(UssClassName);
+			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+		}
 
 		private void Rebuild()
 		{
@@ -283,8 +291,6 @@ namespace PiRhoSoft.Utilities.Editor
 		#endregion
 
 		#region UXML
-
-		public ReferenceField() : this(null, null, null) { }
 
 		public new class UxmlFactory : UxmlFactory<ReferenceField, UxmlTraits> { }
 		public new class UxmlTraits : BindableElement.UxmlTraits
