@@ -54,25 +54,8 @@ namespace PiRhoSoft.Utilities.Editor
 				: value.CreateField();
 
 			field.userData = index;
+			field.SetFieldLabel(key.stringValue);
 			field.Bind(_property.serializedObject);
-
-			if (field is PropertyField propertyField)
-				propertyField.SetLabel(key.stringValue);
-			else if (field is FieldContainer fieldContainer)
-				fieldContainer.SetLabel(key.stringValue);
-			else if (field is Foldout foldout)
-			{
-				foldout.text = key.stringValue;
-
-				// clear the binding of the property to the foldout label
-				var foldoutToggle = foldout.Q<Toggle>(className: Foldout.toggleUssClassName);
-				var foldoutLabel = foldoutToggle.Q<Label>(className: Toggle.textUssClassName);
-
-				foldoutLabel.bindingPath = null;
-				foldoutLabel.binding.Release();
-			}
-			else if (field.GetType().InheritsGeneric(typeof(BaseField<>)))
-				BaseFieldExtensions.SetLabel(field, key.stringValue);
 
 			return field;
 		}

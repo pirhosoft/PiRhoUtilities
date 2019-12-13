@@ -10,14 +10,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
 			var element = this.CreateNextElement(property);
-
-			if (element is PropertyField propertyField)
-				propertyField.SetLabel(null);
-			else if (element is FieldContainer fieldContainer)
-				fieldContainer.SetLabel(null);
-			else if (element.GetType().InheritsGeneric(typeof(BaseField<>)))
-				BaseFieldExtensions.SetLabel(element, null);
-
+			element.SetFieldLabel(null);
 			return element;
 		}
 	}

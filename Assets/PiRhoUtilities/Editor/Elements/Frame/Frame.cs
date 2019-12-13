@@ -56,10 +56,16 @@ namespace PiRhoSoft.Utilities.Editor
 		private bool _isCollapsed = false;
 		private string _label = null;
 		private string _tooltip = null;
+		private bool _addChildren = true;
 
 		public Frame()
 		{
 			BuildUi();
+		}
+
+		protected Frame(bool addChildren) : this()
+		{
+			_addChildren = addChildren;
 		}
 
 		public bool IsCollapsable
@@ -233,7 +239,7 @@ namespace PiRhoSoft.Utilities.Editor
 				Label =_label ?? property.displayName;
 				Tooltip = _tooltip ?? property.GetTooltip();
 
-				if (property.HasVisibleChildFields())
+				if (_addChildren && property.HasVisibleChildFields())
 				{
 					Content.Clear();
 
