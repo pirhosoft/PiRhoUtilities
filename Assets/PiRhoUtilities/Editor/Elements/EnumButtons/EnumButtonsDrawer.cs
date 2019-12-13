@@ -12,11 +12,20 @@ namespace PiRhoSoft.Utilities.Editor
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
 			if (property.propertyType == SerializedPropertyType.Enum)
-				return new EnumButtonsField(property, (attribute as EnumButtonsAttribute).Flags);
-			else
-				Debug.LogWarningFormat(_invalidTypeWarning, property.propertyPath);
+			{
+				var flags = attribute as EnumButtonsAttribute;
+				var field = new EnumButtonsField(this.GetFieldType());
 
-			return new FieldContainer(property.displayName);
+				if (flags.Flags.HasValue)
+					field.UseFlags = true;
+
+				return field.ConfigureProperty(property);
+			}
+			else
+			{
+				Debug.LogWarningFormat(_invalidTypeWarning, property.propertyPath);
+				return new FieldContainer(property.displayName);
+			}
 		}
 	}
 }

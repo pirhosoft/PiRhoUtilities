@@ -14,7 +14,7 @@ namespace PiRhoSoft.Utilities.Editor
 			if (property.propertyType == SerializedPropertyType.String)
 			{
 				var typeAttribute = attribute as TypePickerAttribute;
-				return new TypePickerField(property, typeAttribute.BaseType, typeAttribute.ShowAbstract);
+				return new TypePickerField(typeAttribute.BaseType, typeAttribute.ShowAbstract).ConfigureProperty(property);
 			}
 			else
 			{

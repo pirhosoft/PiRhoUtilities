@@ -18,16 +18,14 @@ namespace PiRhoSoft.Utilities.Editor
 			set => _control.Maximum = new Vector2(rawValue.y, value);
 		}
 
-		public MinMaxSliderField(string label) : base(label)
+		public MinMaxSliderField(string label) : base(label, new MinMaxSliderControl())
 		{
-			_control = new MinMaxSliderControl();
-			Setup(_control);
 		}
 
 		public MinMaxSliderField(string label, float min, float max) : this(label)
 		{
-			_control.Minimum = new Vector2(min, rawValue.x);
-			_control.Maximum = new Vector2(rawValue.y, max);
+			Minimum = min;
+			Maximum = max;
 		}
 
 		public MinMaxSliderField(float min, float max) : this(null, min, max)
@@ -71,7 +69,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region UXML Support
 
-		public MinMaxSliderField() : base(null) { }
+		public MinMaxSliderField() : this(null) { }
 
 		public new class UxmlFactory : UxmlFactory<MinMaxSliderField, UxmlTraits> { }
 

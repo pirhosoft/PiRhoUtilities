@@ -1,8 +1,8 @@
-﻿.pirho-object-picker
+﻿.pirho-object-picker-field
 {
 }
 
-.pirho-object-picker__inspect
+.pirho-object-picker-field__inspect
 {
 	min-width: 16px;
 	max-width: 16px;
