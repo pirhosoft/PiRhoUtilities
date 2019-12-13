@@ -6,6 +6,16 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class MinMaxSliderField : SliderField<Vector2>
 	{
+		#region Defaults
+
+		// These match unity's internal defaults
+		public const float DefaultMinimumValue = 0;
+		public const float DefaultMaximumValue = 10;
+		public const float DefaultMinimum = float.MinValue;
+		public const float DefaultMaximum = float.MaxValue;
+
+		#endregion
+
 		public new float Minimum
 		{
 			get => _control.Minimum.x;
@@ -43,7 +53,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			public MinMaxSliderControl()
 			{
-				_slider = new MinMaxSlider();
+				_slider = new MinMaxSlider(DefaultMinimumValue, DefaultMaximumValue, DefaultMinimum, DefaultMaximum);
 				_slider.AddToClassList(SliderUssClassName);
 
 				_minText = new FloatField();
@@ -75,10 +85,10 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public new class UxmlTraits : BaseField<Vector2>.UxmlTraits
 		{
-			private readonly UxmlFloatAttributeDescription _maxValue = new UxmlFloatAttributeDescription { name = "minimum-value" };
-			private readonly UxmlFloatAttributeDescription _minValue = new UxmlFloatAttributeDescription { name = "maximum-value" };
-			private readonly UxmlFloatAttributeDescription _minimum = new UxmlFloatAttributeDescription { name = "minimum" };
-			private readonly UxmlFloatAttributeDescription _maximum = new UxmlFloatAttributeDescription { name = "maximum" };
+			private readonly UxmlFloatAttributeDescription _maxValue = new UxmlFloatAttributeDescription { name = "minimum-value", defaultValue = DefaultMinimumValue };
+			private readonly UxmlFloatAttributeDescription _minValue = new UxmlFloatAttributeDescription { name = "maximum-value", defaultValue = DefaultMaximumValue };
+			private readonly UxmlFloatAttributeDescription _minimum = new UxmlFloatAttributeDescription { name = "minimum", defaultValue = DefaultMinimum };
+			private readonly UxmlFloatAttributeDescription _maximum = new UxmlFloatAttributeDescription { name = "maximum", defaultValue = DefaultMaximum };
 
 			public override void Init(VisualElement element, IUxmlAttributes bag, CreationContext cc)
 			{

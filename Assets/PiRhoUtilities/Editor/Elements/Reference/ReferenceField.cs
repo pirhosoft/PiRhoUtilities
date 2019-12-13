@@ -46,30 +46,23 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#endregion
 
+		#region Members
+
 		private string _label;
 		private Type _referenceType;
 		private IReferenceDrawer _drawer;
 		private object _value;
 
-		private Frame _frame;
-		private IconButton _setButton;
-		private IconButton _clearButton;
+		private readonly Frame _frame;
+		private readonly IconButton _setButton;
+		private readonly IconButton _clearButton;
 
 		private class TypeProvider : PickerProvider<Type> { }
 		private TypeProvider _typeProvider;
 
-		public ReferenceField() : this(null, null, null)
-		{
-		}
+		#endregion
 
-		public ReferenceField(string label, Type referenceType, IReferenceDrawer drawer)
-		{
-			Setup();
-
-			Label = label;
-			ReferenceType = referenceType;
-			Drawer = drawer;
-		}
+		#region Public Interface
 
 		public string Label
 		{
@@ -95,10 +88,48 @@ namespace PiRhoSoft.Utilities.Editor
 			set => SetValue(value);
 		}
 
+		public ReferenceField(string label)
+		{
+			_typeProvider = ScriptableObject.CreateInstance<TypeProvider>();
+
+			_frame = new Frame();
+			_setButton = _frame.AddHeaderButton(_setIcon.Texture, _setButtonLabel, SetButtonUssClassName, SelectType);
+			_clearButton = _frame.AddHeaderButton(_clearIcon.Texture, _clearButtonLabel, ClearButtonUssClassName, SetNull);
+
+			Add(_frame);
+
+			AddToClassList(UssClassName);
+			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+
+			Label = label;
+		}
+
+		public ReferenceField(string label, Type type) : this(label, type, null)
+		{
+		}
+
+		public ReferenceField(Type type) : this(null, type, null)
+		{
+		}
+
+		public ReferenceField(Type type, IReferenceDrawer drawer) : this(null, type, drawer)
+		{
+		}
+
+		public ReferenceField(string label, Type referenceType, IReferenceDrawer drawer) : this(label)
+		{
+			ReferenceType = referenceType;
+			Drawer = drawer;
+		}
+
 		public void SetValueWithoutNotify(object value)
 		{
 			_value = value;
 		}
+
+		#endregion
+
+		#region Property Setters
 
 		private void SetLabel(string label)
 		{
@@ -137,21 +168,9 @@ namespace PiRhoSoft.Utilities.Editor
 			Rebuild();
 		}
 
+		#endregion
+
 		#region UI
-
-		private void Setup()
-		{
-			AddToClassList(UssClassName);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
-
-			_typeProvider = ScriptableObject.CreateInstance<TypeProvider>();
-
-			_frame = new Frame();
-			_setButton = _frame.AddHeaderButton(_setIcon.Texture, _setButtonLabel, SetButtonUssClassName, SelectType);
-			_clearButton = _frame.AddHeaderButton(_clearIcon.Texture, _clearButtonLabel, ClearButtonUssClassName, SetNull);
-
-			Add(_frame);
-		}
 
 		private void Rebuild()
 		{
@@ -206,23 +225,6 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#endregion
 
-		#region UXML
-
-		public new class UxmlFactory : UxmlFactory<ListField, UxmlTraits> { }
-
-		public new class UxmlTraits : VisualElement.UxmlTraits
-		{
-			public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-			{
-				base.Init(ve, bag, cc);
-
-				// Label
-				// ReferenceType
-			}
-		}
-
-		#endregion
-
 		#region Binding
 
 		protected override void ExecuteDefaultActionAtTarget(EventBase evt)
@@ -263,7 +265,7 @@ namespace PiRhoSoft.Utilities.Editor
 			// PENDING: built in change tracking for undo doesn't work for ManagedReference yet
 
 			Undo.RegisterCompleteObjectUndo(property.serializedObject.targetObject, _undoLabel);
-			
+
 			property.managedReferenceValue = value;
 
 			property.serializedObject.ApplyModifiedProperties();
@@ -276,6 +278,33 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			var currentValue = getter(property);
 			return ReferenceEquals(value, currentValue);
+		}
+
+		#endregion
+
+		#region UXML
+
+		public ReferenceField() : this(null, null, null) { }
+
+		public new class UxmlFactory : UxmlFactory<ReferenceField, UxmlTraits> { }
+		public new class UxmlTraits : BindableElement.UxmlTraits
+		{
+			private readonly UxmlStringAttributeDescription _label = new UxmlStringAttributeDescription { name = "label" };
+			private readonly UxmlStringAttributeDescription _type = new UxmlStringAttributeDescription { name = "type" };
+
+			public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
+			{
+				base.Init(ve, bag, cc);
+
+				var field = ve as ReferenceField;
+
+				field.Label = _label.GetValueFromBag(bag, cc);
+
+				var typeName = _type.GetValueFromBag(bag, cc);
+
+				if (!string.IsNullOrEmpty(typeName))
+					field.ReferenceType = Type.GetType(typeName, false);
+			}
 		}
 
 		#endregion

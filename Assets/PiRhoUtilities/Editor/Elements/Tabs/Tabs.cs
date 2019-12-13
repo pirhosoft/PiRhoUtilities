@@ -5,6 +5,8 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class Tabs : VisualElement
 	{
+		#region Class Names
+
 		public const string Stylesheet = "Tabs/Tabs.uss";
 		public const string UssClassName = "pirho-tabs";
 		public const string HeaderUssClassName = UssClassName + "__header";
@@ -14,11 +16,19 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string TabContentUssClassName = TabUssClassName + "__content";
 		public const string TabContentSelectedUssClassName = TabContentUssClassName + "--selected";
 
-		public VisualElement Header { get; private set; }
-		public VisualElement Content { get; private set; }
+		#endregion
+
+		#region Members
 
 		private readonly Dictionary<string, Tab> _tabs = new Dictionary<string, Tab>();
 		private Tab _currentTab;
+
+		#endregion
+
+		#region Public Interface
+
+		public VisualElement Header { get; private set; }
+		public VisualElement Content { get; private set; }
 
 		public Tabs()
 		{
@@ -47,6 +57,10 @@ namespace PiRhoSoft.Utilities.Editor
 				AddElement(tabName, element);
 			}
 		}
+
+		#endregion
+
+		#region Tab Management
 
 		private void AddTab(string tabName)
 		{
@@ -87,5 +101,7 @@ namespace PiRhoSoft.Utilities.Editor
 				Content.AddToClassList(TabContentUssClassName);
 			}
 		}
+
+		#endregion
 	}
 }

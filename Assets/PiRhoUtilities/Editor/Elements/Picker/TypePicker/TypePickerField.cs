@@ -9,13 +9,33 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class TypePickerField : PickerField<string>
 	{
+		#region Class Names
+
 		public new const string Stylesheet = "Picker/TypePicker/TypePickerStyle.uss";
 		public new const string UssClassName = "pirho-scene-picker-field";
+
+		#endregion
+
+		#region Log Messages
 
 		private const string _invalidTypeWarning = "(PUTPFIT) Invalid type for TypePickerField: the type '{0}' could not be found";
 		private const string _invalidValueWarning = "(PUTPFIT) Failed to set TypePickerField value: '{0}' is not derivable from type '{1}'";
 
+		#endregion
+
+		#region Defaults
+
+		public const bool DefaultShowAbstract = false;
+
+		#endregion
+
+		#region Members
+
 		private TypePickerControl _picker => _control as TypePickerControl;
+
+		#endregion
+
+		#region Public Interface
 
 		public Type Type
 		{
@@ -34,20 +54,24 @@ namespace PiRhoSoft.Utilities.Editor
 			AddToClassList(UssClassName);
 		}
 
-		public TypePickerField(string label, Type type, bool showAbstract = false) : this(label)
+		public TypePickerField(string label, Type type, bool showAbstract = DefaultShowAbstract) : this(label)
 		{
 			_picker.SetType(type, showAbstract);
 		}
 
-		public TypePickerField(Type type, bool showAbstract = false) : this(null, type, showAbstract)
+		public TypePickerField(Type type, bool showAbstract = DefaultShowAbstract) : this(null, type, showAbstract)
 		{
 		}
+
+		#endregion
+
+		#region Visual Input
 
 		private class TypeProvider : PickerProvider<string> { }
 		private class TypePickerControl : PickerControl, IDragReceiver
 		{
 			public Type Type { get; private set; }
-			public bool ShowAbstract { get; private set; }
+			public bool ShowAbstract { get; private set; } = DefaultShowAbstract;
 
 			private Type _value;
 			private string _valueName => _value?.AssemblyQualifiedName ?? string.Empty;
@@ -175,15 +199,17 @@ namespace PiRhoSoft.Utilities.Editor
 			#endregion
 		}
 
+		#endregion
+
 		#region UXML Support
 
-		public TypePickerField() : base(null, null) { }
+		public TypePickerField() : this(null, null) { }
 
 		public new class UxmlFactory : UxmlFactory<TypePickerField, UxmlTraits> { }
 		public new class UxmlTraits : BaseFieldTraits<string, UxmlStringAttributeDescription>
 		{
 			private readonly UxmlStringAttributeDescription _type = new UxmlStringAttributeDescription { name = "type" };
-			private readonly UxmlBoolAttributeDescription _showAbstract = new UxmlBoolAttributeDescription { name = "show-abstract" };
+			private readonly UxmlBoolAttributeDescription _showAbstract = new UxmlBoolAttributeDescription { name = "show-abstract", defaultValue = DefaultShowAbstract };
 
 			public override void Init(VisualElement element, IUxmlAttributes bag, CreationContext cc)
 			{

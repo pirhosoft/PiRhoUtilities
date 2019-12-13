@@ -6,12 +6,22 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class EulerField : BaseField<Quaternion>
 	{
+		#region Class Names
+
 		public const string Stylesheet = "Euler/EulerStyle.uss";
 		public const string UssClassName = "pirho-euler-field";
 		public const string LabelUssClassName = UssClassName + "__label";
 		public const string InputUssClassName = UssClassName + "__input";
 
+		#endregion
+
+		#region Members
+
 		private readonly Vector3Field _vectorField;
+
+		#endregion
+
+		#region Public Interface
 
 		public EulerField(string label) : base(label, null)
 		{
@@ -35,6 +45,8 @@ namespace PiRhoSoft.Utilities.Editor
 			base.SetValueWithoutNotify(newValue);
 			_vectorField.SetValueWithoutNotify(newValue.eulerAngles);
 		}
+
+		#endregion
 
 		#region UXML Support
 

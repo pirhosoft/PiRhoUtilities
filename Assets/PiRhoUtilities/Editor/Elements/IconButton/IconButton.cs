@@ -6,10 +6,20 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class IconButton : Image
 	{
+		#region Class Names
+
 		public const string Stylesheet = "IconButton/IconButton.uss";
 		public const string UssClassName = "pirho-icon-button";
 
+		#endregion
+
+		#region
+
 		private IManipulator _manipulator;
+
+		#endregion
+
+		#region Public Interface
 
 		public IconButton(Texture image, string tooltip, Action action)
 		{
@@ -31,5 +41,16 @@ namespace PiRhoSoft.Utilities.Editor
 			if (_manipulator != null)
 				this.AddManipulator(_manipulator);
 		}
+
+		#endregion
+
+		#region UXML Support
+
+		public IconButton() : this(null, null, null) { }
+
+		public new class UxmlFactory : UxmlFactory<IconButton, UxmlTraits> { }
+		public new class UxmlTraits : Image.UxmlTraits { }
+
+		#endregion
 	}
 }

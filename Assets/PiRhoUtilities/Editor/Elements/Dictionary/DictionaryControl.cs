@@ -103,7 +103,7 @@ namespace PiRhoSoft.Utilities.Editor
 			_keyField.RegisterValueChangedCallback(evt => AddKeyChanged(evt.newValue));
 			_keyField.Q(TextField.textInputUssName).RegisterCallback<KeyDownEvent>(evt => KeyPressed(evt));
 
-			var keyPlaceholder = new PlaceholderControl(Proxy.AddPlaceholder);
+			var keyPlaceholder = new Placeholder(Proxy.AddPlaceholder);
 			keyPlaceholder.AddToField(_keyField);
 
 			Header.Add(_keyField);

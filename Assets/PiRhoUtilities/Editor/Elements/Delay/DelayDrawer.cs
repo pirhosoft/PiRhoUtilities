@@ -12,7 +12,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
 			var element = this.CreateNextElement(property);
-			var input = element.Query(className: TextInputBaseField<string>.ussClassName).First();
+			var input = element.Q(className: TextInputBaseField<string>.ussClassName);
 
 			if (input is TextInputBaseField<string> s)
 				s.isDelayed = true;

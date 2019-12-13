@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
@@ -12,10 +13,31 @@ namespace PiRhoSoft.Utilities.Editor
 
 	public class MessageBox : VisualElement
 	{
+		#region Class Names
+
 		public const string Stylesheet = "MessageBox/MessageBox.uss";
 		public const string UssClassName = "pirho-message-box";
 		public const string ImageUssClassName = UssClassName + "__image";
 		public const string LabelUssClassName = UssClassName + "__label";
+
+		#endregion
+
+		#region Defaults
+
+		public const MessageBoxType DefaultType = MessageBoxType.Info;
+
+		#endregion
+
+		#region Members
+
+		private readonly Image _image;
+		private readonly TextElement _label;
+
+		private MessageBoxType _type = DefaultType;
+
+		#endregion
+
+		#region Public Interface
 
 		public MessageBoxType Type
 		{
@@ -36,11 +58,6 @@ namespace PiRhoSoft.Utilities.Editor
 			set	{ ((INotifyValueChanged<string>)_label).SetValueWithoutNotify(value); }
 		}
 
-		private readonly Image _image;
-		private readonly TextElement _label;
-
-		private MessageBoxType _type;
-
 		public MessageBox(MessageBoxType type, string message)
 		{
 			_image = new Image();
@@ -59,6 +76,10 @@ namespace PiRhoSoft.Utilities.Editor
 			AddToClassList(UssClassName);
 		}
 
+		#endregion
+
+		#region Icon Management
+
 		private Texture GetIcon(MessageBoxType type)
 		{
 			switch (type)
@@ -69,5 +90,46 @@ namespace PiRhoSoft.Utilities.Editor
 				default: return null;
 			}
 		}
+
+		#endregion
+
+		#region UXML Support
+
+		public MessageBox() : this(DefaultType, string.Empty) { }
+
+		public new class UxmlFactory : UxmlFactory<MessageBox, UxmlTraits> { }
+		public new class UxmlTraits : VisualElement.UxmlTraits
+		{
+			private readonly UxmlStringAttributeDescription _messageType = new UxmlStringAttributeDescription { name = "message-type" };
+			private readonly UxmlStringAttributeDescription _message = new UxmlStringAttributeDescription { name = "message" };
+
+			public override void Init(VisualElement element, IUxmlAttributes bag, CreationContext cc)
+			{
+				base.Init(element, bag, cc);
+
+				var field = element as MessageBox;
+
+				field.Message = _message.GetValueFromBag(bag, cc);
+
+				var messageType = _messageType.GetValueFromBag(bag, cc);
+
+				if (!string.IsNullOrEmpty(messageType))
+					field.Type = ParseValue(messageType);
+			}
+
+			private MessageBoxType ParseValue(string valueName)
+			{
+				try
+				{
+					return (MessageBoxType)Enum.Parse(typeof(MessageBoxType), valueName);
+				}
+				catch (Exception exception) when (exception is ArgumentException || exception is OverflowException)
+				{
+					return DefaultType;
+				}
+			}
+		}
+
+		#endregion
 	}
 }

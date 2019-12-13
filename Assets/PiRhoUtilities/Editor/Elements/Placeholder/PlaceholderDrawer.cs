@@ -17,7 +17,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			if (textField != null)
 			{
-				var placeholder = new PlaceholderControl(placeholderAttribute.Text);
+				var placeholder = new Placeholder(placeholderAttribute.Text);
 				placeholder.AddToField(textField);
 				return element;
 			}

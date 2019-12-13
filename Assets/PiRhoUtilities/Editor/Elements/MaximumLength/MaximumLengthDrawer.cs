@@ -12,7 +12,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
 			var element = this.CreateNextElement(property);
-			var input = element.Query<TextField>().First();
+			var input = element.Q<TextField>();
 
 			if (input != null)
 				input.maxLength = (attribute as MaximumLengthAttribute).Length;

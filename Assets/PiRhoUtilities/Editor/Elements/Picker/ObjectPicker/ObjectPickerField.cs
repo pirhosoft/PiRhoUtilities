@@ -9,14 +9,28 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class ObjectPickerField : PickerField<Object>
 	{
+		#region Class Names
+
 		public new const string Stylesheet = "Picker/ObjectPicker/ObjectPickerStyle.uss";
 		public new const string UssClassName = "pirho-object-picker-field";
 		public const string InspectUssClassName = UssClassName + "__inspect";
 
+		#endregion
+
+		#region Log Messages
+
 		private const string _invalidTypeWarning = "(PUOPFIT) Invalid type for ObjectPickerField: the type '{0}' must be derived from UnityEngine.Object";
 		private const string _invalidValueWarning = "(PUOPFIT) Failed to set ObjectPickerField value: '{0}' is not a object of type '{1}'";
 
+		#endregion
+
+		#region Members
+
 		private ObjectPickerControl Picker => _control as ObjectPickerControl;
+
+		#endregion
+
+		#region Public Interface
 
 		public Type Type
 		{
@@ -37,6 +51,10 @@ namespace PiRhoSoft.Utilities.Editor
 		public ObjectPickerField(Type type) : this(null, type)
 		{
 		}
+
+		#endregion
+
+		#region Visual Input
 
 		private class ObjectProvider : PickerProvider<Object> { }
 		private class ObjectPickerControl : PickerControl, IDragReceiver
@@ -174,6 +192,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 			#endregion
 		}
+
+		#endregion
 
 		#region UXML Support
 

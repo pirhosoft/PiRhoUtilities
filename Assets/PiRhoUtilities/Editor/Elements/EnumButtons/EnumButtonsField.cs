@@ -6,6 +6,8 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class EnumButtonsField : BaseField<Enum>
 	{
+		#region Class Names
+
 		public const string Stylesheet = "EnumButtons/EnumButtonsStyle.uss";
 		public const string UssClassName = "pirho-enum-buttons-field";
 		public const string LabelUssClassName = UssClassName + "__label";
@@ -15,8 +17,22 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string FirstButtonUssClassName = ButtonUssClassName + "--first";
 		public const string LastButtonUssClassName = ButtonUssClassName + "--last";
 
+		#endregion
+
+		#region Log Messages
+
 		private const string _invalidTypeWarning = "(PUEBFIT) failed to setup EnumButtonsField: the type '{0}' is not an enum";
 		private const string _invalidValueWarning = "(PUEBFIV) failed to set EnumButtonsField value: '{0}' is not a valid value for the enum '{1}'";
+
+		#endregion
+
+		#region Private Members
+
+		private readonly EnumButtonsControl _control;
+
+		#endregion
+
+		#region Public Interface
 
 		public Type Type
 		{
@@ -30,7 +46,6 @@ namespace PiRhoSoft.Utilities.Editor
 			set => _control.UseFlags = value;
 		}
 
-		private readonly EnumButtonsControl _control;
 
 		public EnumButtonsField(string label) : base(label, null)
 		{
@@ -67,6 +82,10 @@ namespace PiRhoSoft.Utilities.Editor
 			_control.SetValueWithoutNotify(newValue);
 		}
 
+		#endregion
+
+		#region Binding
+
 		protected override void ExecuteDefaultActionAtTarget(EventBase evt)
 		{
 			base.ExecuteDefaultActionAtTarget(evt);
@@ -77,6 +96,10 @@ namespace PiRhoSoft.Utilities.Editor
 				evt.StopPropagation();
 			}
 		}
+
+		#endregion
+
+		#region Visual Input
 
 		private class EnumButtonsControl : VisualElement
 		{
@@ -218,6 +241,8 @@ namespace PiRhoSoft.Utilities.Editor
 				return (int)Enum.Parse(type, value.ToString());
 			}
 		}
+
+		#endregion
 
 		#region UXML Support
 
