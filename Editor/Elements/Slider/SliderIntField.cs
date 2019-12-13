@@ -11,8 +11,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public SliderIntField(string label, int min, int max) : this(label)
 		{
-			_control.Minimum = min;
-			_control.Maximum = max;
+			Minimum = min;
+			Maximum = max;
 		}
 
 		public SliderIntField(int min, int max) : this(null, min, max)

@@ -9,7 +9,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string LabelUssClassName = UssClassName + "__label";
 		public const string InputUssClassName = UssClassName + "__input";
 
-		protected SliderControl _control;
+		protected readonly SliderControl _control;
 
 		public ValueType Minimum
 		{

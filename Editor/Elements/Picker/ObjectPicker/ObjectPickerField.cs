@@ -31,7 +31,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public ObjectPickerField(string label, Type type) : this(label)
 		{
-			Picker.Type = type;
+			Type = type;
 		}
 
 		public ObjectPickerField(Type type) : this(null, type)
@@ -45,7 +45,7 @@ namespace PiRhoSoft.Utilities.Editor
 			public Type Type
 			{
 				get => _type;
-				set => SetupProvider(value);
+				set => SetType(value);
 			}
 
 			private readonly IconButton _inspect;
@@ -84,7 +84,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 			}
 
-			private void SetupProvider(Type type)
+			private void SetType(Type type)
 			{
 				if (type != _type)
 				{

@@ -15,7 +15,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string IconUssClassName = ButtonUssClassName + "__icon";
 		public const string InputLabelUssClassName = ButtonUssClassName + "__label";
 
-		protected PickerControl _control;
+		protected readonly PickerControl _control;
 
 		protected PickerField(string label, PickerControl control) : base(label, control)
 		{
