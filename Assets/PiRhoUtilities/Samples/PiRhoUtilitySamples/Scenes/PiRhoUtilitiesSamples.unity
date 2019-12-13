@@ -208,7 +208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: UnityEngine.Component, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
     PublicKeyToken=null
-  GameObject: {fileID: 1714043357}
+  GameObject: {fileID: 1725971736}
   IntPopup: 0
   FloatPopup: 0.4
   StringPopup: Hola
