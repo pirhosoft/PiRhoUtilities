@@ -7,12 +7,13 @@
 
 		public string AllowAdd = Always;
 		public string AllowRemove = Always;
-		public string AllowReorder = Always;
+		public bool AllowReorder = true;
 		public string EmptyLabel = null;
 
 		public string AddCallback = null;
 		public string RemoveCallback = null;
 		public string ReorderCallback = null;
+		public string ChangeCallback = null;
 
 		public ListAttribute() : base(ContainerPhase, 0)
 		{

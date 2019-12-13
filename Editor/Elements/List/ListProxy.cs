@@ -1,105 +1,69 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
 {
-	public interface IListProxy
+	public abstract class ListProxy
 	{
-		string Label { get; }
-		string Tooltip { get; }
-		string EmptyLabel { get; }
-		string EmptyTooltip { get; }
-		string AddTooltip { get; }
-		string RemoveTooltip { get; }
-		string ReorderTooltip { get; }
-
-		int ItemCount { get; }
-		bool AllowAdd { get; }
-		bool AllowRemove { get; }
-		bool AllowReorder { get; }
-
-		VisualElement CreateElement(int index);
-		bool NeedsUpdate(VisualElement item, int index);
-
-		bool CanAdd();
-		bool CanRemove(int index);
-		bool CanReorder(int from, int to);
-
-		void AddItem();
-		void AddItem(object item);
-		void RemoveItem(int index);
-		void ReorderItem(int from, int to);
-	}
-
-	public abstract class ListProxy : IListProxy
-	{
-		public const string DefaultEmptyLabel = "The list is empty";
-		public const string DefaultEmptyTooltip = "There are no items in this list";
-		public const string DefaultAddTooltip = "Add an item to this list";
-		public const string DefaultRemoveTooltip = "Remove this item from the list";
-		public const string DefaultReorderTooltip = "Move this item within the list";
-
-		public string Label { get; set; }
-		public string Tooltip { get; set; }
-		public string EmptyLabel { get; set; } = DefaultEmptyLabel;
-		public string EmptyTooltip { get; set; } = DefaultEmptyTooltip;
-		public string AddTooltip { get; set; } = DefaultAddTooltip;
-		public string RemoveTooltip { get; set; } = DefaultRemoveTooltip;
-		public string ReorderTooltip { get; set; } = DefaultReorderTooltip;
-
-		public abstract int ItemCount { get; }
-		public virtual bool AllowAdd { get; } = true;
-		public virtual bool AllowRemove { get; } = true;
-		public virtual bool AllowReorder { get; } = true;
-
-		public abstract VisualElement CreateElement(int index);
-		public abstract bool NeedsUpdate(VisualElement item, int index);
-		public abstract void AddItem();
-		public abstract void AddItem(object item);
-		public abstract void RemoveItem(int index);
-		public abstract void ReorderItem(int from, int to);
-
-		public virtual bool CanAdd() => AllowAdd;
-		public virtual bool CanRemove(int index) => AllowRemove;
-		public virtual bool CanReorder(int from, int to) => AllowReorder;
-	}
-
-	public class ListProxy<T> : ListProxy
-	{
-		public List<T> Items;
-
-		public override int ItemCount => Items.Count;
-
-		private readonly Func<int, VisualElement> _createElement;
-
-		public ListProxy(List<T> items, Func<int, VisualElement> createElement)
+		public virtual VisualElement CreateElement(int index)
 		{
-			Items = items;
-
-			_createElement = createElement;
-		}
-
-		public override VisualElement CreateElement(int index)
-		{
-			var element = _createElement?.Invoke(index) ?? new VisualElement();
+			var element = new VisualElement();
 			element.userData = index;
 			return element;
 		}
 
-		public override bool NeedsUpdate(VisualElement item, int index)
+		public virtual bool NeedsUpdate(VisualElement item, int index)
 		{
 			return !(item.userData is int i) || i != index;
 		}
 
+		public virtual bool CanAdd() => true;
+		public virtual bool CanRemove(int index) => true;
+
+		public abstract int ItemCount { get; }
+
+		public abstract void AddItem();
+		public abstract void AddItem(object item);
+		public abstract void RemoveItem(int index);
+		public abstract void ReorderItem(int from, int to);
+	}
+
+	public class IListProxy : ListProxy
+	{
+		public IList Items { get; private set; }
+		public Type ItemType { get; private set; }
+		public Action<VisualElement> Creator { get; private set; }
+
+		public IListProxy(IList items, Type itemType, Action<VisualElement> creator)
+		{
+			Items = items;
+			ItemType = itemType;
+			Creator = creator;
+		}
+
+		public override VisualElement CreateElement(int index)
+		{
+			var element = base.CreateElement(index);
+			Creator?.Invoke(element);
+			return element;
+		}
+
+		public override int ItemCount => Items.Count;
+
 		public override void AddItem()
 		{
-			Items.Add(default);
+			if (ItemType != null && ItemType.IsCreatableAs(ItemType))
+				Items.Add(Activator.CreateInstance(ItemType));
 		}
 
 		public override void AddItem(object item)
 		{
-			Items.Add((T)item);
+			if (ItemType == null || ItemType.IsAssignableFrom(item.GetType()))
+				Items.Add(item);
 		}
 
 		public override void RemoveItem(int index)
@@ -112,6 +76,126 @@ namespace PiRhoSoft.Utilities.Editor
 			var item = Items[from];
 			Items.RemoveAt(from);
 			Items.Insert(to, item);
+		}
+	}
+
+	public class ListProxy<T> : ListProxy
+	{
+		public List<T> Items { get; private set; }
+		public Action<VisualElement> Creator { get; private set; }
+
+		public ListProxy(List<T> items, Action<VisualElement> creator)
+		{
+			Items = items;
+			Creator = creator;
+		}
+
+		public override VisualElement CreateElement(int index)
+		{
+			var element = base.CreateElement(index);
+			Creator?.Invoke(element);
+			return element;
+		}
+
+		public override int ItemCount => Items.Count;
+
+		public override void AddItem()
+		{
+			Items.Add(default);
+		}
+
+		public override void AddItem(object item)
+		{
+			if (item is T t)
+				Items.Add(t);
+		}
+
+		public override void RemoveItem(int index)
+		{
+			Items.RemoveAt(index);
+		}
+
+		public override void ReorderItem(int from, int to)
+		{
+			var item = Items[from];
+			Items.RemoveAt(from);
+			Items.Insert(to, item);
+		}
+	}
+
+	public class PropertyListProxy : ListProxy
+	{
+		public Func<bool> CanAddCallback;
+		public Func<int, bool> CanRemoveCallback;
+
+		private SerializedProperty _property;
+		private readonly PropertyDrawer _drawer;
+
+		public PropertyListProxy(SerializedProperty property, PropertyDrawer drawer)
+		{
+			_property = property;
+			_drawer = drawer;
+		}
+
+		public override VisualElement CreateElement(int index)
+		{
+			var property = _property.GetArrayElementAtIndex(index);
+			var field = _drawer?.CreatePropertyGUI(property) ?? property.CreateField();
+
+			if (field == null) // this happens when a ManagedReference type name changes
+				return new VisualElement();
+
+			field.userData = index;
+			field.Bind(_property.serializedObject);
+
+			if (!(field is Foldout))
+				field.SetFieldLabel(null); // TODO: for references this should be the type name
+
+			return field;
+		}
+
+		public override bool CanAdd()
+		{
+			return CanAddCallback != null
+				? CanAddCallback.Invoke()
+				: base.CanAdd();
+		}
+
+		public override bool CanRemove(int index)
+		{
+			return CanRemoveCallback != null
+				? CanRemoveCallback.Invoke(index)
+				: base.CanRemove(index);
+		}
+
+		public override int ItemCount
+		{
+			get => _property.arraySize;
+		}
+
+		public override void AddItem()
+		{
+			_property.ResizeArray(_property.arraySize + 1);
+			_property.serializedObject.ApplyModifiedProperties();
+		}
+
+		public override void AddItem(object item)
+		{
+			_property.ResizeArray(_property.arraySize + 1);
+			_property.GetArrayElementAtIndex(_property.arraySize - 1).TrySetValue(item);
+			_property.serializedObject.ApplyModifiedProperties();
+		}
+
+		public override void RemoveItem(int index)
+		{
+			_property.RemoveFromArray(index);
+			_property.serializedObject.ApplyModifiedProperties();
+		}
+
+		public override void ReorderItem(int from, int to)
+		{
+			_property.MoveArrayElement(from, to);
+			_property.serializedObject.ApplyModifiedProperties();
 		}
 	}
 }

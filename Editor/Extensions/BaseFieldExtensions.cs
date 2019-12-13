@@ -17,7 +17,6 @@ namespace PiRhoSoft.Utilities.Editor
 		public static readonly string LabelUssClassName = BaseField<int>.labelUssClassName;
 		public static readonly string NoLabelVariantUssClassName = BaseField<int>.noLabelVariantUssClassName;
 
-		private const string _labelName = "label";
 		private const string _visualInputName = "visualInput";
 
 		private const string _configureFieldName = "ConfigureField";
@@ -58,23 +57,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#endregion
 
-		#region Helper Methods
-
-		public static void SetLabel(VisualElement element, string label)
-		{
-			// label is public but this allows access without knowing the generic type of the BaseField
-
-			GetProperty(element.GetType(), _labelName, BindingFlags.Instance | BindingFlags.Public).SetValue(element, label);
-		}
-
-		#endregion
-
 		#region Extension Methods
-
-		public static void SetLabel<T>(this BaseField<T> field, string label)
-		{
-			SetLabel((VisualElement)field, label);
-		}
 
 		public static VisualElement GetVisualInput<T>(this BaseField<T> field)
 		{

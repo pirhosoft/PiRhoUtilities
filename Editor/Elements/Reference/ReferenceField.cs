@@ -237,7 +237,7 @@ namespace PiRhoSoft.Utilities.Editor
 						Label = property.displayName;
 
 					if (ReferenceType == null)
-						ReferenceType = Type.GetType(property.managedReferenceFieldTypename); // TODO: this is not in the normal type name format because that would be too easy
+						ReferenceType = property.GetManagedReferenceFieldType();
 
 					if (Drawer == null)
 						Drawer = new PropertyReferenceDrawer(property, null);
@@ -255,7 +255,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private static object GetReference(SerializedProperty property)
 		{
-			return property.GetObject<object>(); // PENDING: slow but property.managedReferenceValue is write only
+			return property.GetManagedReferenceValue();
 		}
 
 		private void SetReference(SerializedProperty property, object value)
