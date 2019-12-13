@@ -1,42 +1,42 @@
-﻿.pirho-dictionary
+﻿.pirho-dictionary-field
 {
 }
 
-.pirho-dictionary--empty
+.pirho-dictionary-field--empty
 {
 }
 
-.pirho-dictionary--add-disabled
+.pirho-dictionary-field--add-disabled
 {
 }
 
-.pirho-dictionary--remove-disabled
+.pirho-dictionary-field--remove-disabled
 {
 }
 
-.pirho-dictionary--add-key-invalid
+.pirho-dictionary-field--add-key-invalid
 {
 }
 
-.pirho-dictionary__empty-label
+.pirho-dictionary-field__empty-label
 {
 	display: none;
 	margin: 5px;
 	white-space: normal;
 }
 
-.pirho-dictionary--empty .pirho-dictionary__empty-label
+.pirho-dictionary-field--empty .pirho-dictionary-field__empty-label
 {
 	display: flex;
 }
 
-.pirho-dictionary__items
+.pirho-dictionary-field__items
 {
 	flex-grow: 1;
 	flex-shrink: 1;
 }
 
-.pirho-dictionary__key-text
+.pirho-dictionary-field__key-text
 {
 	display: flex;
 	flex-grow: 1;
@@ -44,33 +44,33 @@
 	align-self: stretch;
 }
 
-.pirho-dictionary--add-disabled .pirho-dictionary__key-text
+.pirho-dictionary-field--add-disabled .pirho-dictionary-field__key-text
 {
 	display: none;
 }
 
-.pirho-dictionary--add-key-valid .pirho-dictionary__key-text > .unity-text-field__input
+.pirho-dictionary-field--add-key-valid .pirho-dictionary-field__key-text > .unity-text-field__input
 {
 	background-color: #99FF99;
 }
 
-.pirho-dictionary--add-key-invalid .pirho-dictionary__key-text > .unity-text-field__input
+.pirho-dictionary-field--add-key-invalid .pirho-dictionary-field__key-text > .unity-text-field__input
 {
 	background-color: #FF9999;
 }
 
-.pirho-dictionary__add-button
+.pirho-dictionary-field__add-button
 {
 	margin-left: 5px;
 	display: flex;
 }
 
-.pirho-dictionary--add-disabled .pirho-dictionary__add-button
+.pirho-dictionary-field--add-disabled .pirho-dictionary-field__add-button
 {
 	display: none;
 }
 
-.pirho-dictionary__remove-button
+.pirho-dictionary-field__remove-button
 {
 	display: flex;
 	margin-left: 5px;
@@ -82,12 +82,12 @@
 	margin-top: 3px;
 }
 
-.pirho-dictionary--remove-disabled .pirho-dictionary__remove-button
+.pirho-dictionary-field--remove-disabled .pirho-dictionary-field__remove-button
 {
 	display: none;
 }
 
-.pirho-dictionary__drag-handle
+.pirho-dictionary-field__drag-handle
 {
 	display: flex;
 	cursor: move-arrow;
@@ -97,12 +97,12 @@
 	align-self: flex-start;
 }
 
-.pirho-dictionary--move-disabled .pirho-dictionary__drag-handle
+.pirho-dictionary-field--reorder-disabled .pirho-dictionary-field__drag-handle
 {
 	display: none;
 }
 
-.pirho-dictionary__drag-placeholder
+.pirho-dictionary-field__drag-placeholder
 {
 	flex-grow: 1;
 	background-color: #3E7DE7;
@@ -110,7 +110,7 @@
 	border-radius: 2px;
 }
 
-.pirho-dictionary__item
+.pirho-dictionary-field__item
 {
 	flex-direction: row;
 	flex-grow: 1;
@@ -118,29 +118,29 @@
 	padding: 3px 5px;
 }
 
-.pirho-dictionary__item--dragging
+.pirho-dictionary-field__item--dragging
 {
 	position: absolute;
 	background-color: #000;
 }
 
-.pirho-dictionary__item--even
+.pirho-dictionary-field__item--even
 {
 	background-color: #DDDDDD;
 }
 
-.pirho-dictionary__item--odd
+.pirho-dictionary-field__item--odd
 {
 	background-color: #CCCCCC;
 }
 
-.pirho-dictionary__item__content
+.pirho-dictionary-field__item__content
 {
 	flex-grow: 1;
 	flex-shrink: 1;
 }
 
-.pirho-dictionary__item .unity-foldout
+.pirho-dictionary-field__item .unity-foldout
 {
 	margin-left: 15px;
 	margin-top: 2px;

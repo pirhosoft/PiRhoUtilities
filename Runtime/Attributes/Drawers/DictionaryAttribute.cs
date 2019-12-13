@@ -7,12 +7,13 @@
 
 		public string AllowAdd = Always;
 		public string AllowRemove = Always;
-		public string AllowReorder = Never;
+		public bool AllowReorder = true;
 		public string EmptyLabel = null;
 
 		public string AddCallback = null;
 		public string RemoveCallback = null;
 		public string ReorderCallback = null;
+		public string ChangeCallback = null;
 
 		public DictionaryAttribute() : base(ContainerPhase, 0)
 		{

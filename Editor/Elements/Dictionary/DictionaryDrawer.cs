@@ -13,19 +13,20 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private const string _missingAllowAddMethodWarning = "(PUDDMAAM) invalid method for AllowAdd on field '{0}': the method '{1}' could not be found on type '{2}'";
 		private const string _missingAllowRemoveMethodWarning = "(PUDDMARM) invalid method for AllowRemove on field '{0}': the method '{1}' could not be found on type '{2}'";
-		private const string _missingAllowReorderMethodWarning = "(PUDDMAROM) invalid method for AllowReorder on field '{0}': the method '{1}' could not be found on type '{2}'";
 		private const string _invalidAllowAddMethodWarning = "(PUDDIAAM) invalid method for AllowAdd on field '{0}': the method '{1}' should take no parameters";
 		private const string _invalidAllowRemoveMethodWarning = "(PUDDIARM) invalid method for AllowRemove on field '{0}': the method '{1}' should take an 0 or 1 int parameters";
-		private const string _invalidAllowReorderMethodWarning = "(PUDDIAROM) invalid method for AllowReorder on field '{0}': the method '{1}' should take 0, 1, or 2 int parameters";
 
 		private const string _missingAddMethodWarning = "(PUDDMAM) invalid method for AddCallback on field '{0}': the method '{1}' could not be found on type '{2}'";
 		private const string _missingRemoveMethodWarning = "(PUDDMRM) invalid method for RemoveCallback on field '{0}': the method '{1}' could not be found on type '{2}'";
 		private const string _missingReorderMethodWarning = "(PUDDMROM) invalid method for ReorderCallback on field '{0}': the method '{1}' could not be found on type '{2}'";
-		private const string _invalidAddMethodWarning = "(PUDDIAM) invalid method for AddCallback on field '{0}': the method '{1}' should take no parameters";
-		private const string _invalidRemoveMethodWarning = "(PUDDIRM) invalid method for RemoveCallback on field '{0}': the method '{1}' should take an 0 or 1 int parameters";
+		private const string _missingChangeMethodWarning = "(PUDDMCM) invalid method for ChangeCallback on field '{0}': the method '{1}' could not be found on type '{2}'";
+		private const string _invalidAddMethodWarning = "(PUDDIAM) invalid method for AddCallback on field '{0}': the method '{1}' should take 0 or 1 string parameters";
+		private const string _invalidRemoveMethodWarning = "(PUDDIRM) invalid method for RemoveCallback on field '{0}': the method '{1}' should take 0 or 1 string parameters";
 		private const string _invalidReorderMethodWarning = "(PUDDIROM) invalid method for ReorderCallback on field '{0}': the method '{1}' should take 0, 1, or 2 int parameters";
+		private const string _invalidChangeMethodWarning = "(PUDDICM) invalid method for ChangeCallback on field '{0}': the method '{1}' should take no parameters";
 
 		private static readonly object[] _oneParameter = new object[1];
+		private static readonly object[] _twoParameters = new object[2];
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -34,10 +35,26 @@ namespace PiRhoSoft.Utilities.Editor
 
 			if (keys != null && keys.isArray && values != null && values.isArray && keys.arrayElementType == "string")
 			{
+				var isReference = fieldInfo.FieldType.BaseType.GetGenericTypeDefinition() == typeof(ReferenceDictionary<,>);
+				var referenceType = isReference ? fieldInfo.GetFieldType() : null;
 				var dictionaryAttribute = attribute as DictionaryAttribute;
 				var parent = property.GetOwner<object>();
+				var drawer = this.GetNextDrawer();
+				var proxy = new PropertyDictionaryProxy(property, keys, values, drawer);
 				var path = property.propertyPath;
-				var proxy = CreateProxy(property, keys, values, dictionaryAttribute);
+
+				var field = new DictionaryField();
+				field.SetItemType(referenceType, true);
+				field.Proxy = proxy;
+				field.bindingPath = property.propertyPath;
+				// TODO: other stuff from ConfigureField
+
+				if (!string.IsNullOrEmpty(dictionaryAttribute.EmptyLabel))
+					field.EmptyLabel = dictionaryAttribute.EmptyLabel;
+
+				field.AllowAdd = dictionaryAttribute.AllowAdd != DictionaryAttribute.Never;
+				field.AllowRemove = dictionaryAttribute.AllowRemove != DictionaryAttribute.Never;
+				field.AllowReorder = dictionaryAttribute.AllowReorder;
 
 				if (TryGetMethod(dictionaryAttribute.AllowAdd, _missingAllowAddMethodWarning, path, out var allowAddMethod))
 					AddConditional(proxy.CanAddCallback, parent, allowAddMethod, _invalidAllowAddMethodWarning, path);
@@ -45,20 +62,17 @@ namespace PiRhoSoft.Utilities.Editor
 				if (TryGetMethod(dictionaryAttribute.AllowRemove, _missingAllowRemoveMethodWarning, path, out var allowRemoveMethod))
 					AddConditional(proxy.CanRemoveCallback, parent, allowRemoveMethod, _invalidAllowRemoveMethodWarning, path);
 
-				if (TryGetMethod(dictionaryAttribute.AllowReorder, _missingAllowReorderMethodWarning, path, out var allowReorderMethod))
-					AddConditional(proxy.CanReorderCallback, parent, allowReorderMethod, _invalidAllowReorderMethodWarning, path);
-
 				if (TryGetMethod(dictionaryAttribute.AddCallback, _missingAddMethodWarning, path, out var addMethod))
-					AddCallback(proxy.AddCallback, parent, addMethod, _invalidAddMethodWarning, path);
+					SetupAddCallback(field, parent, addMethod, _invalidAddMethodWarning, path);
 
 				if (TryGetMethod(dictionaryAttribute.RemoveCallback, _missingRemoveMethodWarning, path, out var removeMethod))
-					AddCallback(proxy.RemoveCallback, parent, removeMethod, _invalidRemoveMethodWarning, path);
+					SetupRemoveCallback(field, parent, removeMethod, _invalidRemoveMethodWarning, path);
 
 				if (TryGetMethod(dictionaryAttribute.ReorderCallback, _missingReorderMethodWarning, path, out var reorderMethod))
-					AddCallback(proxy.ReorderCallback, parent, reorderMethod, _invalidReorderMethodWarning, path);
+					SetupReorderCallback(field, parent, reorderMethod, _invalidReorderMethodWarning, path);
 
-				var field = new DictionaryField();
-				field.Setup(keys, proxy);
+				if (TryGetMethod(dictionaryAttribute.ChangeCallback, _missingChangeMethodWarning, path, out var changeMethod))
+					SetupChangeCallback(field, parent, changeMethod, _invalidChangeMethodWarning, path);
 
 				return field;
 			}
@@ -67,24 +81,6 @@ namespace PiRhoSoft.Utilities.Editor
 				Debug.LogWarningFormat(_invalidTypeWarning, property.propertyPath);
 				return new FieldContainer(property.displayName);
 			}
-		}
-
-		private PropertyDictionaryProxy CreateProxy(SerializedProperty property, SerializedProperty keys, SerializedProperty values, DictionaryAttribute dictionaryAttribute)
-		{
-			var drawer = this.GetNextDrawer();
-			var tooltip = this.GetTooltip();
-			var proxy = new PropertyDictionaryProxy(property, keys, values, drawer)
-			{
-				Tooltip = tooltip,
-				AllowAdd = dictionaryAttribute.AllowAdd != null,
-				AllowRemove = dictionaryAttribute.AllowRemove != null,
-				AllowReorder = dictionaryAttribute.AllowReorder != null
-			};
-
-			if (dictionaryAttribute.EmptyLabel != null)
-				proxy.EmptyLabel = dictionaryAttribute.EmptyLabel;
-
-			return proxy;
 		}
 
 		private bool TryGetMethod(string name, string warning, string propertyPath, out MethodInfo method)
@@ -101,14 +97,50 @@ namespace PiRhoSoft.Utilities.Editor
 			return method != null;
 		}
 
-		private void AddCallback(Action<string> callback, object parent, MethodInfo method, string warning, string propertyPath)
+		private void SetupAddCallback(DictionaryField field, object parent, MethodInfo method, string warning, string propertyPath)
 		{
 			var owner = method.IsStatic ? null : parent;
 
 			if (method.HasSignature(null))
-				callback += key => NoneCallback(method, owner);
+				field.RegisterCallback<DictionaryField.ItemAddedEvent>(e => NoneCallback(method, owner));
 			else if (method.HasSignature(null, typeof(string)))
-				callback += key => OneCallback(key, method, owner);
+				field.RegisterCallback<DictionaryField.ItemAddedEvent>(e => OneCallback(e.Key, method, owner));
+			else
+				Debug.LogWarningFormat(warning, propertyPath, method.Name);
+		}
+
+		private void SetupRemoveCallback(DictionaryField field, object parent, MethodInfo method, string warning, string propertyPath)
+		{
+			var owner = method.IsStatic ? null : parent;
+
+			if (method.HasSignature(null))
+				field.RegisterCallback<DictionaryField.ItemRemovedEvent>(e => NoneCallback(method, owner));
+			else if (method.HasSignature(null, typeof(string)))
+				field.RegisterCallback<DictionaryField.ItemRemovedEvent>(e => OneCallback(e.Key, method, owner));
+			else
+				Debug.LogWarningFormat(warning, propertyPath, method.Name);
+		}
+
+		private void SetupReorderCallback(DictionaryField field, object parent, MethodInfo method, string warning, string propertyPath)
+		{
+			var owner = method.IsStatic ? null : parent;
+
+			if (method.HasSignature(null))
+				field.RegisterCallback<DictionaryField.ItemReorderedEvent>(e => NoneCallback(method, owner));
+			else if (method.HasSignature(null, typeof(int)))
+				field.RegisterCallback<DictionaryField.ItemReorderedEvent>(e => OneIntCallback(e.ToIndex, method, owner));
+			else if (method.HasSignature(null, typeof(int), typeof(int)))
+				field.RegisterCallback<DictionaryField.ItemReorderedEvent>(e => TwoIntCallback(e.FromIndex, e.ToIndex, method, owner));
+			else
+				Debug.LogWarningFormat(warning, propertyPath, method.Name);
+		}
+
+		private void SetupChangeCallback(DictionaryField field, object parent, MethodInfo method, string warning, string propertyPath)
+		{
+			var owner = method.IsStatic ? null : parent;
+
+			if (method.HasSignature(null))
+				field.RegisterCallback<DictionaryField.ItemsChangedEvent>(e => NoneCallback(method, owner));
 			else
 				Debug.LogWarningFormat(warning, propertyPath, method.Name);
 		}
@@ -137,6 +169,25 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				_oneParameter[0] = key;
 				method.Invoke(owner, _oneParameter);
+			}
+		}
+
+		private void OneIntCallback(int index, MethodInfo method, object owner)
+		{
+			if (!EditorApplication.isPlaying)
+			{
+				_oneParameter[0] = index;
+				method.Invoke(owner, _oneParameter);
+			}
+		}
+
+		private void TwoIntCallback(int from, int to, MethodInfo method, object owner)
+		{
+			if (!EditorApplication.isPlaying)
+			{
+				_twoParameters[0] = from;
+				_twoParameters[1] = to;
+				method.Invoke(owner, _twoParameters);
 			}
 		}
 

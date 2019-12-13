@@ -381,7 +381,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   List:
-    _items: 00000000
+    _items: 01000000020000000300000004000000
   Array:
     _items:
     - 5.58
@@ -395,9 +395,21 @@ MonoBehaviour:
     _items:
     - id: 1
   Dictionary:
-    _keys: []
-    _values: []
+    _keys:
+    - Two
+    - Three
+    - Four
+    _values:
+    - 
+    - 
+    - 
   ClassDictionary:
+    _keys:
+    - One
+    _values:
+    - First: 0
+      Second: 5
+  ReferenceDictionary:
     _keys: []
     _values: []
   references:
