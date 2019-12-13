@@ -1,4 +1,5 @@
 ﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
@@ -39,22 +40,19 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public static void MakeDragReceiver<Receiver>(this Receiver receiver) where Receiver : VisualElement, IDragReceiver
 		{
-			receiver.RegisterCallback<DragEnterEvent>(OnDragEnter);
-			receiver.RegisterCallback<DragLeaveEvent>(OnDragLeave);
-			receiver.RegisterCallback<DragExitedEvent>(OnDragExited);
 			receiver.RegisterCallback<DragUpdatedEvent>(OnDragUpdated);
 			receiver.RegisterCallback<DragPerformEvent>(OnDragPerform);
 		}
 
 		private static void OnMouseDown(MouseDownEvent evt)
 		{
-			if (evt.target is IDraggable draggable && evt.button == (int)MouseButton.LeftMouse)
+			if (evt.currentTarget is IDraggable draggable && evt.button == (int)MouseButton.LeftMouse)
 				draggable.DragState = DragState.Ready;
 		}
 
 		private static void OnMouseMove(MouseMoveEvent evt)
 		{
-			if (evt.target is IDraggable draggable && draggable.DragState == DragState.Ready)
+			if (evt.currentTarget is IDraggable draggable && draggable.DragState == DragState.Ready)
 			{
 				DragAndDrop.PrepareStartDrag();
 				DragAndDrop.objectReferences = draggable.DragObjects;
@@ -67,36 +65,24 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private static void OnMouseUp(MouseUpEvent evt)
 		{
-			if (evt.target is IDraggable draggable && draggable.DragState != DragState.Idle && evt.button == (int)MouseButton.LeftMouse)
+			if (evt.currentTarget is IDraggable draggable && draggable.DragState != DragState.Idle && evt.button == (int)MouseButton.LeftMouse)
 				draggable.DragState = DragState.Idle;
-		}
-
-		private static void OnDragEnter(DragEnterEvent evt)
-		{
-		}
-
-		private static void OnDragExited(DragExitedEvent evt)
-		{
-		}
-
-		private static void OnDragLeave(DragLeaveEvent evt)
-		{
 		}
 
 		private static void OnDragUpdated(DragUpdatedEvent evt)
 		{
-			if (evt.target is IDragReceiver receiver)
+			if (evt.currentTarget is IDragReceiver receiver)
 			{
 				var objects = DragAndDrop.objectReferences;
 				var data = DragAndDrop.GetGenericData(_dragData);
 
-				DragAndDrop.visualMode = receiver.IsDragValid(objects, data) ? DragAndDropVisualMode.Link : DragAndDropVisualMode.Rejected;
+				DragAndDrop.visualMode = receiver.IsDragValid(objects, data) ? DragAndDropVisualMode.Generic : DragAndDropVisualMode.Rejected;
 			}
 		}
 
 		private static void OnDragPerform(DragPerformEvent evt)
 		{
-			if (evt.target is IDragReceiver receiver)
+			if (evt.currentTarget is IDragReceiver receiver)
 			{
 				var objects = DragAndDrop.objectReferences;
 				var data = DragAndDrop.GetGenericData(_dragData);
