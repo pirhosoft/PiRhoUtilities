@@ -52,6 +52,8 @@ namespace PiRhoSoft.Utilities.Editor
 			private Type _value;
 			private string _valueName => _value?.AssemblyQualifiedName ?? string.Empty;
 
+			private Texture _typeIcon;
+
 			public TypePickerControl()
 			{
 				SetLabel(null, GetLabel());
@@ -103,6 +105,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 						_provider = ScriptableObject.CreateInstance<TypeProvider>();
 						_provider.Setup(types.BaseType.Name, types.Paths.Prepend("None").ToList(), types.Types.Select(t => t.AssemblyQualifiedName).Prepend(string.Empty).ToList(), GetIcon, OnSelected);
+						_typeIcon = AssetPreview.GetMiniTypeThumbnail(Type);
 					}
 
 					if (Type == null || (_value != null && !Type.IsAssignableFrom(_value)))
@@ -125,7 +128,15 @@ namespace PiRhoSoft.Utilities.Editor
 
 			private Texture GetIcon(Type type)
 			{
-				return type == null ? null : AssetPreview.GetMiniTypeThumbnail(type);
+				if (type == null)
+					return _typeIcon;
+
+				var icon = AssetPreview.GetMiniTypeThumbnail(type);
+				
+				if (icon == null)
+					return _typeIcon;
+
+				return icon;
 			}
 
 			private string GetLabel()

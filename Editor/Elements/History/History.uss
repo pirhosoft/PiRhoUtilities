@@ -28,9 +28,18 @@
 	flex-grow: 1;
 }
 
+.pirho-history__list__item__icon
+{
+	min-height: 12px;
+	max-height: 12px;
+	min-width: 12px;
+	max-width: 12px;
+	margin: 1px 3px 0px 3px;
+	align-self: center;
+}
+
 .pirho-history__list__item__label
 {
-	padding-left: 6px;
 	align-self: center;
 }
 
