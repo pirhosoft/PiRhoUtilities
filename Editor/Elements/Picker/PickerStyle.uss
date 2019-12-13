@@ -1,21 +1,22 @@
-﻿.pirho-base-picker
+﻿.pirho-picker-field
+{
+}
+
+.pirho-picker-field__input
 {
 	flex-grow: 1;
-	flex-shrink: 1;
 	flex-direction: row;
-	align-content: center;
 	align-items: center;
 }
 
-.pirho-base-picker__button
+.pirho-picker-field__input__button
 {
 	flex-grow: 1;
-	flex-shrink: 1;
 	margin: 0;
 	padding: 0px 3px 1px 3px;
 }
 
-.pirho-base-picker__button__icon
+.pirho-picker-field__input__button__icon
 {
 	min-height: 12px;
 	max-height: 12px;
@@ -25,7 +26,7 @@
 	align-self: center;
 }
 
-.pirho-base-picker__button__label
+.pirho-picker-field__input__button__label
 {
 	flex-grow: 1;
 	margin-top: 1px;

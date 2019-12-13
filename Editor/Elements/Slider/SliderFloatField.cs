@@ -5,16 +5,14 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class SliderFloatField : SliderField<float>
 	{
-		public SliderFloatField(string label) : base(label)
+		public SliderFloatField(string label) : base(label, new SliderFloatControl())
 		{
-			_control = new SliderFloatControl();
-			Setup(_control);
 		}
 
 		public SliderFloatField(string label, float min, float max) : this(label)
 		{
-			_control.Minimum = min;
-			_control.Maximum = max;
+			Minimum = min;
+			Maximum = max;
 		}
 
 		public SliderFloatField(float min, float max) : this(null, min, max)

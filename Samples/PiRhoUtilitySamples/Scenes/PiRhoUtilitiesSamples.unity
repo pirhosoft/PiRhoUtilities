@@ -206,8 +206,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 628e2cbde454d7a49b77648863582a8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 
-  GameObject: {fileID: 124499908}
+  Type: UnityEngine.Component, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+    PublicKeyToken=null
+  GameObject: {fileID: 1714043357}
   IntPopup: 0
   FloatPopup: 0.4
   StringPopup: Hola
@@ -216,11 +217,11 @@ MonoBehaviour:
   DynamicStringPopup: Hola
   ComboBox: This doesn't have to be in the options
   Euler: {x: 0, y: 0, z: 0.42261827, w: 0.90630776}
-  Buttons: 2
+  Buttons: 1
   Flags: 0
-  Slider: 3
+  Slider: 0
   FloatSlider: 0
-  MinMaxSlider: {x: 0, y: 8.777778}
+  MinMaxSlider: {x: 0.45614028, y: 9.233918}
 --- !u!4 &155533742
 Transform:
   m_ObjectHideFlags: 0

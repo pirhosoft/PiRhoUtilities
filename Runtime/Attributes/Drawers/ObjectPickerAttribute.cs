@@ -10,7 +10,7 @@ namespace PiRhoSoft.Utilities
 		{
 		}
 
-		public ObjectPickerAttribute(Type baseType) : base(FieldPhase, 0)
+		public ObjectPickerAttribute(Type baseType) : base(ControlPhase, 0)
 		{
 			BaseType = baseType; 
 		}

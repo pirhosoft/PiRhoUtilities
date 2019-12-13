@@ -9,7 +9,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string LabelUssClassName = UssClassName + "__label";
 		public const string InputUssClassName = UssClassName + "__input";
 
-		protected SliderControl _control;
+		protected readonly SliderControl _control;
 
 		public ValueType Minimum
 		{
@@ -23,11 +23,7 @@ namespace PiRhoSoft.Utilities.Editor
 			set => _control.Maximum = value;
 		}
 
-		public SliderField(string label) : base(label, null)
-		{
-		}
-
-		protected void Setup(SliderControl control)
+		protected SliderField(string label, SliderControl control) : base(label, control)
 		{
 			_control = control;
 			_control.AddToClassList(InputUssClassName);
@@ -40,9 +36,7 @@ namespace PiRhoSoft.Utilities.Editor
 			labelElement.AddToClassList(LabelUssClassName);
 
 			AddToClassList(UssClassName);
-			this.SetVisualInput(_control);
 			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
-
 		}
 
 		public override void SetValueWithoutNotify(ValueType newValue)
@@ -64,18 +58,18 @@ namespace PiRhoSoft.Utilities.Editor
 
 	#region UXML Support
 
-		public class UxmlTraits<AttributeType> : UxmlTraits where AttributeType : TypedUxmlAttributeDescription<ValueType>, new()
+		public class UxmlTraits<AttributeType> : BaseFieldTraits<ValueType, AttributeType> where AttributeType : TypedUxmlAttributeDescription<ValueType>, new()
 		{
 			private readonly AttributeType _minimum = new AttributeType { name = "minimum" };
 			private readonly AttributeType _maximum = new AttributeType { name = "maximum" };
 
 			public override void Init(VisualElement element, IUxmlAttributes bag, CreationContext cc)
 			{
-				base.Init(element, bag, cc);
-
 				var field = element as SliderField<ValueType>;
 				field.Minimum = _minimum.GetValueFromBag(bag, cc);
 				field.Maximum = _maximum.GetValueFromBag(bag, cc);
+
+				base.Init(element, bag, cc);
 			}
 		}
 	}

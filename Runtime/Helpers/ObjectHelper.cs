@@ -94,14 +94,8 @@ namespace PiRhoSoft.Utilities
 		{
 			var objectList = new ObjectList();
 
-			var objects = includeDisabled ? Resources.FindObjectsOfTypeAll(type).ToList() : Object.FindObjectsOfType(type).ToList();
-
-			for (var i = 0; i < objects.Count; i++)
-			{
-				var obj = objects[i];
-				if (obj.hideFlags != HideFlags.None && obj.hideFlags != HideFlags.NotEditable)
-					objects.RemoveAt(i--);
-			}
+			var objects = (includeDisabled ? Resources.FindObjectsOfTypeAll(type) : Object.FindObjectsOfType(type))
+				.Where(obj => obj.hideFlags == HideFlags.None || obj.hideFlags == HideFlags.NotEditable);
 
 			var paths = objects.Select(obj => GetPath(obj));
 			var prefix = FindCommonPath(paths);
