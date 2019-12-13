@@ -64,13 +64,13 @@ namespace PiRhoSoft.Utilities.Editor
 						SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(new Vector2(worldBound.center.x, worldBound.yMax + worldBound.height - 4)), worldBound.width), _provider);
 				};
 
-				_icon = new Image();
+				_icon = new Image { pickingMode = PickingMode.Ignore };
 				_icon.AddToClassList(IconUssClassName);
 
-				_label = new TextElement();
+				_label = new TextElement { pickingMode = PickingMode.Ignore };
 				_label.AddToClassList(InputLabelUssClassName);
 
-				_arrow = new VisualElement();
+				_arrow = new VisualElement { pickingMode = PickingMode.Ignore };
 				_arrow.AddToClassList(BasePopupField<ValueType, ValueType>.arrowUssClassName);
 
 				_button.Add(_icon);

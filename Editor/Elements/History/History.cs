@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace PiRhoSoft.Utilities.Editor
 {
 	[InitializeOnLoad]
-	public class History : EditorWindow
+	public class HistoryWindow : EditorWindow
 	{
 		public const string Stylesheet = "History/History.uss";
 		public const string UssClassName = "pirho-history";
@@ -15,12 +15,53 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string HeaderButtonUssClassName = HeaderUssClassName + "__button";
 		public const string ListUssClassName = UssClassName + "__list";
 		public const string ListItemUssClassName = ListUssClassName + "__item";
+		public const string ListItemIconUssClassName = ListItemUssClassName + "__icon";
 		public const string ListItemLabelUssClassName = ListItemUssClassName + "__label";
 		public const string CurrentListItemUssClassName = ListItemUssClassName + "--current";
+
+		private const string _windowMenu = "Window/PiRho Utilities/History";
+		private const string _moveBackMenu = "Edit/History/Move Back &LEFT";
+		private const string _moveForwardMenu = "Edit/History/Move Forward &RIGHT";
+
+		private static readonly Icon _icon = Icon.BuiltIn("VerticalLayoutGroup Icon");
 
 		private Button _back;
 		private Button _forward;
 		private ListView _listView;
+
+		[MenuItem(_windowMenu)]
+		private static void Open()
+		{
+			var window = GetWindow<HistoryWindow>();
+			window.titleContent = new GUIContent("History", _icon.Texture);
+			window.Show();
+		}
+
+		[MenuItem(_moveBackMenu, validate = true)]
+		public static bool CanMoveBack()
+		{
+			return HistoryList.Current > 0;
+		}
+
+		[MenuItem(_moveForwardMenu, validate = true)]
+		public static bool CanMoveForward()
+		{
+			return HistoryList.Current < HistoryList.History.Count - 1;
+		}
+
+		[MenuItem(_moveBackMenu, priority = 1)]
+		public static void MoveBack()
+		{
+			if (CanMoveBack())
+				HistoryList.Select(HistoryList.Current - 1);
+		}
+
+		[MenuItem(_moveForwardMenu, priority = 2)]
+		public static void MoveForward()
+		{
+			if (CanMoveForward())
+				HistoryList.Select(HistoryList.Current + 1);
+		}
 
 		void OnEnable()
 		{
@@ -30,18 +71,15 @@ namespace PiRhoSoft.Utilities.Editor
 			var header = new VisualElement();
 			header.AddToClassList(HeaderUssClassName);
 
-			_back = new Button(HistoryList.MoveBack) { text = "Back" };
+			_back = new Button(MoveBack) { text = "Back" };
 			_back.AddToClassList(HeaderButtonUssClassName);
 
-			_forward = new Button(HistoryList.MoveForward) { text = "Forward" };
+			_forward = new Button(MoveForward) { text = "Forward" };
 			_forward.AddToClassList(HeaderButtonUssClassName);
 
-			_listView = new ListView();
+			_listView = new ListView(HistoryList.History, 21, MakeItem, BindItem);
 			_listView.AddToClassList(ListUssClassName);
 			_listView.selectionType = SelectionType.Single;
-			_listView.itemsSource = HistoryList.History;
-			_listView.makeItem = MakeItem;
-			_listView.bindItem = BindItem;
 			_listView.onItemChosen += item => Select();
 			_listView.onSelectionChanged += selection => Highlight();
 
@@ -62,8 +100,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void Refresh()
 		{
-			_back.SetEnabled(HistoryList.CanMoveBack());
-			_forward.SetEnabled(HistoryList.CanMoveForward());
+			_back.SetEnabled(CanMoveBack());
+			_forward.SetEnabled(CanMoveForward());
 			_listView.Refresh();
 		}
 
@@ -100,15 +138,20 @@ namespace PiRhoSoft.Utilities.Editor
 			public Object[] DragObjects => HistoryList.History[_index];
 			public object DragData => DragObjects;
 
+			private readonly Image _icon;
 			private readonly Label _label;
+
 			private int _index;
 
 			public HistoryItem()
 			{
-				_label = new Label();
-				_label.pickingMode = PickingMode.Ignore;
+				_icon = new Image();
+				_icon.AddToClassList(ListItemIconUssClassName);
+
+				_label = new Label { pickingMode = PickingMode.Ignore };
 				_label.AddToClassList(ListItemLabelUssClassName);
 				
+				Add(_icon);
 				Add(_label);
 				AddToClassList(ListItemUssClassName);
 
@@ -118,20 +161,15 @@ namespace PiRhoSoft.Utilities.Editor
 			public void Bind(int index)
 			{
 				_index = index;
-				_label.text = HistoryList.GetName(index);
-				_label.EnableInClassList(CurrentListItemUssClassName, index == HistoryList.Current);
+				_icon.image = HistoryList.GetIcon(_index);
+				_label.text = HistoryList.GetName(_index);
+				_label.EnableInClassList(CurrentListItemUssClassName, _index == HistoryList.Current);
 			}
 		}
 
 		private static class HistoryList
 		{
-			private const string _windowMenu = "Window/PiRho Utilities/History";
-			private const string _moveBackMenu = "Edit/History/Move Back &LEFT";
-			private const string _moveForwardMenu = "Edit/History/Move Forward &RIGHT";
-
 			private const int _capacity = 100;
-
-			private static readonly Icon _icon = Icon.BuiltIn("VerticalLayoutGroup Icon");
 
 			private static bool _skipNextSelection = false;
 
@@ -144,45 +182,23 @@ namespace PiRhoSoft.Utilities.Editor
 				EditorApplication.playModeStateChanged += OnPlayModeChanged;
 			}
 
-			[MenuItem(_windowMenu)]
-			private static void Open()
-			{
-				var window = GetWindow<History>();
-				window.titleContent = new GUIContent("History", _icon.Texture);
-				window.Show();
-			}
-
-			[MenuItem(_moveBackMenu, validate = true)]
-			public static bool CanMoveBack()
-			{
-				return Current > 0;
-			}
-
-			[MenuItem(_moveForwardMenu, validate = true)]
-			public static bool CanMoveForward()
-			{
-				return Current < History.Count - 1;
-			}
-
-			[MenuItem(_moveBackMenu, priority = 1)]
-			public static void MoveBack()
-			{
-				if (CanMoveBack())
-					Select(--Current);
-			}
-
-			[MenuItem(_moveForwardMenu, priority = 2)]
-			public static void MoveForward()
-			{
-				if (CanMoveForward())
-					Select(++Current);
-			}
-
 			public static void Select(int index)
 			{
 				Current = index;
 				_skipNextSelection = true;
 				Selection.objects = History[index];
+			}
+
+			public static Texture GetIcon(int index)
+			{
+				var objects = History[index];
+
+				return GetIcon(objects[0]);
+			}
+
+			private static Texture GetIcon(Object obj)
+			{
+				return obj ? AssetPreview.GetMiniThumbnail(obj) : null;
 			}
 
 			public static string GetName(int index)
