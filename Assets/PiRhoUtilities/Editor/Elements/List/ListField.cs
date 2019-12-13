@@ -269,7 +269,7 @@ namespace PiRhoSoft.Utilities.Editor
 			AddToClassList(UssClassName);
 			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
 
-			_addButton = AddHeaderButton(_addIcon.Texture, _addTooltip, AddButtonUssClassName, AddItem);
+			_addButton = AddHeaderButton(_addIcon.Texture, _addTooltip, AddButtonUssClassName, DoAdd);
 			_removeButtons = Content.Query<IconButton>(className: RemoveButtonUssClassName).Build();
 			_reorderHandles = Content.Query<IconButton>(className: DragHandleUssClassName).Build();
 
@@ -313,6 +313,7 @@ namespace PiRhoSoft.Utilities.Editor
 		private void UpdateReorderState()
 		{
 			EnableInClassList(ReorderDisabledUssClassName, !_allowReorder);
+
 			UnregisterCallback<MouseMoveEvent>(UpdateDrag);
 			UnregisterCallback<MouseUpEvent>(StopDrag);
 
@@ -356,8 +357,6 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void UpdateItemType()
 		{
-			_addButton.SetAction(_allowDerived ? (Action)SelectType : (Action)AddItem);
-
 			if (_itemType != null)
 			{
 				var types = TypeHelper.GetTypeList(_itemType, false);
@@ -445,6 +444,14 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Item Management
 
+		private void DoAdd()
+		{
+			if (_allowDerived)
+				SelectType();
+			else
+				AddItem();
+		}
+
 		private void SelectType()
 		{
 			if (_allowAdd && _proxy.CanAdd())
@@ -464,10 +471,10 @@ namespace PiRhoSoft.Utilities.Editor
 			if (_allowAdd && _proxy.CanAdd())
 			{
 				var item = Activator.CreateInstance(selected);
-				Proxy.AddItem(item);
+				_proxy.AddItem(item);
 				UpdateItemsWithoutNotify();
 
-				using (var e = ItemAddedEvent.GetPooled(Proxy.ItemCount - 1, item))
+				using (var e = ItemAddedEvent.GetPooled(_proxy.ItemCount - 1, item))
 				{
 					e.target = this;
 					SendEvent(e);
@@ -477,12 +484,12 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void AddItem()
 		{
-			if (_allowAdd && Proxy.CanAdd())
+			if (_allowAdd && _proxy.CanAdd())
 			{
-				Proxy.AddItem();
+				_proxy.AddItem();
 				UpdateItemsWithoutNotify();
 
-				using (var e = ItemAddedEvent.GetPooled(Proxy.ItemCount - 1, null))
+				using (var e = ItemAddedEvent.GetPooled(_proxy.ItemCount - 1, null))
 				{
 					e.target = this;
 					SendEvent(e);
