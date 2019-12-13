@@ -217,9 +217,9 @@ MonoBehaviour:
   DynamicStringPopup: Hola
   ComboBox: This doesn't have to be in the options
   Euler: {x: 0, y: 0, z: 0.42261827, w: 0.90630776}
-  Buttons: 2
+  Buttons: 1
   Flags: 0
-  Slider: 3
+  Slider: 0
   FloatSlider: 0
   MinMaxSlider: {x: 0.45614028, y: 9.233918}
 --- !u!4 &155533742
@@ -491,6 +491,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Inline:
+    Bool: 0
+    Int: 0
+    Float: 0
+    String: 
+  Frame:
     Bool: 0
     Int: 0
     Float: 0

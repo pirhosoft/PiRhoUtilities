@@ -16,4 +16,5 @@
 .pirho-slider-field__input__text
 {
 	width: 50px;
+	margin: 0px;
 }

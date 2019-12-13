@@ -24,8 +24,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public MinMaxSliderField(string label, float min, float max) : this(label)
 		{
-			_control.Minimum = new Vector2(min, rawValue.x);
-			_control.Maximum = new Vector2(rawValue.y, max);
+			Minimum = min;
+			Maximum = max;
 		}
 
 		public MinMaxSliderField(float min, float max) : this(null, min, max)

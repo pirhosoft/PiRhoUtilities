@@ -47,7 +47,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public ComboBoxField(string label, List<string> options) : this(label)
 		{
-			_comboBox.Options = options;
+			Options = options;
 		}
 
 		public ComboBoxField(List<string> options) : this(null, options)
