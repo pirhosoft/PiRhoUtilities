@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -114,6 +115,58 @@ namespace PiRhoSoft.Utilities.Editor
 				if (element.ClassListContains(validClass))
 					element.RemoveFromClassList(validClass);
 			}
+		}
+
+		#endregion
+
+		#region Property Configuration
+
+		private const string _labelName = "label";
+
+		public static void SetFieldLabel(this VisualElement field, string label)
+		{
+			if (field is PropertyField propertyField)
+			{
+				propertyField.label = label;
+
+				// if label is being cleared it will be automatically set to the property name on binding so it then needs to be reset
+				// TODO: figure out a better way to do this
+
+				if (string.IsNullOrEmpty(label))
+				{
+					field.schedule.Execute(() =>
+					{
+						propertyField.label = label;
+						var baseField = field.Q(className: BaseFieldExtensions.UssClassName);
+						baseField.SetFieldLabel(label);
+					}).StartingIn(0);
+				}
+			}
+			else if (field is FieldContainer fieldContainer)
+			{
+				fieldContainer.SetLabel(label);
+			}
+			else if (field is Foldout foldout)
+			{
+				foldout.text = label;
+
+				// clear the binding of the property to the foldout label
+				var foldoutToggle = foldout.Q<Toggle>(className: Foldout.toggleUssClassName);
+				var foldoutLabel = foldoutToggle.Q<Label>(className: Toggle.textUssClassName);
+
+				foldoutLabel.bindingPath = null;
+				foldoutLabel.binding.Release();
+			}
+			else if (field.GetType().InheritsGeneric(typeof(BaseField<>)))
+			{
+				// label is public but this allows access without knowing the generic type of the BaseField
+				field.GetType().GetProperty(_labelName, BindingFlags.Instance | BindingFlags.Public).SetValue(field, label);
+			}
+		}
+
+		public static void ConfigureAsField(this VisualElement element, Label label, SerializedProperty property)
+		{
+			label.tooltip = property.GetTooltip();
 		}
 
 		#endregion

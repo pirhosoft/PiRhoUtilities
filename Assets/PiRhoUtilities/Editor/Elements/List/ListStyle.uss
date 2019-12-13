@@ -1,52 +1,52 @@
-﻿.pirho-list
+﻿.pirho-list-field
 {
 }
 
-.pirho-list--empty
+.pirho-list-field--empty
 {
 }
 
-.pirho-list--add-disabled
+.pirho-list-field--add-disabled
 {
 }
 
-.pirho-list--remove-disabled
+.pirho-list-field--remove-disabled
 {
 }
 
-.pirho-list--move-disabled
+.pirho-list-field--move-disabled
 {
 }
 
-.pirho-list__empty-label
+.pirho-list-field__empty-label
 {
 	display: none;
 	margin: 5px;
 	white-space: normal;
 }
 
-.pirho-list--empty .pirho-list__empty-label
+.pirho-list-field--empty .pirho-list-field__empty-label
 {
 	display: flex;
 }
 
-.pirho-list__items
+.pirho-list-field__items
 {
 	flex-grow: 1;
 	flex-shrink: 1;
 }
 
-.pirho-list__add-button
+.pirho-list-field__add-button
 {
 	display: flex;
 }
 
-.pirho-list--add-disabled .pirho-list__add-button
+.pirho-list-field--add-disabled .pirho-list-field__add-button
 {
 	display: none;
 }
 
-.pirho-list__remove-button
+.pirho-list-field__remove-button
 {
 	display: flex;
 	margin-left: 5px;
@@ -58,12 +58,12 @@
 	margin-top: 3px;
 }
 
-.pirho-list--remove-disabled .pirho-list__remove-button
+.pirho-list-field--remove-disabled .pirho-list-field__remove-button
 {
 	display: none;
 }
 
-.pirho-list__drag-handle
+.pirho-list-field__drag-handle
 {
 	display: flex;
 	cursor: move-arrow;
@@ -73,12 +73,12 @@
 	align-self: flex-start;
 }
 
-.pirho-list--move-disabled .pirho-list__drag-handle
+.pirho-list-field--reorder-disabled .pirho-list-field__drag-handle
 {
 	display: none;
 }
 
-.pirho-list__drag-placeholder
+.pirho-list-field__drag-placeholder
 {
 	flex-grow: 1;
 	background-color: #3E7DE7;
@@ -86,7 +86,7 @@
 	border-radius: 2px;
 }
 
-.pirho-list__item
+.pirho-list-field__item
 {
 	flex-direction: row;
 	flex-grow: 1;
@@ -94,29 +94,29 @@
 	padding: 3px 5px;
 }
 
-.pirho-list__item--dragging
+.pirho-list-field__item--dragging
 {
 	position: absolute;
 	background-color: #000;
 }
 
-.pirho-list__item--even
+.pirho-list-field__item--even
 {
 	background-color: #DFDFDF;
 }
 
-.pirho-list__item--odd
+.pirho-list-field__item--odd
 {
 	background-color: #CBCBCB;
 }
 
-.pirho-list__item__content
+.pirho-list-field__item__content
 {
 	flex-grow: 1;
 	flex-shrink: 1;
 }
 
-.pirho-list__item .unity-foldout
+.pirho-list-field__item .unity-foldout
 {
 	margin-left: 15px;
 	margin-top: 2px;
