@@ -23,7 +23,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			foreach (var className in _labelClasses)
 			{
-				var label = element.Query<Label>(className: className).First();
+				var label = element.Q<Label>(className: className);
 
 				if (label != null)
 				{

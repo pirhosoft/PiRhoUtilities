@@ -5,7 +5,13 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class FieldContainer : VisualElement
 	{
+		#region Class Names
+
 		public const string UssClassName = "pirho-field-container";
+
+		#endregion
+
+		#region Public Interface
 
 		public Label Label { get; private set; }
 
@@ -46,5 +52,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 			}
 		}
+
+		#endregion
 	}
 }

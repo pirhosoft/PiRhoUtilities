@@ -134,13 +134,17 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#endregion
 
-		#region Strings
+		#region Defaults
 
 		public const string DefaultEmptyLabel = "The list is empty";
 		public const string DefaultEmptyTooltip = "There are no items in this list";
 		public const string DefaultAddTooltip = "Add an item to this list";
 		public const string DefaultRemoveTooltip = "Remove this item from the list";
 		public const string DefaultReorderTooltip = "Move this item within the list";
+
+		public const bool DefaultAllowAdd = true;
+		public const bool DefaultAllowRemove = true;
+		public const bool DefaultAllowReorder = true;
 
 		#endregion
 
@@ -152,15 +156,17 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#endregion
 
+		#region Members
+
 		private string _emptyLabel = DefaultEmptyLabel;
 		private string _emptyTooltip = DefaultEmptyTooltip;
 		private string _addTooltip = DefaultAddTooltip;
 		private string _removeTooltip = DefaultRemoveTooltip;
 		private string _reorderTooltip = DefaultReorderTooltip;
 
-		private bool _allowAdd = true;
-		private bool _allowRemove = true;
-		private bool _allowReorder = true;
+		private bool _allowAdd = DefaultAllowAdd;
+		private bool _allowRemove = DefaultAllowRemove;
+		private bool _allowReorder = DefaultAllowReorder;
 
 		private ListProxy _proxy;
 
@@ -179,6 +185,8 @@ namespace PiRhoSoft.Utilities.Editor
 		private int _dragToIndex = -1;
 		private VisualElement _dragElement;
 		private VisualElement _dragPlaceholder;
+
+		#endregion
 
 		#region Public Interface
 
@@ -640,13 +648,31 @@ namespace PiRhoSoft.Utilities.Editor
 		#region UXML Support
 
 		public new class UxmlFactory : UxmlFactory<ListField, UxmlTraits> { }
-
-		public new class UxmlTraits : BindableElement.UxmlTraits
+		public new class UxmlTraits : Frame.UxmlTraits
 		{
+			private readonly UxmlBoolAttributeDescription _allowAdd = new UxmlBoolAttributeDescription { name = "allow-add", defaultValue = DefaultAllowAdd };
+			private readonly UxmlBoolAttributeDescription _allowRemove = new UxmlBoolAttributeDescription { name = "allow-remove", defaultValue = DefaultAllowRemove };
+			private readonly UxmlBoolAttributeDescription _allowReorder = new UxmlBoolAttributeDescription { name = "allow-reorder", defaultValue = DefaultAllowReorder };
+			private readonly UxmlStringAttributeDescription _emptyLabel = new UxmlStringAttributeDescription { name = "empty-label", defaultValue = DefaultEmptyLabel };
+			private readonly UxmlStringAttributeDescription _emptyTooltip = new UxmlStringAttributeDescription { name = "empty-tooltip", defaultValue = DefaultEmptyTooltip };
+			private readonly UxmlStringAttributeDescription _addTooltip = new UxmlStringAttributeDescription { name = "add-tooltip", defaultValue = DefaultAddTooltip };
+			private readonly UxmlStringAttributeDescription _removeTooltip = new UxmlStringAttributeDescription { name = "remove-tooltip", defaultValue = DefaultRemoveTooltip };
+			private readonly UxmlStringAttributeDescription _reorderTooltip = new UxmlStringAttributeDescription { name = "reorder-tooltip", defaultValue = DefaultReorderTooltip };
+
 			public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
 			{
 				base.Init(ve, bag, cc);
+
 				var list = ve as ListField;
+
+				list.AllowAdd = _allowAdd.GetValueFromBag(bag, cc);
+				list.AllowRemove = _allowRemove.GetValueFromBag(bag, cc);
+				list.AllowReorder = _allowReorder.GetValueFromBag(bag, cc);
+				list.EmptyLabel = _emptyLabel.GetValueFromBag(bag, cc);
+				list.EmptyTooltip = _emptyTooltip.GetValueFromBag(bag, cc);
+				list.AddTooltip =_addTooltip.GetValueFromBag(bag, cc);
+				list.RemoveTooltip = _removeTooltip.GetValueFromBag(bag, cc);
+				list.ReorderTooltip = _reorderTooltip.GetValueFromBag(bag, cc);
 			}
 		}
 

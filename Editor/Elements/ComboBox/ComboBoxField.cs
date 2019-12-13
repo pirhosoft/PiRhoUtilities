@@ -9,10 +9,28 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class ComboBoxField : BaseField<string>
 	{
+		#region Class Names
+
 		public const string Stylesheet = "ComboBox/ComboBoxStyle.uss";
 		public const string UssClassName = "pirho-combo-box-field";
 		public const string LabelUssClassName = UssClassName + "__label";
 		public const string InputUssClassName = UssClassName + "__input";
+
+		#endregion
+
+		#region Defaults
+
+		public const bool DefaultIsDelayed = false;
+
+		#endregion
+
+		#region Members
+
+		private readonly ComboBoxControl _comboBox;
+
+		#endregion
+
+		#region Public Interface
 
 		public bool IsDelayed
 		{
@@ -25,8 +43,6 @@ namespace PiRhoSoft.Utilities.Editor
 			get => _comboBox.Options;
 			set => _comboBox.Options = value;
 		}
-
-		private readonly ComboBoxControl _comboBox;
 
 		public ComboBoxField(string label) : base(label, null)
 		{
@@ -60,6 +76,10 @@ namespace PiRhoSoft.Utilities.Editor
 			_comboBox.SetValueWithoutNotify(newValue);
 		}
 
+		#endregion
+
+		#region Visual Input
+
 		private class ComboBoxControl : VisualElement
 		{
 			public const string InputTextUssClassName = InputUssClassName + "__text";
@@ -92,7 +112,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			public ComboBoxControl()
 			{
-				TextField = new TextField();
+				TextField = new TextField { isDelayed = DefaultIsDelayed };
 				TextField.AddToClassList(InputTextUssClassName);
 
 				var arrow = new VisualElement();
@@ -125,6 +145,8 @@ namespace PiRhoSoft.Utilities.Editor
 			}
 		}
 
+		#endregion
+
 		#region UXML Support
 
 		public ComboBoxField() : this(null, null) { }
@@ -133,6 +155,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public new class UxmlTraits : BaseFieldTraits<string, UxmlStringAttributeDescription>
 		{
 			private readonly UxmlStringAttributeDescription _options = new UxmlStringAttributeDescription { name = "options" };
+			private readonly UxmlBoolAttributeDescription _delayed = new UxmlBoolAttributeDescription { name = "is-delayed", defaultValue = DefaultIsDelayed };
 
 			public override void Init(VisualElement element, IUxmlAttributes bag, CreationContext cc)
 			{
@@ -142,6 +165,7 @@ namespace PiRhoSoft.Utilities.Editor
 				var options = _options.GetValueFromBag(bag, cc);
 
 				field.Options = options.Split(',').ToList();
+				field.IsDelayed = _delayed.GetValueFromBag(bag, cc);
 			}
 		}
 

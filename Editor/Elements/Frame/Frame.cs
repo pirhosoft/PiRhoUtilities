@@ -28,10 +28,13 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#endregion
 
-		#region Strings
+		#region Defaults
 
-		private const string CollapseTooltip = "Collapse this view";
-		private const string ExpandTooltip = "Expand this view";
+		public const string CollapseTooltip = "Collapse this view";
+		public const string ExpandTooltip = "Expand this view";
+
+		public const bool DefaultIsCollapsable = true;
+		public const bool DefaultIsCollapsed = false;
 
 		#endregion
 
@@ -42,21 +45,28 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#endregion
 
+		#region Private Members
+
+		private Label _labelElement;
+		private IconButton _collapseButton;
+
+		private readonly bool _addChildren = true;
+
+		private bool _isCollapsable = DefaultIsCollapsable;
+		private bool _isCollapsed = DefaultIsCollapsed;
+		private string _label = null;
+		private string _tooltip = null;
+
+		#endregion
+
+		#region Public Interface
+
 		public VisualElement Header { get; private set; }
 		public VisualElement Content { get; private set; }
 		public VisualElement Footer { get; private set; }
 
 		public VisualElement HeaderButtons { get; private set; }
 		public VisualElement FooterButtons { get; private set; }
-
-		private Label _labelElement;
-		private IconButton _collapseButton;
-
-		private bool _isCollapsable = true;
-		private bool _isCollapsed = false;
-		private string _label = null;
-		private string _tooltip = null;
-		private bool _addChildren = true;
 
 		public Frame()
 		{
@@ -116,6 +126,10 @@ namespace PiRhoSoft.Utilities.Editor
 			return button;
 		}
 
+		#endregion
+
+		#region State Setters
+
 		private void SetCollapsable(bool isCollapsable)
 		{
 			if (_isCollapsable != isCollapsable)
@@ -157,6 +171,8 @@ namespace PiRhoSoft.Utilities.Editor
 			_tooltip = tooltip;
 			UpdateLabel();
 		}
+
+		#endregion
 
 		#region UI
 
@@ -275,16 +291,24 @@ namespace PiRhoSoft.Utilities.Editor
 		#region UXML
 
 		public new class UxmlFactory : UxmlFactory<Frame, UxmlTraits> { }
-
 		public new class UxmlTraits : BindableElement.UxmlTraits
 		{
+			private readonly UxmlStringAttributeDescription _label = new UxmlStringAttributeDescription { name = "label" };
+			private readonly UxmlStringAttributeDescription _tooltip = new UxmlStringAttributeDescription { name = "tooltip" };
+			private readonly UxmlBoolAttributeDescription _collapsable = new UxmlBoolAttributeDescription { name = "is-collapsable", defaultValue = DefaultIsCollapsable };
+			private readonly UxmlBoolAttributeDescription _collapsed = new UxmlBoolAttributeDescription { name = "is-collapsed", defaultValue = DefaultIsCollapsed };
+
 			public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
 			{
 				base.Init(ve, bag, cc);
 
 				var frame = ve as Frame;
+				frame.Label = _label.GetValueFromBag(bag, cc);
+				frame.Tooltip = _tooltip.GetValueFromBag(bag, cc);
+				frame.IsCollapsable = _collapsable.GetValueFromBag(bag, cc);
+				frame.IsCollapsed = _collapsed.GetValueFromBag(bag, cc);
 
-				// label, tooltip, iscollapsable, iscollapsed, header buttons, footer buttons, content
+				// header buttons, footer buttons, content
 			}
 		}
 

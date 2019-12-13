@@ -1,29 +1,45 @@
 ﻿using System.Reflection;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
 {
-	public class PlaceholderControl : Label
+	public class Placeholder : Label
 	{
+		#region Class Names
+
 		public const string Stylesheet = "Placeholder/PlaceholderStyle.uss";
 		public const string UssClassName = "pirho-placeholder";
+
+		#endregion
+
+		#region Log Messages
+
+		private const string _invalidParentWarning = "(PUPCIP) Invalid parent for Placeholder: Placeholders can only be added to TextFields";
+
+		#endregion
+
+		#region Cached Reflection Info
 
 		private static readonly PropertyInfo _textInputProperty;
 		private static readonly PropertyInfo _textProperty;
 
-		static PlaceholderControl()
+		static Placeholder()
 		{
 			_textInputProperty = typeof(TextField).GetProperty("textInput", BindingFlags.NonPublic | BindingFlags.Instance);
 			_textProperty = _textInputProperty?.PropertyType?.GetProperty("text", BindingFlags.Public | BindingFlags.Instance);
 		}
 
-		public PlaceholderControl(string text)
-		{
-			this.text = text;
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
-			AddToClassList(UssClassName);
+		#endregion
 
+		#region Public Interface
+
+		public Placeholder(string text) : base(text)
+		{
 			pickingMode = PickingMode.Ignore;
+
+			AddToClassList(UssClassName);
+			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
 		}
 
 		public void AddToField(TextField textField)
@@ -37,6 +53,10 @@ namespace PiRhoSoft.Utilities.Editor
 			textField.RegisterCallback<KeyDownEvent>(evt => UpdateDisplayed(textField));
 		}
 
+		#endregion
+
+		#region State Management
+
 		private void UpdateDisplayed(TextField field)
 		{
 			// Execute a frame later because text won't be updated yet
@@ -48,5 +68,32 @@ namespace PiRhoSoft.Utilities.Editor
 				this.SetDisplayed(string.IsNullOrEmpty(text));
 			}).StartingIn(0);
 		}
+
+		#endregion
+
+		#region UXML Support
+
+		public Placeholder() : this(null) { }
+
+		public new class UxmlFactory : UxmlFactory<Placeholder, UxmlTraits> { }
+		public new class UxmlTraits : Label.UxmlTraits
+		{
+			public override void Init(VisualElement element, IUxmlAttributes bag, CreationContext cc)
+			{
+				base.Init(element, bag, cc);
+
+				var field = element as Placeholder;
+
+				if (field.parent is TextField textField)
+					field.AddToField(textField);
+				else
+				{
+					field.RemoveFromHierarchy();
+					Debug.LogWarning(_invalidParentWarning);
+				}
+			}
+		}
+
+		#endregion
 	}
 }

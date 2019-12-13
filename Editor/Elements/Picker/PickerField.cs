@@ -7,6 +7,8 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public abstract class PickerField<ValueType> : BaseField<ValueType> where ValueType : class
 	{
+		#region Class Names
+
 		public const string Stylesheet = "Picker/PickerStyle.uss";
 		public const string UssClassName = "pirho-picker-field";
 		public const string InputUssClassName = UssClassName + "__input";
@@ -15,7 +17,15 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string IconUssClassName = ButtonUssClassName + "__icon";
 		public const string InputLabelUssClassName = ButtonUssClassName + "__label";
 
+		#endregion
+
+		#region Members
+
 		protected readonly PickerControl _control;
+
+		#endregion
+
+		#region Public Interface
 
 		protected PickerField(string label, PickerControl control) : base(label, control)
 		{
@@ -41,6 +51,10 @@ namespace PiRhoSoft.Utilities.Editor
 			base.SetValueWithoutNotify(newValue);
 			_control.SetValueWithoutNotify(newValue);
 		}
+
+		#endregion
+
+		#region Visual Input
 
 		protected abstract class PickerControl : VisualElement
 		{
@@ -87,5 +101,7 @@ namespace PiRhoSoft.Utilities.Editor
 				_icon.SetDisplayed(icon);
 			}
 		}
+
+		#endregion
 	}
 }

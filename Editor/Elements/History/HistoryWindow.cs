@@ -9,7 +9,9 @@ namespace PiRhoSoft.Utilities.Editor
 	[InitializeOnLoad]
 	public class HistoryWindow : EditorWindow
 	{
-		public const string Stylesheet = "History/History.uss";
+		#region Class Names
+
+		public const string Stylesheet = "History/HistoryStyle.uss";
 		public const string UssClassName = "pirho-history";
 		public const string HeaderUssClassName = UssClassName + "__header";
 		public const string HeaderButtonUssClassName = HeaderUssClassName + "__button";
@@ -19,18 +21,34 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string ListItemLabelUssClassName = ListItemUssClassName + "__label";
 		public const string CurrentListItemUssClassName = ListItemUssClassName + "--current";
 
+		#endregion
+
+		#region Window Names
+
 		private const string _windowMenu = "Window/PiRho Utilities/History";
 		private const string _moveBackMenu = "Edit/History/Move Back &LEFT";
 		private const string _moveForwardMenu = "Edit/History/Move Forward &RIGHT";
 
+		#endregion
+
+		#region Icons
+
 		private static readonly Icon _icon = Icon.BuiltIn("VerticalLayoutGroup Icon");
+
+		#endregion
+
+		#region Members
 
 		private Button _back;
 		private Button _forward;
 		private ListView _listView;
 
+		#endregion
+
+		#region Window Management
+
 		[MenuItem(_windowMenu)]
-		private static void Open()
+		public static void Open()
 		{
 			var window = GetWindow<HistoryWindow>();
 			window.titleContent = new GUIContent("History", _icon.Texture);
@@ -63,7 +81,11 @@ namespace PiRhoSoft.Utilities.Editor
 				HistoryList.Select(HistoryList.Current + 1);
 		}
 
-		void OnEnable()
+		#endregion
+
+		#region ListView Management
+
+		private void OnEnable()
 		{
 			rootVisualElement.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
 			rootVisualElement.AddToClassList(UssClassName);
@@ -167,6 +189,10 @@ namespace PiRhoSoft.Utilities.Editor
 			}
 		}
 
+		#endregion
+
+		#region HistoryList Management
+
 		private static class HistoryList
 		{
 			private const int _capacity = 100;
@@ -263,5 +289,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 			}
 		}
+
+		#endregion
 	}
 }

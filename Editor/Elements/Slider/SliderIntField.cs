@@ -5,6 +5,16 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class SliderIntField : SliderField<int>
 	{
+		#region Defaults
+
+		// These match unity's internal defaults
+		public const int DefaultMinimum = 0;
+		public const int DefaultMaximum = 10;
+
+		#endregion
+
+		#region Public Interface
+
 		public SliderIntField(string label) : base(label, new SliderIntControl())
 		{
 		}
@@ -19,6 +29,10 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 		}
 
+		#endregion
+
+		#region Visual Input
+
 		private class SliderIntControl : SliderControl
 		{
 			public override int Minimum { get => _slider.lowValue; set => _slider.lowValue = value; }
@@ -29,7 +43,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			public SliderIntControl()
 			{
-				_slider = new SliderInt();
+				_slider = new SliderInt(DefaultMinimum, DefaultMaximum);
 				_slider.AddToClassList(SliderUssClassName);
 				_text = new IntegerField();
 				_text.AddToClassList(TextUssClassName);
@@ -45,12 +59,21 @@ namespace PiRhoSoft.Utilities.Editor
 			}
 		}
 
+		#endregion
+
 		#region UXML Support
 
 		public SliderIntField() : this(null) { }
 
 		public new class UxmlFactory : UxmlFactory<SliderIntField, UxmlTraits> { }
-		public new class UxmlTraits : UxmlTraits<UxmlIntAttributeDescription> { }
+		public new class UxmlTraits : UxmlTraits<UxmlIntAttributeDescription>
+		{
+			public UxmlTraits()
+			{
+				_minimum.defaultValue = DefaultMinimum;
+				_maximum.defaultValue = DefaultMaximum;
+			}
+		}
 
 		#endregion
 	}

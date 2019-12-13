@@ -4,12 +4,22 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public abstract class SliderField<ValueType> : BaseField<ValueType>
 	{
+		#region Class Names
+
 		public const string Stylesheet = "Slider/SliderStyle.uss";
 		public const string UssClassName = "pirho-slider-field";
 		public const string LabelUssClassName = UssClassName + "__label";
 		public const string InputUssClassName = UssClassName + "__input";
 
+		#endregion
+
+		#region Members
+
 		protected readonly SliderControl _control;
+
+		#endregion
+
+		#region Public Interface
 
 		public ValueType Minimum
 		{
@@ -45,6 +55,10 @@ namespace PiRhoSoft.Utilities.Editor
 			_control.SetValueWithoutNotify(newValue);
 		}
 
+		#endregion
+
+		#region Visual Input
+
 		protected abstract class SliderControl : VisualElement
 		{
 			public const string SliderUssClassName = InputUssClassName + "__slider";
@@ -56,12 +70,14 @@ namespace PiRhoSoft.Utilities.Editor
 			public abstract void SetValueWithoutNotify(ValueType value);
 		}
 
-	#region UXML Support
+		#endregion
 
-		public class UxmlTraits<AttributeType> : BaseFieldTraits<ValueType, AttributeType> where AttributeType : TypedUxmlAttributeDescription<ValueType>, new()
+		#region UXML Support
+
+		public abstract class UxmlTraits<AttributeType> : BaseFieldTraits<ValueType, AttributeType> where AttributeType : TypedUxmlAttributeDescription<ValueType>, new()
 		{
-			private readonly AttributeType _minimum = new AttributeType { name = "minimum" };
-			private readonly AttributeType _maximum = new AttributeType { name = "maximum" };
+			protected readonly AttributeType _minimum = new AttributeType { name = "minimum" };
+			protected readonly AttributeType _maximum = new AttributeType { name = "maximum" };
 
 			public override void Init(VisualElement element, IUxmlAttributes bag, CreationContext cc)
 			{
@@ -72,7 +88,7 @@ namespace PiRhoSoft.Utilities.Editor
 				base.Init(element, bag, cc);
 			}
 		}
-	}
 
-	#endregion
+		#endregion
+	}
 }

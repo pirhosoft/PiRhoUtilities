@@ -11,7 +11,7 @@ namespace PiRhoSoft.Utilities.Editor
 			var type = this.GetFieldType();
 			var next = this.GetNextDrawer();
 			var drawer = new PropertyReferenceDrawer(property, next);
-			var field = new ReferenceField(null, type, drawer);
+			var field = new ReferenceField(type, drawer);
 
 			field.bindingPath = property.propertyPath; // TODO: other stuff from ConfigureField
 
