@@ -279,6 +279,63 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Toggle: 0
+--- !u!1 &1127808754
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1127808756}
+  - component: {fileID: 1127808755}
+  m_Layer: 0
+  m_Name: ReferenceSample
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1127808755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127808754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c813ea1fcfac12240ae91e78dcc9f758, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Reference1:
+    id: 0
+  Reference2:
+    id: 1
+  references:
+    version: 1
+    00000000:
+      type: {class: TestReferenceBool, ns: PiRhoSoft.Utilities, asm: Assembly-CSharp}
+      data:
+        Value: 1
+    00000001:
+      type: {class: TestReferenceInt, ns: PiRhoSoft.Utilities, asm: Assembly-CSharp}
+      data:
+        Value: 10
+--- !u!4 &1127808756
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127808754}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.6797447, y: -0.029274847, z: -1.6642413}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1189498314
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,19 +380,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   List:
-    _items: 0400000000000000010000000000000000000000
+    _items: 00000000
   Array:
     _items:
+    - 5.58
     - 0
     - 0
     - 0
-    - 0
+  ReferenceList:
+    _items:
+    - id: 0
+  InlineReferenceList:
+    _items:
+    - id: 1
   Dictionary:
     _keys: []
     _values: []
   ClassDictionary:
     _keys: []
     _values: []
+  references:
+    version: 1
+    00000000:
+      type: {class: ContainersSample/FloatReference, ns: PiRhoSoft.Utilities, asm: Assembly-CSharp}
+      data:
+        FloatValue: 0
+    00000001:
+      type: {class: ContainersSample/IntReference, ns: PiRhoSoft.Utilities, asm: Assembly-CSharp}
+      data:
+        IntValue: 0
 --- !u!1 &1714043357
 GameObject:
   m_ObjectHideFlags: 0
@@ -490,6 +563,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Inline:
+    Bool: 0
+    Int: 0
+    Float: 0
+    String: 
+  Frame:
     Bool: 0
     Int: 0
     Float: 0

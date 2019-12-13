@@ -6,8 +6,15 @@ namespace PiRhoSoft.Utilities
 	[AddComponentMenu("PiRho Utilities/Containers")]
 	public class ContainersSample : MonoBehaviour
 	{
+		public interface ITestReference { }
+		[Serializable] public class IntReference : ITestReference { public int IntValue; }
+		[Serializable] public class BoolReference : ITestReference { public bool BoolValue; }
+		[Serializable] public class FloatReference : ITestReference { public float FloatValue; }
+		[Serializable] public class StringReference : ITestReference { public string StringValue; }
+
 		[Serializable] public class TestList : SerializedList<int> { }
 		[Serializable] public class TestArray : SerializedArray<float> { public TestArray(int count) : base(count) { } }
+		[Serializable] public class TestReferenceList : ReferenceList<ITestReference> { }
 		[Serializable] public class TestDictionary : SerializedDictionary<string, string> { }
 		[Serializable] public class TestClass { public int First; public string Second; }
 		[Serializable] public class TestClassDictionary : SerializedDictionary<string, TestClass> { }
@@ -17,9 +24,17 @@ namespace PiRhoSoft.Utilities
 		public TestList List;
 
 		[Tooltip("A 4 item test array")]
-		[List(AllowAdd = ListAttribute.Never, AllowRemove = ListAttribute.Never, AllowReorder = ListAttribute.Never)]
+		[List(AllowAdd = ListAttribute.Never, AllowRemove = ListAttribute.Never, AllowReorder = false)]
 		[Minimum(0.0f)]
 		public TestArray Array = new TestArray(4);
+
+		[Tooltip("A test list of references")]
+		[List]
+		public TestReferenceList ReferenceList;
+
+		[Tooltip("A test inline list of references")]
+		[List] [Inline]
+		public TestReferenceList InlineReferenceList;
 
 		[Tooltip("A test dictionary with callbacks")]
 		[Dictionary(AddCallback = nameof(DictionaryItemAdded), RemoveCallback = nameof(DictionaryItemRemoved))]

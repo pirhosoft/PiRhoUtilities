@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -98,8 +100,64 @@ namespace PiRhoSoft.Utilities.Editor
 		}
 
 		// this property is internal for some reason
-		public static Gradient GetGradientValue(this SerializedProperty property) => _gradientValueProperty?.GetValue(property) as Gradient;
-		public static void SetGradientValue(this SerializedProperty property, Gradient gradient) => _gradientValueProperty?.SetValue(property, gradient);
+		public static Gradient GetGradientValue(this SerializedProperty property)
+		{
+			return _gradientValueProperty?.GetValue(property) as Gradient;
+		}
+
+		public static void SetGradientValue(this SerializedProperty property, Gradient gradient)
+		{
+			_gradientValueProperty?.SetValue(property, gradient);
+		}
+
+		public static Type GetManagedReferenceFieldType(this SerializedProperty property)
+		{
+			if (property.propertyType != SerializedPropertyType.ManagedReference)
+				return null;
+
+			return ParseType(property.managedReferenceFieldTypename);
+		}
+
+		public static Type GetManagedReferenceValueType(this SerializedProperty property)
+		{
+			if (property.propertyType != SerializedPropertyType.ManagedReference)
+				return null;
+
+			return ParseType(property.managedReferenceFullTypename);
+		}
+
+		private static Regex _unityType = new Regex(@"(\S+) ([^/]+)(?:/(.+))?", RegexOptions.Compiled);
+		private static Dictionary<string, Type> _unityTypeMap = new Dictionary<string, Type>();
+
+		private static Type ParseType(string unityName)
+		{
+			if (!_unityTypeMap.TryGetValue(unityName, out var type))
+			{
+				var match = _unityType.Match(unityName);
+
+				if (match.Success)
+				{
+					// unity format is "Assembly Type" or "Assembly Parent/Type"
+					// c# format is "Type, Assembly" or "Parent+Type, Assembly" but Assembly must be fully qualified
+
+					var assembly = match.Groups[1].Value;
+					var name = match.Groups[2].Value;
+					var nested = match.Groups[3].Value;
+					var fullName = string.IsNullOrEmpty(nested) ? name : $"{name}+{nested}";
+
+					var a = AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(am => am.GetName().Name == assembly);
+					type = a.GetType(fullName);
+					_unityTypeMap.Add(unityName, type);
+				}
+			}
+
+			return type;
+		}
+
+		public static object GetManagedReferenceValue(this SerializedProperty property)
+		{
+			return property.GetObject<object>(); // PENDING: slow but property.managedReferenceValue is write only
+		}
 
 		public static VisualElement CreateField(this SerializedProperty property)
 		{
@@ -119,17 +177,10 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				property.ClearArray();
 			}
-			else if (property.propertyType != SerializedPropertyType.ManagedReference && property.hasChildren)
+			else if (property.hasChildren && property.propertyType != SerializedPropertyType.ManagedReference)
 			{
-				// TODO: probably needs to be more robust or the iteration fixed or something
-				var end = property.GetEndProperty();
-				property.NextVisible(true);
-
-				while (!SerializedProperty.EqualContents(property, end))
-				{
+				foreach (var child in property.Children())
 					property.SetToDefault();
-					property.NextVisible(false);
-				}
 			}
 			else
 			{
@@ -160,7 +211,7 @@ namespace PiRhoSoft.Utilities.Editor
 					case SerializedPropertyType.Vector3Int: property.vector3IntValue = default; break;
 					case SerializedPropertyType.RectInt: property.rectIntValue = default; break;
 					case SerializedPropertyType.BoundsInt: property.boundsIntValue = default; break;
-					case SerializedPropertyType.ManagedReference: property.managedReferenceValue = null; break;
+					case SerializedPropertyType.ManagedReference: property.managedReferenceValue = default; break;
 				}
 			}
 		}
@@ -169,28 +220,74 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			// this boxes for value types but I don't think there's a way around that without dynamic code generation
 
-			if (typeof(T) == typeof(int) && property.propertyType == SerializedPropertyType.Integer) { value = (T)(object)property.intValue; return true; }
-			if (typeof(T) == typeof(bool) && property.propertyType == SerializedPropertyType.Boolean) { value = (T)(object)property.boolValue; return true; }
-			if (typeof(T) == typeof(float) && property.propertyType == SerializedPropertyType.Float) { value = (T)(object)property.floatValue; return true; }
-			if (typeof(T) == typeof(string) && property.propertyType == SerializedPropertyType.String) { value = (T)(object)property.stringValue; return true; }
-			if (typeof(T) == typeof(Color) && property.propertyType == SerializedPropertyType.Color) { value = (T)(object)property.colorValue; return true; }
-			if (typeof(T) == typeof(LayerMask) && property.propertyType == SerializedPropertyType.LayerMask) { value = (T)(object)property.intValue; return true; }
-			if ((typeof(T) == typeof(Enum) || typeof(T).IsEnum) && property.propertyType == SerializedPropertyType.Enum) { value = (T)(object)property.GetEnumValue(); return true; }
-			if (typeof(T) == typeof(Vector2) && property.propertyType == SerializedPropertyType.Vector2) { value = (T)(object)property.vector2Value; return true; }
-			if (typeof(T) == typeof(Vector3) && property.propertyType == SerializedPropertyType.Vector3) { value = (T)(object)property.vector3Value; return true; }
-			if (typeof(T) == typeof(Vector4) && property.propertyType == SerializedPropertyType.Vector4) { value = (T)(object)property.vector4Value; return true; }
-			if (typeof(T) == typeof(Rect) && property.propertyType == SerializedPropertyType.Rect) { value = (T)(object)property.rectValue; return true; }
-			if (typeof(T) == typeof(AnimationCurve) && property.propertyType == SerializedPropertyType.AnimationCurve) { value = (T)(object)property.animationCurveValue; return true; }
-			if (typeof(T) == typeof(Bounds) && property.propertyType == SerializedPropertyType.Bounds) { value = (T)(object)property.boundsValue; return true; }
-			if (typeof(T) == typeof(Gradient) && property.propertyType == SerializedPropertyType.Gradient) { value = (T)(object)property.GetGradientValue(); return true; }
-			if (typeof(T) == typeof(Quaternion) && property.propertyType == SerializedPropertyType.Quaternion) { value = (T)(object)property.quaternionValue; return true; }
-			if (typeof(T) == typeof(Vector2Int) && property.propertyType == SerializedPropertyType.Vector2Int) { value = (T)(object)property.vector2IntValue; return true; }
-			if (typeof(T) == typeof(Vector3Int) && property.propertyType == SerializedPropertyType.Vector3Int) { value = (T)(object)property.vector3IntValue; return true; }
-			if (typeof(T) == typeof(RectInt) && property.propertyType == SerializedPropertyType.RectInt) { value = (T)(object)property.rectIntValue; return true; }
-			if (typeof(T) == typeof(BoundsInt) && property.propertyType == SerializedPropertyType.BoundsInt) { value = (T)(object)property.boundsIntValue; return true; }
-			if (typeof(Object).IsAssignableFrom(typeof(T)) && property.propertyType == SerializedPropertyType.ObjectReference) { value = (T)(object)property.objectReferenceValue; return true; }
+			var type = typeof(T);
+
+			switch (property.propertyType)
+			{
+				case SerializedPropertyType.Generic: break;
+				case SerializedPropertyType.Integer: if (type == typeof(int)) { value = (T)(object)property.intValue; return true; } break;
+				case SerializedPropertyType.Boolean: if (type == typeof(bool)) { value = (T)(object)property.boolValue; return true; } break;
+				case SerializedPropertyType.Float: if (type == typeof(float)) { value = (T)(object)property.floatValue; return true; } break;
+				case SerializedPropertyType.String: if (type == typeof(string)) { value = (T)(object)property.stringValue; return true; } break;
+				case SerializedPropertyType.Color: if (type == typeof(Color)) { value = (T)(object)property.colorValue; return true; } break;
+				case SerializedPropertyType.ObjectReference: if (typeof(Object).IsAssignableFrom(type)) { value = (T)(object)property.objectReferenceValue; return true; } break;
+				case SerializedPropertyType.LayerMask: if (type == typeof(LayerMask)) { value = (T)(object)property.intValue; return true; } break;
+				case SerializedPropertyType.Enum: if (type == typeof(Enum) || type.IsEnum) { value = (T)(object) property.GetEnumValue(); return true; } break;
+				case SerializedPropertyType.Vector2: if (type == typeof(Vector2)) { value = (T)(object)property.vector2Value; return true; } break;
+				case SerializedPropertyType.Vector3: if (type == typeof(Vector3)) { value = (T)(object)property.vector3Value; return true; } break;
+				case SerializedPropertyType.Vector4: if (type == typeof(Vector4)) { value = (T)(object)property.vector4Value; return true; } break;
+				case SerializedPropertyType.Rect: if (type == typeof(Rect)) { value = (T)(object)property.rectValue; return true; } break;
+				case SerializedPropertyType.ArraySize: if (type == typeof(int)) { value = (T)(object)property.intValue; return true; } break;
+				case SerializedPropertyType.Character: if (type == typeof(int)) { value = (T)(object)property.intValue; return true; } break;
+				case SerializedPropertyType.AnimationCurve: if (type == typeof(AnimationCurve)) { value = (T)(object)property.animationCurveValue; return true; } break;
+				case SerializedPropertyType.Bounds: if (type == typeof(Bounds)) { value = (T)(object)property.boundsValue; return true; } break;
+				case SerializedPropertyType.Gradient: if (type == typeof(Gradient)) { value = (T)(object)property.GetGradientValue(); return true; } break;
+				case SerializedPropertyType.Quaternion: if (type == typeof(Quaternion)) { value = (T)(object)property.quaternionValue; return true; } break;
+				case SerializedPropertyType.ExposedReference: break;
+				case SerializedPropertyType.FixedBufferSize: break;
+				case SerializedPropertyType.Vector2Int: if (type == typeof(Vector2Int)) { value = (T)(object)property.vector2IntValue; return true; } break;
+				case SerializedPropertyType.Vector3Int: if (type == typeof(Vector3Int)) { value = (T)(object)property.vector3IntValue; return true; } break;
+				case SerializedPropertyType.RectInt: if (type == typeof(RectInt)) { value = (T)(object)property.rectIntValue; return true; } break;
+				case SerializedPropertyType.BoundsInt: if (type == typeof(BoundsInt)) { value = (T)(object)property.boundsIntValue; return true; } break;
+				case SerializedPropertyType.ManagedReference: var managed = property.GetManagedReferenceValue(); if (managed is T t) { value = t; return true; } break;
+			}
 
 			value = default;
+			return false;
+		}
+
+		public static bool TrySetValue(this SerializedProperty property, object value)
+		{
+			switch (property.propertyType)
+			{
+				case SerializedPropertyType.Generic: return false;
+				case SerializedPropertyType.Integer: if (value is int i) { property.intValue = i; return true; } return false;
+				case SerializedPropertyType.Boolean: if (value is bool b) { property.boolValue = b; return true; } return false;
+				case SerializedPropertyType.Float: if (value is float f) { property.floatValue = f; return true; } return false;
+				case SerializedPropertyType.String: if (value is string s) { property.stringValue = s; return true; } return false;
+				case SerializedPropertyType.Color: if (value is Color color) { property.colorValue = color; return true; } return false;
+				case SerializedPropertyType.ObjectReference: if (typeof(Object).IsAssignableFrom(value.GetType())) { property.objectReferenceValue = (Object)value; return true; } return false;
+				case SerializedPropertyType.LayerMask: if (value is LayerMask mask) { property.intValue = mask; return true; } return false;
+				case SerializedPropertyType.Enum: if (value.GetType().IsEnum || value.GetType() == typeof(Enum)) { return property.SetEnumValue((Enum)value); } return false;
+				case SerializedPropertyType.Vector2: if (value is Vector2 v2) { property.vector2Value = v2; return true; } return false;
+				case SerializedPropertyType.Vector3: if (value is Vector3 v3) { property.vector3Value = v3; return true; } return false;
+				case SerializedPropertyType.Vector4: if (value is Vector4 v4) { property.vector4Value = v4; return true; } return false;
+				case SerializedPropertyType.Rect: if (value is Rect rect) { property.rectValue = rect; return true; } return false;
+				case SerializedPropertyType.ArraySize: if (value is int size) { property.intValue = size; return true; } return false;
+				case SerializedPropertyType.Character: if (value is int character) { property.intValue = character; return true; } return false;
+				case SerializedPropertyType.AnimationCurve: if (value is AnimationCurve curve) { property.animationCurveValue = curve; return true; } return false;
+				case SerializedPropertyType.Bounds: if (value is Bounds bounds) { property.boundsValue = bounds; return true; } return false;
+				case SerializedPropertyType.Gradient: if (value is Gradient gradient) { property.SetGradientValue(gradient); return true; } return false;
+				case SerializedPropertyType.Quaternion: if (value is Quaternion q) { property.quaternionValue = q; return true; } return false;
+				case SerializedPropertyType.ExposedReference: return false;
+				case SerializedPropertyType.FixedBufferSize: return false;
+				case SerializedPropertyType.Vector2Int: if (value is Vector2Int v2i) { property.vector2IntValue = v2i; return true; } return false;
+				case SerializedPropertyType.Vector3Int: if (value is Vector3Int v3i) { property.vector3IntValue = v3i; return true; } return false;
+				case SerializedPropertyType.RectInt: if (value is RectInt recti) { property.rectIntValue = recti; return true; } return false;
+				case SerializedPropertyType.BoundsInt: if (value is BoundsInt boundsi) { property.boundsIntValue = boundsi; return true; } return false;
+				case SerializedPropertyType.ManagedReference: if (property.GetManagedReferenceFieldType().IsAssignableFrom(value.GetType())) { property.managedReferenceValue = value; return true; } return false;
+			}
+
 			return false;
 		}
 
@@ -198,6 +295,19 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			var type = property.GetObject<object>().GetType();
 			return (Enum)Enum.Parse(type, property.intValue.ToString());
+		}
+
+		public static bool SetEnumValue(this SerializedProperty property, Enum value)
+		{
+			var index = Array.IndexOf(property.enumNames, value.ToString());
+
+			if (index >= 0)
+			{
+				property.enumValueIndex = index;
+				return true;
+			}
+
+			return false;
 		}
 
 		public static void ResizeArray(this SerializedProperty arrayProperty, int newSize)
