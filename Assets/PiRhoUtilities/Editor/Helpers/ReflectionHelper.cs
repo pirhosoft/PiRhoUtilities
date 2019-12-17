@@ -148,7 +148,7 @@ namespace PiRhoSoft.Utilities.Editor
 			return null;
 		}
 
-		private static ChangeTriggerControl<FieldType> GetSerializedPropertyTrigger<FieldType>(SerializedProperty property, string sourceName, string attributeName, string sourceParameterName, ref bool found, Action<FieldType> updateAction)
+		private static ChangeTrigger<FieldType> GetSerializedPropertyTrigger<FieldType>(SerializedProperty property, string sourceName, string attributeName, string sourceParameterName, ref bool found, Action<FieldType> updateAction)
 		{
 			var sibling = property.GetSibling(sourceName);
 
@@ -159,7 +159,7 @@ namespace PiRhoSoft.Utilities.Editor
 				if (!ValidateProperty(sibling, typeof(FieldType)))
 					Debug.LogWarningFormat(property.serializedObject.targetObject, _invalidSiblingWarning, sourceParameterName, attributeName, property.propertyPath, nameof(FieldType));
 				else
-					return new ChangeTriggerControl<FieldType>(property, (oldValue, newValue) => updateAction?.Invoke(newValue));
+					return new ChangeTrigger<FieldType>(property, (changedProperty, oldValue, newValue) => updateAction?.Invoke(newValue));
 			}
 
 			return null;
