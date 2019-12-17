@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 
 namespace PiRhoSoft.Utilities.Editor
@@ -93,6 +94,26 @@ namespace PiRhoSoft.Utilities.Editor
 					type = type.BaseType;
 				}
 			}
+		}
+
+		#endregion
+
+		#region Utility
+
+		public static Type FindType(string name)
+		{
+			// search with normal rules
+			var type = Type.GetType(name);
+
+			// search in default runtime assembly
+			if (type == null)
+				type = Type.GetType($"{name}, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null");
+
+			// search in default editor assembly
+			if (type == null)
+				type = Type.GetType($"{name}, Assembly-CSharp-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null");
+
+			return type;
 		}
 
 		#endregion

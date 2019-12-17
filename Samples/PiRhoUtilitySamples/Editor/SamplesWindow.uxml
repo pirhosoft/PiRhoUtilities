@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UXML
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="UnityEngine.UIElements"
+	xsi:noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
+	xsi:schemaLocation="UnityEngine.UIElements ../UIElementsSchema/UnityEngine.UIElements.xsd">
+
+	<ListView name="sample-list"></ListView>
+	<Box class="code-container">
+		<ScrollView class="view-scroller" mode="Vertical">
+			<VisualElement name="code-sample" class="sample-view"></VisualElement>
+		</ScrollView>
+		<ScrollView class="code-scroller" mode="VerticalAndHorizontal">
+			<TextField name="code-text" class="code-view" multiline="true"></TextField>
+		</ScrollView>
+	</Box>
+	<Box class="uxml-container">
+		<ScrollView class="view-scroller" mode="Vertical">
+			<VisualElement name="uxml-sample" class="sample-view"></VisualElement>
+		</ScrollView>
+		<ScrollView class="code-scroller" mode="VerticalAndHorizontal">
+			<TextField name="uxml-text" class="code-view" multiline="true"></TextField>
+		</ScrollView>
+		<ScrollView class="code-scroller" mode="VerticalAndHorizontal">
+			<TextField name="uxml-code-text" class="code-view" multiline="true"></TextField>
+		</ScrollView>
+	</Box>
+</UXML>

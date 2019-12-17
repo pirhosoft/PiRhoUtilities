@@ -92,6 +92,38 @@ namespace PiRhoSoft.Utilities.Editor
 			_defaultBindEnumMethod.Invoke(null, new object[] { field, wrapper, property, getter, setter, comparer });
 		}
 
+		public static void BindManagedReference<ReferenceType>(INotifyValueChanged<ReferenceType> field, SerializedProperty property, Action onSet)
+		{
+			CreateBind(field, property, GetManagedReference<ReferenceType>, (p, v) => { SetManagedReference(p, v); onSet?.Invoke(); }, CompareManagedReferences);
+		}
+
+		private static ReferenceType GetManagedReference<ReferenceType>(SerializedProperty property)
+		{
+			var value = property.GetManagedReferenceValue();
+			if (value is ReferenceType reference)
+				return reference;
+
+			return default;
+		}
+
+		private static void SetManagedReference<ReferenceType>(SerializedProperty property, ReferenceType value)
+		{
+			// PENDING: built in change tracking for undo doesn't work for ManagedReference yet
+
+			Undo.RegisterCompleteObjectUndo(property.serializedObject.targetObject, "Change reference");
+
+			property.managedReferenceValue = value;
+
+			property.serializedObject.ApplyModifiedProperties();
+			Undo.FlushUndoRecordObjects();
+		}
+
+		private static bool CompareManagedReferences<ReferenceType>(ReferenceType value, SerializedProperty property, Func<SerializedProperty, ReferenceType> getter)
+		{
+			var currentValue = getter(property);
+			return ReferenceEquals(value, currentValue);
+		}
+
 		#endregion
 	}
 }

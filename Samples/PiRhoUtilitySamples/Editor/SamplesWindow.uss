@@ -1,0 +1,44 @@
+﻿:root
+{
+	flex-direction: row;
+}
+
+#sample-list
+{
+	--unity-item-height: 26;
+	width: 200px;
+	border-right-width: 1px;
+	border-right-color: black;
+}
+
+#sample-list Label
+{
+	padding: 5px;
+}
+
+.code-container, .uxml-container
+{
+	flex-grow: 1;
+	flex-basis: 0;
+}
+
+.sample-view
+{
+	flex-grow: 1;
+	border-bottom-width: 1px;
+	border-bottom-color: black;
+}
+
+.code-container .code-scroller
+{
+	max-height: 50%;
+}
+
+.uxml-container .code-scroller
+{
+	max-height: 33%;
+}
+
+.code-view
+{
+}
