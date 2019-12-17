@@ -14,7 +14,8 @@ namespace PiRhoSoft.Utilities.Editor
 			if (property.propertyType == SerializedPropertyType.Enum)
 			{
 				var flags = attribute as EnumButtonsAttribute;
-				var field = new EnumButtonsField(this.GetFieldType());
+				var field = new EnumButtonsField();
+				field.Type = this.GetFieldType();
 
 				if (flags.Flags.HasValue)
 					field.UseFlags = true;
