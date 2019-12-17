@@ -7,9 +7,15 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		public static bool HasSignature(this MethodInfo method, Type returnType, params Type[] parameterTypes)
 		{
-			var parameters = method.GetParameters();
+			if (returnType != null && method.ReturnType != returnType)
+				return false;
 
-			if (returnType != null && method.ReturnType != returnType) return false;
+			return method.HasParameters(parameterTypes);
+		}
+
+		public static bool HasParameters(this MethodInfo method, params Type[] parameterTypes)
+		{
+			var parameters = method.GetParameters();
 			if (parameters.Length != parameterTypes.Length) return false;
 
 			for (var i = 0; i < parameters.Length; i++)

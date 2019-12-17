@@ -699,7 +699,7 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				var arrayProperty = property.FindPropertyRelative("Array.size");
 
-				if (arrayProperty == null)
+				if (arrayProperty != null)
 				{
 					var sizeBinding = new ChangeTriggerControl<int>(null, (oldSize, size) => UpdateItems());
 					sizeBinding.Watch(arrayProperty);

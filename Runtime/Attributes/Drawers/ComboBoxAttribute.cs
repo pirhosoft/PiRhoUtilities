@@ -5,17 +5,19 @@ namespace PiRhoSoft.Utilities
 {
 	public class ComboBoxAttribute : PropertyTraitAttribute
 	{
-		public string OptionsMethod { get; private set; }
 		public List<string> Options { get; private set; }
+		public string OptionsSource { get; private set; }
+		public bool AutoUpdate { get; private set; }
 
 		public ComboBoxAttribute(string[] options) : base(ControlPhase, 0)
 		{
 			Options = options.ToList();
 		}
 
-		public ComboBoxAttribute(string optionsMethod) : base(ControlPhase, 0)
+		public ComboBoxAttribute(string optionsSource, bool autoUpdate = true) : base(ControlPhase, 0)
 		{
-			OptionsMethod = optionsMethod;
+			OptionsSource = optionsSource;
+			AutoUpdate = autoUpdate;
 		}
 	}
 }

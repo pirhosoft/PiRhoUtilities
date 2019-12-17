@@ -11,8 +11,11 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		public virtual VisualElement CreateElement(int index)
 		{
-			var element = new VisualElement();
-			element.userData = index;
+			var element = new VisualElement
+			{
+				userData = index
+			};
+
 			return element;
 		}
 
@@ -107,7 +110,7 @@ namespace PiRhoSoft.Utilities.Editor
 	public class DictionaryProxy<T> : DictionaryProxy
 	{
 		private Dictionary<string, T> _items = new Dictionary<string, T>();
-		private List<string> _indexMap = new List<string>();
+		private readonly List<string> _indexMap = new List<string>();
 
 		public Dictionary<string, T> Items { get => _items; set => SetItems(value); }
 		public Action<string, VisualElement> Creator { get; private set; }
@@ -176,7 +179,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public Func<string, bool> CanAddCallback;
 		public Func<string, bool> CanRemoveCallback;
 
-		private SerializedProperty _property;
+		private readonly SerializedProperty _property;
 		private readonly SerializedProperty _keysProperty;
 		private readonly SerializedProperty _valuesProperty;
 		private readonly PropertyDrawer _drawer;

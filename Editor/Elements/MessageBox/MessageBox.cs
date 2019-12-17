@@ -58,6 +58,10 @@ namespace PiRhoSoft.Utilities.Editor
 			set	{ ((INotifyValueChanged<string>)_label).SetValueWithoutNotify(value); }
 		}
 
+		public MessageBox() : this(DefaultType, string.Empty)
+		{
+		}
+
 		public MessageBox(MessageBoxType type, string message)
 		{
 			_image = new Image();
@@ -94,8 +98,6 @@ namespace PiRhoSoft.Utilities.Editor
 		#endregion
 
 		#region UXML Support
-
-		public MessageBox() : this(DefaultType, string.Empty) { }
 
 		public new class UxmlFactory : UxmlFactory<MessageBox, UxmlTraits> { }
 		public new class UxmlTraits : VisualElement.UxmlTraits
