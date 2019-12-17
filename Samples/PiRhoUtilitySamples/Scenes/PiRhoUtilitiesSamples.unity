@@ -166,7 +166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RequiredString: 
   RequiredObject: {fileID: 0}
-  OddInt: 0
+  OddInt: 3
   MaximumInt: 10
   MinimumInt: 5
   ClampedInt: 5
@@ -174,7 +174,7 @@ MonoBehaviour:
   MinimumFloat: 5
   ClampedFloat: 10
   SnappedInt: -20
-  SnappedFloat: 3
+  SnappedFloat: 2
   MaximumString: 
   RequiredShortString: 
 --- !u!1 &155533740
