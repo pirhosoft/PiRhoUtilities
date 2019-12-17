@@ -23,6 +23,10 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Public Interface
 
+		public EulerField() : this(null)
+		{
+		}
+
 		public EulerField(string label) : base(label, null)
 		{
 			_vectorField = new Vector3Field();
@@ -50,10 +54,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region UXML Support
 
-		public EulerField() : this(null) {}
-
 		public new class UxmlFactory : UxmlFactory<EulerField, UxmlTraits> { }
-
 		public new class UxmlTraits : BaseField<Quaternion>.UxmlTraits
 		{
 			private readonly UxmlFloatAttributeDescription _x = new UxmlFloatAttributeDescription { name = "x", defaultValue = 0.0f };

@@ -146,6 +146,10 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				fieldContainer.SetLabel(label);
 			}
+			else if (field is ImGuiDrawer imgui)
+			{
+				imgui.Label = label;
+			}
 			else if (field is Foldout foldout)
 			{
 				foldout.text = label;

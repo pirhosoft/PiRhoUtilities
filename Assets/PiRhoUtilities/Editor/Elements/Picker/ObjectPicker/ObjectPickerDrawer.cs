@@ -13,14 +13,13 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			if (property.propertyType == SerializedPropertyType.ObjectReference)
 			{
-				var pickerAttribute = attribute as ObjectPickerAttribute;
-				var type = pickerAttribute.BaseType ?? this.GetFieldType();
+				var type = this.GetFieldType();
 
 				return new ObjectPickerField(type).ConfigureProperty(property);
 			}
 			else
 			{
-				Debug.LogWarningFormat(_invalidPropertyTypeWarning, property.propertyPath);
+				Debug.LogWarningFormat(property.serializedObject.targetObject, _invalidPropertyTypeWarning, property.propertyPath);
 			}
 
 			return new FieldContainer(property.displayName);
