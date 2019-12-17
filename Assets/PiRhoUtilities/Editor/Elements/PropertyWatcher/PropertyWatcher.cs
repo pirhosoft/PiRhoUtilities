@@ -1,16 +1,18 @@
 ﻿using System;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
 {
 	public abstract class PropertyWatcher : BindableElement
 	{
-		public PropertyWatcher(SerializedProperty property)
+		public SerializedProperty Property { get; private set; }
+
+		public PropertyWatcher()
 		{
 			style.display = DisplayStyle.None;
-			Watch(property);
 		}
 
 		public virtual void Watch(SerializedProperty property)
@@ -18,13 +20,36 @@ namespace PiRhoSoft.Utilities.Editor
 			if (this.IsBound())
 				binding.Release();
 
+			Property = property;
+
 			if (property != null)
 				this.BindProperty(property);
+		}
+
+		protected override void ExecuteDefaultActionAtTarget(EventBase evt)
+		{
+			base.ExecuteDefaultActionAtTarget(evt);
+
+			if (this.TryGetPropertyBindEvent(evt, out var property))
+			{
+				if (!SerializedProperty.EqualContents(Property, property))
+				{
+					Watch(property);
+					evt.StopPropagation();
+				}
+			}
 		}
 	}
 
 	public abstract class PropertyWatcher<T> : PropertyWatcher, INotifyValueChanged<T>
 	{
+		#region Log Messages
+
+		private const string _invalidWatcherError = "(PUEPWIW) invalid type '{0}' for PropertyWatcher: PropertyWatcher can only be used with types that have a corresponding SerializedPropertyType";
+		private const string _invalidPropertyError = "(PUEPWIP) invalid property '{0}' for PropertyWatcher: the property is type '{1}' but should be type '{2}'";
+
+		#endregion
+
 		private T _value;
 
 		public T value
@@ -34,12 +59,8 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				var previous = _value;
 				SetValueWithoutNotify(value);
-				OnChanged(previous, value);
+				OnChanged(Property, previous, value);
 			}
-		}
-
-		public PropertyWatcher(SerializedProperty property) : base(property)
-		{
 		}
 
 		public void SetValueWithoutNotify(T newValue)
@@ -50,7 +71,19 @@ namespace PiRhoSoft.Utilities.Editor
 		public override void Watch(SerializedProperty property)
 		{
 			if (property != null)
-				property.TryGetValue(out _value);
+			{
+				if (!property.TryGetValue(out _value))
+				{
+					var requiredType = SerializedPropertyExtensions.GetPropertyType<T>();
+
+					if (requiredType == SerializedPropertyType.Generic)
+						Debug.LogWarningFormat(_invalidWatcherError, typeof(T).Name); // TODO: this will also trigger when T is intended to be a ManagedReference type
+					else
+						Debug.LogWarningFormat(_invalidPropertyError, property.propertyPath, property.propertyType, requiredType);
+
+					base.Watch(null);
+				}
+			}
 
 			base.Watch(property);
 		}
@@ -59,13 +92,22 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			base.ExecuteDefaultActionAtTarget(evt);
 
-			if (typeof(T) == typeof(Enum) && this.TryGetPropertyBindEvent(evt, out var property))
+			if (!evt.isPropagationStopped && this.TryGetPropertyBindEvent(evt, out var property))
 			{
-				BindingExtensions.DefaultEnumBind(this as INotifyValueChanged<Enum>, property);
-				evt.StopPropagation();
+				if (this is INotifyValueChanged<Enum> enumThis)
+				{
+					BindingExtensions.DefaultEnumBind(enumThis, property);
+					evt.StopPropagation();
+				}
+				else if (property.propertyType == SerializedPropertyType.ManagedReference)
+				{
+					var type = property.GetManagedReferenceFieldType();
+					BindingExtensions.BindManagedReference(this, property, null);
+					evt.StopPropagation();
+				}
 			}
 		}
 
-		protected abstract void OnChanged(T previousValue, T newValue);
+		protected abstract void OnChanged(SerializedProperty property, T previousValue, T newValue);
 	}
 }

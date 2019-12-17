@@ -216,6 +216,40 @@ namespace PiRhoSoft.Utilities.Editor
 			}
 		}
 
+		public static SerializedPropertyType GetPropertyType<T>()
+		{
+			var type = typeof(T);
+
+			// SerializedPropertyType.Generic
+			if (type == typeof(int)) return SerializedPropertyType.Integer;
+			else if (type == typeof(bool)) return SerializedPropertyType.Boolean;
+			else if (type == typeof(float)) return SerializedPropertyType.Float;
+			else if (type == typeof(string)) return SerializedPropertyType.String;
+			else if (type == typeof(Color)) return SerializedPropertyType.Color;
+			else if (typeof(Object).IsAssignableFrom(type)) return SerializedPropertyType.ObjectReference;
+			else if (type == typeof(LayerMask)) return SerializedPropertyType.LayerMask;
+			else if (type == typeof(Enum) || type.IsEnum) return SerializedPropertyType.Enum;
+			else if (type == typeof(Vector2)) return SerializedPropertyType.Vector2;
+			else if (type == typeof(Vector3)) return SerializedPropertyType.Vector3;
+			else if (type == typeof(Vector4)) return SerializedPropertyType.Vector4;
+			else if (type == typeof(Rect)) return SerializedPropertyType.Rect;
+			// SerializedPropertyType.ArraySize - stored as ints
+			else if (type == typeof(char)) return SerializedPropertyType.Character;
+			else if (type == typeof(AnimationCurve)) return SerializedPropertyType.AnimationCurve;
+			else if (type == typeof(Bounds)) return SerializedPropertyType.Bounds;
+			else if (type == typeof(Gradient)) return SerializedPropertyType.Gradient;
+			else if (type == typeof(Quaternion)) return SerializedPropertyType.Quaternion;
+			// SerializedPropertyType.ExposedReference
+			// SerializedPropertyType.FixedBufferSize
+			else if (type == typeof(Vector2Int)) return SerializedPropertyType.Vector2Int;
+			else if (type == typeof(Vector3Int)) return SerializedPropertyType.Vector3Int;
+			else if (type == typeof(RectInt)) return SerializedPropertyType.RectInt;
+			else if (type == typeof(BoundsInt)) return SerializedPropertyType.BoundsInt;
+			// SerializedPropertyType.ManagedReference - no way to know
+
+			return SerializedPropertyType.Generic;
+		}
+
 		public static bool TryGetValue<T>(this SerializedProperty property, out T value)
 		{
 			// this boxes for value types but I don't think there's a way around that without dynamic code generation
@@ -238,7 +272,7 @@ namespace PiRhoSoft.Utilities.Editor
 				case SerializedPropertyType.Vector4: if (type == typeof(Vector4)) { value = (T)(object)property.vector4Value; return true; } break;
 				case SerializedPropertyType.Rect: if (type == typeof(Rect)) { value = (T)(object)property.rectValue; return true; } break;
 				case SerializedPropertyType.ArraySize: if (type == typeof(int)) { value = (T)(object)property.intValue; return true; } break;
-				case SerializedPropertyType.Character: if (type == typeof(int)) { value = (T)(object)property.intValue; return true; } break;
+				case SerializedPropertyType.Character: if (type == typeof(char)) { value = (T)(object)(char)property.intValue; return true; } break;
 				case SerializedPropertyType.AnimationCurve: if (type == typeof(AnimationCurve)) { value = (T)(object)property.animationCurveValue; return true; } break;
 				case SerializedPropertyType.Bounds: if (type == typeof(Bounds)) { value = (T)(object)property.boundsValue; return true; } break;
 				case SerializedPropertyType.Gradient: if (type == typeof(Gradient)) { value = (T)(object)property.GetGradientValue(); return true; } break;
@@ -249,7 +283,7 @@ namespace PiRhoSoft.Utilities.Editor
 				case SerializedPropertyType.Vector3Int: if (type == typeof(Vector3Int)) { value = (T)(object)property.vector3IntValue; return true; } break;
 				case SerializedPropertyType.RectInt: if (type == typeof(RectInt)) { value = (T)(object)property.rectIntValue; return true; } break;
 				case SerializedPropertyType.BoundsInt: if (type == typeof(BoundsInt)) { value = (T)(object)property.boundsIntValue; return true; } break;
-				case SerializedPropertyType.ManagedReference: var managed = property.GetManagedReferenceValue(); if (managed is T t) { value = t; return true; } break;
+				case SerializedPropertyType.ManagedReference: var managed = property.GetManagedReferenceValue(); if (managed == null) { value = default; return true; } else if (managed is T t) { value = t; return true; } break;
 			}
 
 			value = default;

@@ -36,9 +36,9 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		public IList Items { get; private set; }
 		public Type ItemType { get; private set; }
-		public Action<VisualElement> Creator { get; private set; }
+		public Action<VisualElement, int> Creator { get; private set; }
 
-		public IListProxy(IList items, Type itemType, Action<VisualElement> creator)
+		public IListProxy(IList items, Type itemType, Action<VisualElement, int> creator)
 		{
 			Items = items;
 			ItemType = itemType;
@@ -48,7 +48,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public override VisualElement CreateElement(int index)
 		{
 			var element = base.CreateElement(index);
-			Creator?.Invoke(element);
+			Creator?.Invoke(element, index);
 			return element;
 		}
 
