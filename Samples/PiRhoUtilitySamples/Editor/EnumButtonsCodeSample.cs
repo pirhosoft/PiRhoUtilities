@@ -11,7 +11,7 @@ namespace PiRhoSoft.Utilities.Samples
 	{
 		// These enum values are written as flags so they will work properly when Use Flags is true. This is not
 		// necessary when Use Flags is false. The [Flags] attribute itself isn't required - it's only purpose is to
-		// make an enum value with multiple flags selected print as a comma separated string rather than a number.
+		// make an enum value with multiple flags selected print as a comma separated list rather than a number.
 
 		[Flags]
 		public enum Games

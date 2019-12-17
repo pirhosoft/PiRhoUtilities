@@ -7,13 +7,17 @@
 
 	<ListView name="sample-list"></ListView>
 	<Box class="code-container">
-		<VisualElement name="code-sample" class="sample-view"></VisualElement>
+		<ScrollView class="view-scroller" mode="Vertical">
+			<VisualElement name="code-sample" class="sample-view"></VisualElement>
+		</ScrollView>
 		<ScrollView class="code-scroller" mode="VerticalAndHorizontal">
 			<TextField name="code-text" class="code-view" multiline="true"></TextField>
 		</ScrollView>
 	</Box>
 	<Box class="uxml-container">
-		<VisualElement name="uxml-sample" class="sample-view"></VisualElement>
+		<ScrollView class="view-scroller" mode="Vertical">
+			<VisualElement name="uxml-sample" class="sample-view"></VisualElement>
+		</ScrollView>
 		<ScrollView class="code-scroller" mode="VerticalAndHorizontal">
 			<TextField name="uxml-text" class="code-view" multiline="true"></TextField>
 		</ScrollView>

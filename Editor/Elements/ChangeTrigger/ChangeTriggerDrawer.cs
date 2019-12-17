@@ -77,11 +77,11 @@ namespace PiRhoSoft.Utilities.Editor
 		private PropertyWatcher CreateControl<T>(SerializedProperty property, T value, MethodInfo method, object owner)
 		{
 			if (method.HasSignature(null))
-				return new ChangeTriggerControl<T>(property, (oldValue, newValue) => OnChanged(method, owner));
+				return new ChangeTrigger<T>(property, (_, oldValue, newValue) => OnChanged(method, owner));
 			else if (method.HasSignature(null, typeof(T)))
-				return new ChangeTriggerControl<T>(property, (oldValue, newValue) => OnChanged(newValue, method, owner));
+				return new ChangeTrigger<T>(property, (_, oldValue, newValue) => OnChanged(newValue, method, owner));
 			else if (method.HasSignature(null, typeof(T), typeof(T)))
-				return new ChangeTriggerControl<T>(property, (oldValue, newValue) => OnChanged(oldValue, newValue, method, owner));
+				return new ChangeTrigger<T>(property, (_, oldValue, newValue) => OnChanged(oldValue, newValue, method, owner));
 
 			Debug.LogWarningFormat(_invalidMethodWarning, property.propertyPath, method.Name, typeof(T).Name);
 			return null;
