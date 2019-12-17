@@ -32,13 +32,13 @@ namespace PiRhoSoft.Utilities.Editor
 
 				if (property.propertyType == SerializedPropertyType.String)
 				{
-					var change = new ChangeTriggerControl<string>(property, (previous, current) => UpdateString(message, current));
+					var change = new ChangeTrigger<string>(property, (_, previous, current) => UpdateString(message, current));
 					UpdateString(message, property.stringValue);
 					element.Add(change);
 				}
 				else if (property.propertyType == SerializedPropertyType.ObjectReference)
 				{
-					var change = new ChangeTriggerControl<Object>(property, (previous, current) => UpdateObject(message, current));
+					var change = new ChangeTrigger<Object>(property, (_, previous, current) => UpdateObject(message, current));
 					UpdateObject(message, property.objectReferenceValue);
 					element.Add(change);
 				}

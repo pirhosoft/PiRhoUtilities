@@ -42,7 +42,6 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private const string _setButtonLabel = "Select type";
 		private const string _clearButtonLabel = "Reset to null";
-		private const string _undoLabel = "Change reference";
 
 		#endregion
 
@@ -252,7 +251,7 @@ namespace PiRhoSoft.Utilities.Editor
 					if (Drawer == null)
 						Drawer = new PropertyReferenceDrawer(property, null);
 
-					BindingExtensions.CreateBind(this, property, GetReference, SetReference, CompareReferences);
+					BindingExtensions.BindManagedReference(this, property, Rebuild);
 				}
 				else
 				{
@@ -261,31 +260,6 @@ namespace PiRhoSoft.Utilities.Editor
 
 				evt.StopPropagation();
 			}
-		}
-
-		private static object GetReference(SerializedProperty property)
-		{
-			return property.GetManagedReferenceValue();
-		}
-
-		private void SetReference(SerializedProperty property, object value)
-		{
-			// PENDING: built in change tracking for undo doesn't work for ManagedReference yet
-
-			Undo.RegisterCompleteObjectUndo(property.serializedObject.targetObject, _undoLabel);
-
-			property.managedReferenceValue = value;
-
-			property.serializedObject.ApplyModifiedProperties();
-			Undo.FlushUndoRecordObjects();
-
-			Rebuild();
-		}
-
-		private static bool CompareReferences(object value, SerializedProperty property, Func<SerializedProperty, object> getter)
-		{
-			var currentValue = getter(property);
-			return ReferenceEquals(value, currentValue);
 		}
 
 		#endregion

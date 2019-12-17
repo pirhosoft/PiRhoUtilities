@@ -63,32 +63,32 @@ namespace PiRhoSoft.Utilities.Editor
 					case SerializedPropertyType.Boolean:
 					{
 						UpdateVisibility(element, sibling.boolValue, conditionalAttribute.BoolValue, conditionalAttribute.Test);
-						return new ChangeTriggerControl<bool>(sibling, (oldValue, newValue) => UpdateVisibility(element, newValue, conditionalAttribute.BoolValue, conditionalAttribute.Test));
+						return new ChangeTrigger<bool>(sibling, (_, oldValue, newValue) => UpdateVisibility(element, newValue, conditionalAttribute.BoolValue, conditionalAttribute.Test));
 					}
 					case SerializedPropertyType.Integer:
 					{
 						UpdateVisibility(element, sibling.intValue, conditionalAttribute.IntValue, conditionalAttribute.Test);
-						return new ChangeTriggerControl<int>(sibling, (oldValue, newValue) => UpdateVisibility(element, newValue, conditionalAttribute.IntValue, conditionalAttribute.Test));
+						return new ChangeTrigger<int>(sibling, (_, oldValue, newValue) => UpdateVisibility(element, newValue, conditionalAttribute.IntValue, conditionalAttribute.Test));
 					}
 					case SerializedPropertyType.Float:
 					{
 						UpdateVisibility(element, sibling.floatValue, conditionalAttribute.FloatValue, conditionalAttribute.Test);
-						return new ChangeTriggerControl<float>(sibling, (oldValue, newValue) => UpdateVisibility(element, newValue, conditionalAttribute.FloatValue, conditionalAttribute.Test));
+						return new ChangeTrigger<float>(sibling, (_, oldValue, newValue) => UpdateVisibility(element, newValue, conditionalAttribute.FloatValue, conditionalAttribute.Test));
 					}
 					case SerializedPropertyType.String:
 					{
 						UpdateVisibility(element, sibling.stringValue, conditionalAttribute.StringValue, conditionalAttribute.Test);
-						return new ChangeTriggerControl<string>(sibling, (oldValue, newValue) => UpdateVisibility(element, newValue, conditionalAttribute.StringValue, conditionalAttribute.Test));
+						return new ChangeTrigger<string>(sibling, (_, oldValue, newValue) => UpdateVisibility(element, newValue, conditionalAttribute.StringValue, conditionalAttribute.Test));
 					}
 					case SerializedPropertyType.Enum:
 					{
 						UpdateVisibility(element, sibling.intValue, conditionalAttribute.IntValue, conditionalAttribute.Test);
-						return new ChangeTriggerControl<Enum>(sibling, (oldValue, newValue) => UpdateVisibility(element, sibling.intValue, conditionalAttribute.IntValue, conditionalAttribute.Test));
+						return new ChangeTrigger<Enum>(sibling, (_, oldValue, newValue) => UpdateVisibility(element, sibling.intValue, conditionalAttribute.IntValue, conditionalAttribute.Test));
 					}
 					case SerializedPropertyType.ObjectReference:
 					{
 						UpdateVisibility(element, sibling.objectReferenceValue, conditionalAttribute.BoolValue, conditionalAttribute.Test);
-						return new ChangeTriggerControl<Object>(sibling, (oldValue, newValue) => UpdateVisibility(element, sibling.objectReferenceValue, conditionalAttribute.BoolValue, conditionalAttribute.Test));
+						return new ChangeTrigger<Object>(sibling, (_, oldValue, newValue) => UpdateVisibility(element, sibling.objectReferenceValue, conditionalAttribute.BoolValue, conditionalAttribute.Test));
 					}
 				}
 

@@ -46,6 +46,9 @@ namespace PiRhoSoft.Utilities.Editor
 			set => _control.UseFlags = value;
 		}
 
+		public EnumButtonsField() : this(null)
+		{
+		}
 
 		public EnumButtonsField(string label) : base(label, null)
 		{
@@ -62,18 +65,6 @@ namespace PiRhoSoft.Utilities.Editor
 			AddToClassList(UssClassName);
 			this.SetVisualInput(_control);
 			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
-		}
-
-		public EnumButtonsField(string label, Type type) : this(label)
-		{
-			Type = type;
-
-			// Initialize this so that the binding can look up the type
-			base.SetValueWithoutNotify(Enum.ToObject(type, 0) as Enum);
-		}
-
-		public EnumButtonsField(Type type) : this(null, type)
-		{
 		}
 
 		public override void SetValueWithoutNotify(Enum newValue)
@@ -179,7 +170,7 @@ namespace PiRhoSoft.Utilities.Editor
 						var value = _values.Length > 0 ? _values.GetValue(0) as Enum : Enum.ToObject(type, 0) as Enum;
 
 						Rebuild();
-						SetValueWithoutNotify(value);
+						this.SendChangeEvent(_value, value);
 					}
 				}
 			}
@@ -246,8 +237,6 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region UXML Support
 
-		public EnumButtonsField() : base(null, null) { }
-
 		public new class UxmlFactory : UxmlFactory<EnumButtonsField, UxmlTraits> { }
 		public new class UxmlTraits : BaseField<Enum>.UxmlTraits
 		{
@@ -261,7 +250,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 				var field = element as EnumButtonsField;
 				var typeName = _type.GetValueFromBag(bag, cc);
-				var type = Type.GetType(typeName, false);
+				var type = TypeHelper.FindType(typeName);
 
 				var flags = false;
 				if (_flags.TryGetValueFromBag(bag, cc, ref flags))
@@ -270,7 +259,7 @@ namespace PiRhoSoft.Utilities.Editor
 				field.Type = type;
 
 				var valueName = _value.GetValueFromBag(bag, cc);
-				if (!string.IsNullOrEmpty(valueName))
+				if (type != null && !string.IsNullOrEmpty(valueName))
 				{
 					if (TryParseValue(type, valueName, out var value))
 						field.SetValueWithoutNotify(value);

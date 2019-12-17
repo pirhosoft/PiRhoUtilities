@@ -260,6 +260,11 @@ namespace PiRhoSoft.Utilities.Editor
 			UpdateItemType();
 		}
 
+		public void Rebuild()
+		{
+			UpdateItemsWithoutNotify();
+		}
+
 		#endregion
 
 		#region Ui
@@ -638,7 +643,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 				if (arrayProperty != null)
 				{
-					var sizeBinding = new ChangeTriggerControl<int>(null, (oldSize, size) => UpdateItems());
+					var sizeBinding = new ChangeTrigger<int>(null, (_, oldSize, newSize) => UpdateItems());
 					sizeBinding.Watch(arrayProperty);
 
 					Add(sizeBinding);

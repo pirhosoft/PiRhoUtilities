@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UXML
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="UnityEngine.UIElements"
+	xmlns:editor="UnityEditor.UIElements"
+	xmlns:pirho="PiRhoSoft.Utilities.Editor"
+	xsi:noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
+	xsi:schemaLocation="UnityEngine.UIElements ../UIElementsSchema/UnityEngine.UIElements.xsd">
+
+	<editor:PropertyField binding-path="Int"></editor:PropertyField>
+	<pirho:ChangeTriggerInt name="int-trigger" binding-path="Int"></pirho:ChangeTriggerInt>
+	<editor:PropertyField binding-path="Bool"></editor:PropertyField>
+	<pirho:ChangeTriggerBool name="bool-trigger" binding-path="Bool"></pirho:ChangeTriggerBool>;
+	<editor:PropertyField binding-path="Float"></editor:PropertyField>
+	<pirho:ChangeTriggerFloat name="float-trigger" binding-path="Float"></pirho:ChangeTriggerFloat>;
+	<editor:PropertyField binding-path="String"></editor:PropertyField>
+	<pirho:ChangeTriggerString name="string-trigger" binding-path="String"></pirho:ChangeTriggerString>;
+	<editor:PropertyField binding-path="Color"></editor:PropertyField>
+	<pirho:ChangeTriggerColor name="color-trigger" binding-path="Color"></pirho:ChangeTriggerColor>;
+	<editor:PropertyField binding-path="Object"></editor:PropertyField>
+	<pirho:ChangeTriggerObject name="object-trigger" binding-path="Object"></pirho:ChangeTriggerObject>;
+	<editor:PropertyField binding-path="Enum"></editor:PropertyField>
+	<pirho:ChangeTriggerEnum name="enum-trigger" binding-path="Enum"></pirho:ChangeTriggerEnum>;
+	<editor:PropertyField binding-path="Vector2"></editor:PropertyField>
+	<pirho:ChangeTriggerVector2 name="vector2-trigger" binding-path="Vector2"></pirho:ChangeTriggerVector2>;
+	<editor:PropertyField binding-path="Vector3"></editor:PropertyField>
+	<pirho:ChangeTriggerVector3 name="vector3-trigger" binding-path="Vector3"></pirho:ChangeTriggerVector3>;
+	<editor:PropertyField binding-path="Vector4"></editor:PropertyField>
+	<pirho:ChangeTriggerVector4 name="vector4-trigger" binding-path="Vector4"></pirho:ChangeTriggerVector4>;
+	<editor:PropertyField binding-path="Rect"></editor:PropertyField>
+	<pirho:ChangeTriggerRect name="rect-trigger" binding-path="Rect"></pirho:ChangeTriggerRect>;
+	<editor:PropertyField binding-path="ArraySize"></editor:PropertyField>
+	<pirho:ChangeTriggerArraySize name="array-size-trigger" binding-path="ArraySize.Array.size"></pirho:ChangeTriggerArraySize>;
+	<editor:PropertyField binding-path="Character"></editor:PropertyField>
+	<pirho:ChangeTriggerCharacter name="character-trigger" binding-path="Character"></pirho:ChangeTriggerCharacter>;
+	<editor:PropertyField binding-path="AnimationCurve"></editor:PropertyField>
+	<pirho:ChangeTriggerAnimationCurve name="animation-curve-trigger" binding-path="AnimationCurve"></pirho:ChangeTriggerAnimationCurve>;
+	<editor:PropertyField binding-path="Bounds"></editor:PropertyField>
+	<pirho:ChangeTriggerBounds name="bounds-trigger" binding-path="Bounds"></pirho:ChangeTriggerBounds>;
+	<editor:PropertyField binding-path="Gradient"></editor:PropertyField>
+	<pirho:ChangeTriggerGradient name="gradient-trigger" binding-path="Gradient"></pirho:ChangeTriggerGradient>;
+	<editor:PropertyField binding-path="Quaternion"></editor:PropertyField>
+	<pirho:ChangeTriggerQuaternion name="quaternion-trigger" binding-path="Quaternion"></pirho:ChangeTriggerQuaternion>;
+	<editor:PropertyField binding-path="Vector2Int"></editor:PropertyField>
+	<pirho:ChangeTriggerVector2Int name="vector2-int-trigger" binding-path="Vector2Int"></pirho:ChangeTriggerVector2Int>;
+	<editor:PropertyField binding-path="Vector3Int"></editor:PropertyField>
+	<pirho:ChangeTriggerVector3Int name="vector3-int-trigger" binding-path="Vector3Int"></pirho:ChangeTriggerVector3Int>;
+	<editor:PropertyField binding-path="RectInt"></editor:PropertyField>
+	<pirho:ChangeTriggerRectInt name="rect-int-trigger" binding-path="RectInt"></pirho:ChangeTriggerRectInt>;
+	<editor:PropertyField binding-path="BoundsInt"></editor:PropertyField>
+	<pirho:ChangeTriggerBoundsInt name="bounds-int-trigger" binding-path="BoundsInt"></pirho:ChangeTriggerBoundsInt>;
+	<editor:PropertyField binding-path="Reference"></editor:PropertyField>
+	<pirho:ChangeTriggerReference name="reference-trigger" binding-path="Reference"></pirho:ChangeTriggerReference>;
+</UXML>
