@@ -44,8 +44,7 @@ namespace PiRhoSoft.Utilities.Editor
 				var path = property.propertyPath;
 
 				var field = new DictionaryField();
-				field.SetItemType(referenceType, true);
-				field.Proxy = proxy;
+				field.SetProxy(proxy, referenceType, true);
 				field.bindingPath = property.propertyPath;
 				// TODO: other stuff from ConfigureField
 
@@ -57,7 +56,7 @@ namespace PiRhoSoft.Utilities.Editor
 				field.AllowReorder = dictionaryAttribute.AllowReorder;
 
 				if (TryGetMethod(dictionaryAttribute.AllowAdd, _missingAllowAddMethodWarning, path, out var allowAddMethod))
-					AddConditional(proxy.CanAddCallback, parent, allowAddMethod, _invalidAllowAddMethodWarning, path);
+					AddConditional(proxy.CanAddKeyCallback, parent, allowAddMethod, _invalidAllowAddMethodWarning, path);
 
 				if (TryGetMethod(dictionaryAttribute.AllowRemove, _missingAllowRemoveMethodWarning, path, out var allowRemoveMethod))
 					AddConditional(proxy.CanRemoveCallback, parent, allowRemoveMethod, _invalidAllowRemoveMethodWarning, path);

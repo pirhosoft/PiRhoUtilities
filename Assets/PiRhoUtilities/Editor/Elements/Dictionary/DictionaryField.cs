@@ -12,16 +12,14 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public class ItemAddedEvent : EventBase<ItemAddedEvent>
 		{
-			public static ItemAddedEvent GetPooled(string key, object item)
+			public static ItemAddedEvent GetPooled(string key)
 			{
 				var e = GetPooled();
 				e.Key = key;
-				e.Item = item;
 				return e;
 			}
 
 			public string Key { get; private set; }
-			public object Item { get; private set; }
 
 			public ItemAddedEvent()
 			{
@@ -37,7 +35,6 @@ namespace PiRhoSoft.Utilities.Editor
 			void LocalInit()
 			{
 				Key = string.Empty;
-				Item = null;
 			}
 		}
 
@@ -109,6 +106,9 @@ namespace PiRhoSoft.Utilities.Editor
 		#region Log Messages
 
 		private const string _invalidBindingError = "(PUEDFIB) invalid binding '{0}' for DictionaryField: property '{1}' is type '{2}' but should be an array";
+		private const string _invalidTypeError = "(PUEDFIT) invalid item type '{0}' for DictionaryField: the item type must be a default constructable class when used with allowDerived = false";
+		private const string _failedAddError = "(PUEDFFA) failed to add item '{0}' of type '{1}' to the DictionaryField: the item type must be a value type or default constructable class that is compatible with the dictionary";
+		private const string _unspecifiedType = "(unspecified)";
 
 		#endregion
 
@@ -173,7 +173,7 @@ namespace PiRhoSoft.Utilities.Editor
 		private bool _allowRemove = DefaultAllowRemove;
 		private bool _allowReorder = DefaultAllowReorder;
 
-		private DictionaryProxy _proxy;
+		private IDictionaryProxy _proxy;
 
 		private class TypeProvider : PickerProvider<Type> { }
 		private TypeProvider _typeProvider;
@@ -181,10 +181,10 @@ namespace PiRhoSoft.Utilities.Editor
 		private bool _allowDerived = false;
 
 		private TextField _addField;
-		private Placeholder _addText;
+		private Placeholder _addPlaceholderText;
 		private IconButton _addButton;
 		private UQueryState<IconButton> _removeButtons;
-		private UQueryState<IconButton> _reorderHandles;
+		private UQueryState<Image> _reorderHandles;
 		private TextElement _emptyText;
 		private VisualElement _itemsContainer;
 
@@ -240,8 +240,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public string AddPlaceholder
 		{
-			get => _addTooltip;
-			set { _addTooltip = value; UpdateAddPlaceholder(); }
+			get => _addPlaceholder;
+			set { _addPlaceholder = value; UpdateAddPlaceholder(); }
 		}
 
 		public string RemoveTooltip
@@ -256,20 +256,24 @@ namespace PiRhoSoft.Utilities.Editor
 			set { _reorderTooltip = value; UpdateReorderLabels(); }
 		}
 
-		public DictionaryProxy Proxy
-		{
-			get => _proxy;
-			set { _proxy = value; UpdateProxy(); }
-		}
-
+		public IDictionaryProxy Proxy => _proxy;
 		public Type ItemType => _itemType;
 		public bool AllowDerived => _allowDerived;
 
-		public void SetItemType(Type type, bool allowDerived)
+		public void SetProxy(IDictionaryProxy proxy, Type itemType, bool allowDerived)
 		{
-			_itemType = type;
-			_allowDerived = type != null && allowDerived;
+			if (itemType != null && !allowDerived && !itemType.IsCreatable())
+			{
+				Debug.LogWarningFormat(_invalidTypeError, itemType.FullName);
+				return;
+			}
 
+			_proxy = proxy;
+			_itemType = itemType;
+			_allowDerived = allowDerived && itemType != null;
+
+			UpdateProxy();
+			UpdateReorderState();
 			UpdateItemType();
 		}
 
@@ -292,15 +296,15 @@ namespace PiRhoSoft.Utilities.Editor
 			_addField.RegisterValueChangedCallback(evt => AddKeyChanged(evt.newValue));
 			_addField.Q(TextField.textInputUssName).RegisterCallback<KeyDownEvent>(evt => AddKeyPressed(evt));
 
-			_addText = new Placeholder(_addPlaceholder);
-			_addText.AddToField(_addField);
+			_addPlaceholderText = new Placeholder(_addPlaceholder);
+			_addPlaceholderText.AddToField(_addField);
 
 			Header.Add(_addField);
 			_addField.PlaceBehind(HeaderButtons);
 
 			_addButton = AddHeaderButton(_addIcon.Texture, _addTooltip, AddButtonUssClassName, DoAdd);
 			_removeButtons = Content.Query<IconButton>(className: RemoveButtonUssClassName).Build();
-			_reorderHandles = Content.Query<IconButton>(className: DragHandleUssClassName).Build();
+			_reorderHandles = Content.Query<Image>(className: DragHandleUssClassName).Build();
 
 			_emptyText = new TextElement();
 			_emptyText.AddToClassList(EmptyLabelUssClassName);
@@ -342,12 +346,14 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void UpdateReorderState()
 		{
-			EnableInClassList(ReorderDisabledUssClassName, !_allowReorder);
+			var allow = _allowReorder && (_proxy != null && _proxy.IsReorderable);
+
+			EnableInClassList(ReorderDisabledUssClassName, !allow);
 
 			UnregisterCallback<MouseMoveEvent>(UpdateDrag);
 			UnregisterCallback<MouseUpEvent>(StopDrag);
 
-			if (_allowReorder)
+			if (allow)
 			{
 				RegisterCallback<MouseMoveEvent>(UpdateDrag);
 				RegisterCallback<MouseUpEvent>(StopDrag);
@@ -367,7 +373,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void UpdateAddPlaceholder()
 		{
-			_addText.text = _addPlaceholder;
+			_addPlaceholderText.text = _addPlaceholder;
 		}
 
 		private void UpdateRemoveLabels()
@@ -387,7 +393,7 @@ namespace PiRhoSoft.Utilities.Editor
 			if (_proxy != null)
 				UpdateItemsWithoutNotify();
 			else
-				EnableInClassList(EmptyUssClassName, false);
+				EnableInClassList(EmptyUssClassName, true);
 		}
 
 		private void UpdateItemType()
@@ -412,85 +418,105 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void UpdateItemsWithoutNotify()
 		{
-			EnableInClassList(EmptyUssClassName, _proxy.ItemCount == 0);
+			EnableInClassList(EmptyUssClassName, _proxy.Count == 0);
 
-			while (_itemsContainer.childCount > _proxy.ItemCount)
+			while (_itemsContainer.childCount > _proxy.Count)
 				_itemsContainer.RemoveAt(_itemsContainer.childCount - 1);
 
-			for (var i = 0; i < _itemsContainer.childCount; i++)
-				UpdateElement(i);
+			for (var i = 0; i < _proxy.Count; i++)
+			{
+				var key = _proxy.GetKey(i);
 
-			for (var i = _itemsContainer.childCount; i < _proxy.ItemCount; i++)
-				CreateElement(i);
+				if (i < _itemsContainer.childCount)
+					CheckElement(i, key);
+				else
+					CreateElement(i, key);
+			}
 
-			var key = _addField.text;
-			var addable = _proxy.CanAdd(key);
-			_addButton.SetEnabled(addable);
+			AddKeyChanged(_addField.text);
 
 			_removeButtons.ForEach(button =>
 			{
-				var index = GetItemIndex(button.parent);
-				var removable = _proxy.CanRemove(index);
+				var key = GetKey(button.parent);
+				var index = GetIndex(button.parent);
+				var removable = _proxy.CanRemove(index, key);
 
 				button.SetEnabled(removable);
 			});
 		}
 
-		#endregion
-
-		#region Element Creation
-
-		private void CreateElement(int index)
+		private void CreateElement(int index, string key)
 		{
 			var item = new VisualElement();
 			item.AddToClassList(ItemUssClassName);
-			item.AddToClassList(index % 2 == 0 ? ItemEvenUssClassName : ItemOddUssClassName);
 			_itemsContainer.Add(item);
 
 			var dragHandle = new Image { image = _dragIcon.Texture, tooltip = _reorderTooltip };
 			dragHandle.AddToClassList(DragHandleUssClassName);
-			dragHandle.RegisterCallback((MouseDownEvent e) => StartDrag(e, GetItemIndex(item)));
+			dragHandle.RegisterCallback((MouseDownEvent e) => StartDrag(e, item));
 			item.Add(dragHandle);
 
-			var content = _proxy.CreateElement(index);
-			content.AddToClassList(ItemContentUssClassName);
-			item.Add(content);
-
-			var remove = new IconButton(_removeIcon.Texture, _removeTooltip, () => RemoveItem(index));
+			var remove = new IconButton(_removeIcon.Texture, _removeTooltip, () => RemoveItem(item));
 			remove.AddToClassList(RemoveButtonUssClassName);
 			item.Add(remove);
+
+			UpdateContent(item, index, key);
 		}
 
-		private void UpdateElement(int index)
+		private void CheckElement(int index, string key)
 		{
-			var item = _itemsContainer.ElementAt(index);
+			var item = _itemsContainer[index];
+			var current = GetKey(item);
+
+			if (key != current)
+			{
+				item.RemoveAt(1);
+				UpdateContent(item, index, key);
+			}
+		}
+
+		private void UpdateContent(VisualElement item, int index, string key)
+		{
+			SetKey(item, key);
 			item.EnableInClassList(ItemEvenUssClassName, index % 2 == 0);
 			item.EnableInClassList(ItemOddUssClassName, index % 2 != 0);
 
-			if (_proxy.NeedsUpdate(item, index))
-			{
-				var content = _proxy.CreateElement(index);
-				content.AddToClassList(ItemContentUssClassName);
-				item.RemoveAt(1);
-				item.Insert(1, content);
-			}
+			var content = _proxy.CreateElement(index, key);
+			content.AddToClassList(ItemContentUssClassName);
+			item.Insert(1, content);
 		}
 
 		#endregion
 
 		#region Item Management
 
+		private int GetIndex(VisualElement element)
+		{
+			return element.parent.IndexOf(element);
+		}
+
+		private string GetKey(VisualElement element)
+		{
+			return element.userData is string s ? s : null;
+		}
+
+		private void SetKey(VisualElement element, string key)
+		{
+			element.userData = key;
+		}
+
 		private void AddKeyChanged(string newValue)
 		{
-			// Separately check for empty so it shows up as valid but add is still disabled
+			// Separately check for empty so it shows up as valid even if it's not.
 
 			var empty = string.IsNullOrEmpty(newValue);
-			var valid = empty || _proxy.CanAdd(newValue);
+			var validKey = _proxy != null && _proxy.CanAdd(newValue);
+			var validType = _proxy != null && (_allowDerived || _proxy.CanAdd(_itemType));
 
-			EnableInClassList(AddKeyInvalidUssClassName, !valid);
-			EnableInClassList(AddKeyValidUssClassName, valid && !empty);
+			EnableInClassList(AddKeyInvalidUssClassName, !empty && !validKey);
+			EnableInClassList(AddKeyValidUssClassName, !empty && validKey);
 
-			_addButton.SetEnabled(valid && !string.IsNullOrEmpty(newValue));
+			_addButton.SetEnabled(validKey && validType);
 		}
 
 		private void AddKeyPressed(KeyDownEvent evt)
@@ -508,7 +534,7 @@ namespace PiRhoSoft.Utilities.Editor
 			if (_allowDerived)
 				SelectType();
 			else
-				AddItem();
+				AddItem(_itemType);
 		}
 
 		private void SelectType()
@@ -531,31 +557,18 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			var key = _addField.text;
 
-			if (_allowAdd && _proxy.CanAdd(key))
+			if (_allowAdd && _proxy.CanAdd(key) && _proxy.CanAdd(selected))
 			{
-				var item = Activator.CreateInstance(selected);
-				_proxy.AddItem(key, item);
-				UpdateItemsWithoutNotify();
-
-				using (var e = ItemAddedEvent.GetPooled(key, item))
+				if (!_proxy.AddItem(key, selected))
 				{
-					e.target = this;
-					SendEvent(e);
+					Debug.LogErrorFormat(_failedAddError, key, selected != null ? selected.FullName : _unspecifiedType);
+					return;
 				}
-			}
-		}
 
-		private void AddItem()
-		{
-			var key = _addField.text;
-
-			if (_allowAdd && _proxy.CanAdd(key))
-			{
-				_proxy.AddItem(key);
 				_addField.value = string.Empty;
 				UpdateItemsWithoutNotify();
 
-				using (var e = ItemAddedEvent.GetPooled(key, null))
+				using (var e = ItemAddedEvent.GetPooled(key))
 				{
 					e.target = this;
 					SendEvent(e);
@@ -563,13 +576,14 @@ namespace PiRhoSoft.Utilities.Editor
 			}
 		}
 
-		private void RemoveItem(int index)
+		private void RemoveItem(VisualElement item)
 		{
-			if (_allowRemove && _proxy.CanRemove(index))
-			{
-				var key = _proxy.GetKey(index);
+			var key = GetKey(item);
+			var index = GetIndex(item);
 
-				Proxy.RemoveItem(index);
+			if (_allowRemove && _proxy.CanRemove(index, key))
+			{
+				Proxy.RemoveItem(index, key);
 				UpdateItemsWithoutNotify();
 
 				using (var e = ItemRemovedEvent.GetPooled(key))
@@ -603,15 +617,11 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Dragging
 
-		private int GetItemIndex(VisualElement item)
-		{
-			return item.parent.IndexOf(item);
-		}
-
-		private void StartDrag(MouseDownEvent e, int index)
+		private void StartDrag(MouseDownEvent e, VisualElement item)
 		{
 			if (e.button == (int)MouseButton.LeftMouse)
 			{
+				var index = GetIndex(item);
 				var mousePosition = _itemsContainer.WorldToLocal(e.mousePosition);
 
 				_dragFromIndex = index;

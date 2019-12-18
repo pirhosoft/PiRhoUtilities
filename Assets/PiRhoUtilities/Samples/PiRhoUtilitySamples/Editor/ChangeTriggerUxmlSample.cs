@@ -12,7 +12,7 @@ namespace PiRhoSoft.Utilities.Samples
 
 		public override void Setup(VisualElement root)
 		{
-			var asset = ScriptableObject.CreateInstance<ChangeTriggerCodeSample.DummyAsset>();
+			var asset = ScriptableObject.CreateInstance<ChangeTriggerCodeSample.SampleAsset>();
 			var obj = new SerializedObject(asset);
 
 			root.Q<ChangeTriggerInt>("int-trigger").SetAction(PropertyChanged);
