@@ -13,13 +13,17 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#endregion
 
-		#region
+		#region Private Members
 
 		private IManipulator _manipulator;
 
 		#endregion
 
 		#region Public Interface
+
+		public IconButton() : this(null, null, null)
+		{
+		}
 
 		public IconButton(Texture image, string tooltip, Action action)
 		{
@@ -45,8 +49,6 @@ namespace PiRhoSoft.Utilities.Editor
 		#endregion
 
 		#region UXML Support
-
-		public IconButton() : this(null, null, null) { }
 
 		public new class UxmlFactory : UxmlFactory<IconButton, UxmlTraits> { }
 		public new class UxmlTraits : Image.UxmlTraits { }

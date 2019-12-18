@@ -49,6 +49,10 @@ namespace PiRhoSoft.Utilities.Editor
 			set => _picker.SetType(Type, value);
 		}
 
+		public TypePickerField() : this(null, null)
+		{
+		}
+
 		public TypePickerField(string label) : base(label, new TypePickerControl())
 		{
 			AddToClassList(UssClassName);
@@ -202,8 +206,6 @@ namespace PiRhoSoft.Utilities.Editor
 		#endregion
 
 		#region UXML Support
-
-		public TypePickerField() : this(null, null) { }
 
 		public new class UxmlFactory : UxmlFactory<TypePickerField, UxmlTraits> { }
 		public new class UxmlTraits : BaseFieldTraits<string, UxmlStringAttributeDescription>

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,9 +13,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string UssClassName = "pirho-validate";
 		public const string MessageBoxUssClassName = UssClassName + "__message-box";
 
-		private const string _missingMethodWarning = "(PUVDMM) invalid method for ValidateAttribute on field '{0}': the method '{1}' could not be found on type '{2}'";
-		private const string _invalidMethodReturnWarning = "(PUVDIMR) invalid method for ValidateAttribute on field '{0}': the method '{1}' should return a bool";
-		private const string _invalidMethodParametersWarning = "(PUVDIMP) invalid method for ValidateAttribute on field '{0}': the method '{1}' should take no parameters";
+		private const string _invalidMethodWarning = "(PUVDMM) invalid method for ValidateAttribute on field '{0}': a parameterless bool returing method named '{1}' could not be found on type '{2}'";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -30,45 +29,26 @@ namespace PiRhoSoft.Utilities.Editor
 
 			validate.Add(element);
 			validate.Add(message);
-
-			var method = GetMethod(property, validateAttribute);
+			
+			var method = ReflectionHelper.CreateFunctionCallback<bool>(property, fieldInfo.DeclaringType, validateAttribute.Method, nameof(ValidateAttribute), nameof(ValidateAttribute.Method));
 
 			if (method != null)
 			{
-				var owner = method.IsStatic ? null : property.GetOwner<object>();
-				var change = ChangeTrigger.Create(property, (_) => Update(message, method, owner));
-				Update(message, method, owner);
-				element.Add(change);
+				element.Add(ChangeTrigger.Create(property, (_) => Validate(message, method)));
+				Validate(message, method);
+			}
+			else
+			{
+				Debug.LogWarningFormat(_invalidMethodWarning, property.propertyPath, validateAttribute.Method, fieldInfo.DeclaringType.Name);
 			}
 
 			return validate;
 		}
 
-		private void Update(VisualElement message, MethodInfo method, object owner)
+		private void Validate(VisualElement message, Func<bool> validate)
 		{
-			var valid = (bool)method.Invoke(owner, null);
+			var valid = validate();
 			message.SetDisplayed(!valid);
-		}
-
-		private MethodInfo GetMethod(SerializedProperty property, ValidateAttribute validateAttribute)
-		{
-			var method = fieldInfo.DeclaringType.GetMethod(validateAttribute.Method, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-			if (method != null)
-			{
-				if (method.ReturnType != typeof(bool))
-					Debug.LogWarningFormat(_invalidMethodReturnWarning, property.propertyPath, validateAttribute.Method);
-				else if (!method.HasSignature(null))
-					Debug.LogWarningFormat(_invalidMethodParametersWarning, property.propertyPath, validateAttribute.Method);
-				else
-					return method;
-			}
-			else
-			{
-				Debug.LogWarningFormat(_missingMethodWarning, property.propertyPath, validateAttribute.Method, fieldInfo.DeclaringType.Name);
-			}
-
-			return null;
 		}
 	}
 }

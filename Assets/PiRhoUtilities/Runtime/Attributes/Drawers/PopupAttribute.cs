@@ -9,8 +9,9 @@ namespace PiRhoSoft.Utilities
 		public List<float> FloatValues { get; private set; }
 		public List<string> StringValues { get; private set; }
 		public List<string> Options { get; private set; }
-		public string ValuesMethod { get; private set; }
-		public string OptionsMethod { get; private set; }
+		public string ValuesSource { get; private set; }
+		public string OptionsSource { get; private set; }
+		public bool AutoUpdate { get; private set; }
 
 		public PopupAttribute(string[] values, string[] options = null) : base(ControlPhase, 0)
 		{
@@ -30,10 +31,11 @@ namespace PiRhoSoft.Utilities
 			Options = options?.ToList();
 		}
 
-		public PopupAttribute(string valuesMethod, string optionsMethod = null) : base(ControlPhase, 0)
+		public PopupAttribute(string valuesSource, string optionsSource = null, bool autoUpdate = true) : base(ControlPhase, 0)
 		{
-			ValuesMethod = valuesMethod;
-			OptionsMethod = optionsMethod;
+			ValuesSource = valuesSource;
+			OptionsSource = optionsSource;
+			AutoUpdate = autoUpdate;
 		}
 	}
 }

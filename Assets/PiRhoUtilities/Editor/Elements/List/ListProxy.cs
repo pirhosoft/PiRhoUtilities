@@ -11,8 +11,11 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		public virtual VisualElement CreateElement(int index)
 		{
-			var element = new VisualElement();
-			element.userData = index;
+			var element = new VisualElement
+			{
+				userData = index
+			};
+
 			return element;
 		}
 
@@ -128,7 +131,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public Func<bool> CanAddCallback;
 		public Func<int, bool> CanRemoveCallback;
 
-		private SerializedProperty _property;
+		private readonly SerializedProperty _property;
 		private readonly PropertyDrawer _drawer;
 
 		public PropertyListProxy(SerializedProperty property, PropertyDrawer drawer)

@@ -38,6 +38,10 @@ namespace PiRhoSoft.Utilities.Editor
 			set => Picker.Type = value;
 		}
 
+		public ObjectPickerField() : this(null, null)
+		{
+		}
+
 		public ObjectPickerField(string label) : base(label, new ObjectPickerControl())
 		{
 			AddToClassList(UssClassName);
@@ -196,8 +200,6 @@ namespace PiRhoSoft.Utilities.Editor
 		#endregion
 
 		#region UXML Support
-
-		public ObjectPickerField() : this(null, null) { }
 
 		public new class UxmlFactory : UxmlFactory<ObjectPickerField, UxmlTraits> { }
 		public new class UxmlTraits : BaseField<Object>.UxmlTraits

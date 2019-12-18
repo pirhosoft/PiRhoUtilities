@@ -15,6 +15,10 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Public Interface
 
+		public SliderIntField() : this(null)
+		{
+		}
+
 		public SliderIntField(string label) : base(label, new SliderIntControl())
 		{
 		}
@@ -63,7 +67,6 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region UXML Support
 
-		public SliderIntField() : this(null) { }
 
 		public new class UxmlFactory : UxmlFactory<SliderIntField, UxmlTraits> { }
 		public new class UxmlTraits : UxmlTraits<UxmlIntAttributeDescription>

@@ -9,11 +9,11 @@ namespace PiRhoSoft.Utilities
 		public float Number { get; private set; }
 		public Vector4 Vector { get; private set; }
 		public Bounds Bounds { get; private set; }
-		public string Snap { get; private set; }
+		public string SnapSource { get; private set; }
 
-		public SnapAttribute(string snap) : base(ValidatePhase, Order)
+		public SnapAttribute(string snapSource) : base(ValidatePhase, Order)
 		{
-			Snap = snap;
+			SnapSource = snapSource;
 		}
 
 		public SnapAttribute(float snap) : base(ValidatePhase, Order)

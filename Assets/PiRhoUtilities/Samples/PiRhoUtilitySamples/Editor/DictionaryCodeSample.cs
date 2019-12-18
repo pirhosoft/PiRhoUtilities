@@ -203,7 +203,7 @@ namespace PiRhoSoft.Utilities.Samples
 			dictionary.SetProxy(proxies[startingProxy].Proxy, proxies[startingProxy].ItemType, proxies[startingProxy].AllowDerived);
 			root.Add(dictionary);
 
-			var proxyPopup = new PopupField<ProxySelect>("Item Type", proxies, startingProxy, proxy => proxy.Name, proxy => proxy.Name);
+			var proxyPopup = new UnityEditor.UIElements.PopupField<ProxySelect>("Item Type", proxies, startingProxy, proxy => proxy.Name, proxy => proxy.Name);
 			proxyPopup.RegisterValueChangedCallback(e => dictionary.SetProxy(e.newValue.Proxy, e.newValue.ItemType, e.newValue.AllowDerived));
 			root.Add(proxyPopup);
 

@@ -109,7 +109,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public Func<Type, bool> CanAddTypeCallback;
 		public Func<string, bool> CanRemoveCallback;
 
-		private SerializedProperty _property;
+		private readonly SerializedProperty _property;
 		private readonly SerializedProperty _keysProperty;
 		private readonly SerializedProperty _valuesProperty;
 		private readonly PropertyDrawer _drawer;

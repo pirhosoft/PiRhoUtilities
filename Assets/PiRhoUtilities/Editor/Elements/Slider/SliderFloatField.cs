@@ -15,6 +15,10 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Public Interface
 
+		public SliderFloatField() : this(null)
+		{
+		}
+
 		public SliderFloatField(string label) : base(label, new SliderFloatControl())
 		{
 		}
@@ -62,8 +66,6 @@ namespace PiRhoSoft.Utilities.Editor
 		#endregion
 
 		#region UXML Support
-
-		public SliderFloatField() : this(null) { }
 
 		public new class UxmlFactory : UxmlFactory<SliderFloatField, UxmlTraits> { }
 		public new class UxmlTraits : UxmlTraits<UxmlFloatAttributeDescription>
