@@ -18,8 +18,8 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				var slider = new SliderIntField();
 
-				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, ReflectionSource.All, property, slider, fieldInfo.DeclaringType, Mathf.RoundToInt(sliderAttribute.Minimum), sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MinimumSource), minimum => slider.Minimum = minimum);
-				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, ReflectionSource.All, property, slider, fieldInfo.DeclaringType, Mathf.RoundToInt(sliderAttribute.Maximum), sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MaximumSource), maximum => slider.Maximum = maximum);
+				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, property, slider, fieldInfo.DeclaringType, Mathf.RoundToInt(sliderAttribute.Minimum), sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MinimumSource), minimum => slider.Minimum = minimum);
+				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, property, slider, fieldInfo.DeclaringType, Mathf.RoundToInt(sliderAttribute.Maximum), sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MaximumSource), maximum => slider.Maximum = maximum);
 
 				return slider.ConfigureProperty(property);
 			}
@@ -27,8 +27,8 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				var slider = new SliderFloatField();
 
-				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, ReflectionSource.All, property, slider, fieldInfo.DeclaringType, sliderAttribute.Minimum, sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MinimumSource), minimum => slider.Minimum = minimum);
-				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, ReflectionSource.All, property, slider, fieldInfo.DeclaringType, sliderAttribute.Maximum, sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MaximumSource), maximum => slider.Maximum = maximum);
+				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, property, slider, fieldInfo.DeclaringType, sliderAttribute.Minimum, sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MinimumSource), minimum => slider.Minimum = minimum);
+				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, property, slider, fieldInfo.DeclaringType, sliderAttribute.Maximum, sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MaximumSource), maximum => slider.Maximum = maximum);
 
 				return slider.ConfigureProperty(property);
 			}
@@ -36,8 +36,8 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				var slider = new MinMaxSliderField();
 
-				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, ReflectionSource.All, property, slider, fieldInfo.DeclaringType, Mathf.RoundToInt(sliderAttribute.Minimum), sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MinimumSource), minimum => slider.Minimum = minimum);
-				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, ReflectionSource.All, property, slider, fieldInfo.DeclaringType, Mathf.RoundToInt(sliderAttribute.Maximum), sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MaximumSource), maximum => slider.Maximum = maximum);
+				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, property, slider, fieldInfo.DeclaringType, Mathf.RoundToInt(sliderAttribute.Minimum), sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MinimumSource), minimum => slider.Minimum = minimum);
+				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, property, slider, fieldInfo.DeclaringType, Mathf.RoundToInt(sliderAttribute.Maximum), sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MaximumSource), maximum => slider.Maximum = maximum);
 
 				return slider.ConfigureProperty(property);
 			}

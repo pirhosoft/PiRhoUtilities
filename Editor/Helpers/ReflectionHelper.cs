@@ -7,19 +7,10 @@ using Object = UnityEngine.Object;
 
 namespace PiRhoSoft.Utilities.Editor
 {
-	[Flags]
-	public enum ReflectionSource
-	{
-		None = 0,
-		SerializedProperty = 1 << 0,
-		Method = 1 << 1,
-		Property = 1 << 2,
-		Field = 1 << 3,
-		All = int.MaxValue
-	}
-
 	public static class ReflectionHelper
 	{
+		#region Log Warnings
+
 		private const string _missingSourceWarning = "(PURHMS) invalid '{0}' for '{1}' on field '{2}': '{3}' could not be found on type '{4}'";
 		private const string _invalidSiblingWarning = "(PURHIPR) invalid '{0}' sibling for '{1}' on field '{2}': the SerializedProperty '{3}' should be a {4}";
 		private const string _invalidMethodReturnWarning = "(PURHMR) invalid '{0}' method for '{1}' on field '{2}': the method '{3}' should return a '{4}'";
@@ -27,27 +18,29 @@ namespace PiRhoSoft.Utilities.Editor
 		private const string _invalidPropertyWarning = "(PURHIPR) invalid '{0}' property for '{1}' on field '{2}': the property '{3}' should be a readable {4}";
 		private const string _invalidFieldWarning = "(PURHIFR) invalid '{0}' field for '{1}' on field '{2}': the field '{3}' should be a {4}";
 
+		#endregion
+
 		private static readonly object[] _oneParameter = new object[1];
 		private static readonly object[] _twoParameters = new object[2];
 
-		public static void SetupValueSourceCallback<FieldType>(string sourceName, ReflectionSource validSources, SerializedProperty property, VisualElement element, Type declaringType, FieldType defaultValue, bool autoUpdate, string attributeName, string sourceParameterName, Action<FieldType> updateAction)
+		public static void SetupValueSourceCallback<FieldType>(string sourceName, SerializedProperty property, VisualElement element, Type declaringType, FieldType defaultValue, bool autoUpdate, string attributeName, string sourceParameterName, Action<FieldType> updateAction)
 		{
 			if (!string.IsNullOrEmpty(sourceName))
 			{
-				var valueFunction = GetValueFunction(validSources, property, declaringType, sourceName, attributeName, sourceParameterName, element, out var needsSchedule, updateAction);
+				var valueFunction = GetValueFunction(property, declaringType, sourceName, attributeName, sourceParameterName, element, out var needsSchedule, updateAction);
 				if (valueFunction != null)
-					SetupSchedule(element, () => updateAction.Invoke(valueFunction()), autoUpdate && needsSchedule);
+					SetupSchedule(element, () => updateAction(valueFunction()), autoUpdate && needsSchedule);
 			}
 			else
 			{
-				updateAction.Invoke(defaultValue);
+				updateAction(defaultValue);
 			}
 		}
 
-		public static Func<FieldType> CreateValueSourceFunction<FieldType>(SerializedProperty property, VisualElement element, Type declaringType, string sourceName, ReflectionSource validSources, FieldType defaultValue, string attributeName, string sourceParameterName)
+		public static Func<FieldType> CreateValueSourceFunction<FieldType>(SerializedProperty property, VisualElement element, Type declaringType, string sourceName, FieldType defaultValue, string attributeName, string sourceParameterName)
 		{
 			if (!string.IsNullOrEmpty(sourceName))
-				return GetValueFunction<FieldType>(validSources, property, declaringType, sourceName, attributeName, sourceParameterName, element, out var _, null);
+				return GetValueFunction<FieldType>(property, declaringType, sourceName, attributeName, sourceParameterName, element, out var _, null);
 
 			return () => defaultValue;
 		}
@@ -105,13 +98,12 @@ namespace PiRhoSoft.Utilities.Editor
 			return null;
 		}
 
-		private static Func<FieldType> GetValueFunction<FieldType>(ReflectionSource validSources, SerializedProperty property, Type declaringType, string sourceName, string attributeName, string sourceParameterName, VisualElement element, out bool needsSchedule, Action<FieldType> updateAction)
+		private static Func<FieldType> GetValueFunction<FieldType>(SerializedProperty property, Type declaringType, string sourceName, string attributeName, string sourceParameterName, VisualElement element, out bool needsSchedule, Action<FieldType> updateAction)
 		{
 			needsSchedule = true;
 			var found = false;
 
-			if ((validSources & ReflectionSource.SerializedProperty) > 0)
-			{
+			{ // Property
 				var changeTrigger = GetSerializedPropertyTrigger(property, sourceName, attributeName, sourceParameterName, ref found, updateAction);
 				if (changeTrigger != null)
 				{
@@ -121,22 +113,19 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 			}
 
-			if ((validSources & ReflectionSource.Method) > 0)
-			{
+			{ // Method
 				var valueFunction = GetValueFromMethodFunction<FieldType>(declaringType, sourceName, property, attributeName, sourceParameterName, ref found, true);
 				if (valueFunction != null)
 					return valueFunction;
 			}
 
-			if ((validSources & ReflectionSource.Property) > 0)
-			{
+			{ // Property
 				var valueFunction = GetValueFromPropertyFunction<FieldType>(declaringType, sourceName, property, attributeName, sourceParameterName, ref found);
 				if (valueFunction != null)
 					return valueFunction;
 			}
 
-			if ((validSources & ReflectionSource.Field) > 0)
-			{
+			{ // Field
 				var valueFunction = GetValueFromFieldFunction<FieldType>(declaringType, sourceName, property, attributeName, sourceParameterName, ref found, ref needsSchedule);
 				if (valueFunction != null)
 					return valueFunction;
@@ -355,12 +344,32 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			switch (property.propertyType)
 			{
-				case SerializedPropertyType.Boolean: return type == typeof(bool);
+				case SerializedPropertyType.Generic: return false;
 				case SerializedPropertyType.Integer: return type == typeof(int);
+				case SerializedPropertyType.Boolean: return type == typeof(bool);
 				case SerializedPropertyType.Float: return type == typeof(float);
 				case SerializedPropertyType.String: return type == typeof(string);
-				case SerializedPropertyType.Enum: return typeof(Enum).IsAssignableFrom(type);
+				case SerializedPropertyType.Color: return type == typeof(Color);
 				case SerializedPropertyType.ObjectReference: return typeof(Object).IsAssignableFrom(type);
+				case SerializedPropertyType.LayerMask: return type == typeof(LayerMask);
+				case SerializedPropertyType.Enum: return type == typeof(Enum) || type.IsEnum;
+				case SerializedPropertyType.Vector2: return type == typeof(Vector2);
+				case SerializedPropertyType.Vector3: return type == typeof(Vector3);
+				case SerializedPropertyType.Vector4: return type == typeof(Vector4);
+				case SerializedPropertyType.Rect: return type == typeof(Rect);
+				case SerializedPropertyType.ArraySize: return type == typeof(int);
+				case SerializedPropertyType.Character: return type == typeof(char);
+				case SerializedPropertyType.AnimationCurve: return type == typeof(AnimationCurve);
+				case SerializedPropertyType.Bounds: return type == typeof(Bounds);
+				case SerializedPropertyType.Gradient: return type == typeof(Gradient);
+				case SerializedPropertyType.Quaternion: return type == typeof(Quaternion);
+				case SerializedPropertyType.ExposedReference: return false;
+				case SerializedPropertyType.FixedBufferSize: return false;
+				case SerializedPropertyType.Vector2Int: return type == typeof(Vector2Int);
+				case SerializedPropertyType.Vector3Int: return type == typeof(Vector3Int);
+				case SerializedPropertyType.RectInt: return type == typeof(RectInt);
+				case SerializedPropertyType.BoundsInt: return type == typeof(BoundsInt);
+				case SerializedPropertyType.ManagedReference: var managed = property.GetManagedReferenceValue(); return managed == null || type.IsAssignableFrom(managed.GetType());
 				default: return false;
 			}
 		}

@@ -17,8 +17,11 @@ namespace PiRhoSoft.Utilities.Editor
 
 			if (textField != null)
 			{
-				var placeholder = new Placeholder(placeholderAttribute.Text);
+				var placeholder = new Placeholder();
 				placeholder.AddToField(textField);
+
+				ReflectionHelper.SetupValueSourceCallback(placeholderAttribute.TextSource, property, placeholder, fieldInfo.DeclaringType, placeholderAttribute.Text, placeholderAttribute.AutoUpdate, nameof(PlaceholderAttribute), nameof(PlaceholderAttribute.TextSource), value => placeholder.text = value);
+
 				return element;
 			}
 			else

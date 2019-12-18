@@ -16,14 +16,14 @@ namespace PiRhoSoft.Utilities.Editor
 
 			if (property.propertyType == SerializedPropertyType.Integer)
 			{
-				var max = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, maximumAttribute.MaximumSource, ReflectionSource.All, Mathf.RoundToInt(maximumAttribute.Maximum), nameof(MaximumAttribute), nameof(MaximumAttribute.MaximumSource));
+				var max = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, maximumAttribute.MaximumSource, Mathf.RoundToInt(maximumAttribute.Maximum), nameof(MaximumAttribute), nameof(MaximumAttribute.MaximumSource));
 
 				Clamp(property, max());
 				element.RegisterCallback<FocusOutEvent>(e => Clamp(property, max()));
 			}
 			else if (property.propertyType == SerializedPropertyType.Float)
 			{
-				var max = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, maximumAttribute.MaximumSource, ReflectionSource.All, maximumAttribute.Maximum, nameof(MaximumAttribute), nameof(MaximumAttribute.MaximumSource));
+				var max = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, maximumAttribute.MaximumSource, maximumAttribute.Maximum, nameof(MaximumAttribute), nameof(MaximumAttribute.MaximumSource));
 
 				Clamp(property, max());
 				element.RegisterCallback<FocusOutEvent>(e => Clamp(property, max()));

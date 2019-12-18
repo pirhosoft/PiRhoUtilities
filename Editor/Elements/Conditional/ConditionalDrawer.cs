@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Reflection;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
@@ -11,16 +9,6 @@ namespace PiRhoSoft.Utilities.Editor
 	class ConditionalDrawer : PropertyDrawer
 	{
 		public const string UssClassName = "pirho-conditional";
-
-		private const string _missingSiblingWarning = "(PUCDMS) invalid property for ConditionalAttribute on field '{0}': the property '{1}' could not be found on type '{2}'";
-		private const string _invalidSiblingWarning = "(PUCDIS) invalid property for ConditionalAttribute on field '{0}': the property '{1}' should be a bool, int, float, string, or Object";
-		private const string _missingFieldWarning = "(PUCDMF) invalid field for ConditionalAttribute on field '{0}': the field '{1}' could not be found on type '{2}'";
-		private const string _invalidFieldWarning = "(PUCDIF) invalid field for ConditionalAttribute on field '{0}': the field '{1}' should be a bool, int, float, string, or Object";
-		private const string _missingPropertyWarning = "(PUCDMP) invalid property for ConditionalAttribute on field '{0}': the property '{1}' could not be found on type '{2}'";
-		private const string _invalidPropertyWarning = "(PUCDIP) invalid property for ConditionalAttribute on field '{0}': the property '{1}' should be a bool, int, float, string, or Object";
-		private const string _missingMethodWarning = "(PUCDMM) invalid method for ConditionalAttribute on field '{0}': the method '{1}' could not be found on type '{2}'";
-		private const string _invalidMethodReturnWarning = "(PUCDIMR) invalid method for ConditionalAttribute on field '{0}': the method '{1}' should return a bool, int, float, string, or Object";
-		private const string _invalidMethodParametersWarning = "(PUCDIMP) invalid method for ConditionalAttribute on field '{0}': the method '{1}' should take no parameters";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -34,181 +22,97 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			var conditionalAttribute = attribute as ConditionalAttribute;
 
-			switch (conditionalAttribute.Source)
+			switch (conditionalAttribute.Type)
 			{
-				case ConditionalSource.Sibling: SetupSiblingCondition(element, property); break;
-				case ConditionalSource.Field: SetupFieldCondition(element, property); break;
-				case ConditionalSource.Property: SetupPropertyCondition(element, property); break;
-				case ConditionalSource.Method: SetupMethodCondition(element, property); break;
+				case ConditionalAttribute.TestType.Bool:
+					ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, property, element, fieldInfo.DeclaringType, true, true, nameof(ConditionalAttribute), nameof(ConditionalAttribute.ValueSource),
+						value => UpdateBoolVisibility(element, value, conditionalAttribute.BoolTest));
+					break;
+				case ConditionalAttribute.TestType.Int:
+					ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, property, element, fieldInfo.DeclaringType, 0, true, nameof(ConditionalAttribute), nameof(ConditionalAttribute.ValueSource),
+						value => UpdateNumberVisibility(element, value, conditionalAttribute.IntValue, conditionalAttribute.NumberTest));
+					break;
+				case ConditionalAttribute.TestType.Float:
+					ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, property, element, fieldInfo.DeclaringType, 0.0f, true, nameof(ConditionalAttribute), nameof(ConditionalAttribute.ValueSource),
+						value => UpdateNumberVisibility(element, value, conditionalAttribute.FloatValue, conditionalAttribute.NumberTest));
+					break;
+				case ConditionalAttribute.TestType.String:
+					ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, property, element, fieldInfo.DeclaringType, string.Empty, true, nameof(ConditionalAttribute), nameof(ConditionalAttribute.ValueSource),
+						value => UpdateStringVisibility(element, value, conditionalAttribute.StringValue, conditionalAttribute.StringTest));
+					break;
+				case ConditionalAttribute.TestType.Enum:
+					ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, property, element, fieldInfo.DeclaringType, default(Enum), true, nameof(ConditionalAttribute), nameof(ConditionalAttribute.ValueSource),
+						value => UpdateEnumVisibility(element, value, conditionalAttribute.IntValue, conditionalAttribute.EnumTest));
+					break;
+				case ConditionalAttribute.TestType.Object:
+					ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, property, element, fieldInfo.DeclaringType, (Object)null, true, nameof(ConditionalAttribute), nameof(ConditionalAttribute.ValueSource),
+						value => UpdateObjectVisibility(element, value, conditionalAttribute.ObjectTest));
+					break;
 			}
 		}
 
-		private void SetupSiblingCondition(VisualElement element, SerializedProperty property)
+		private static void UpdateBoolVisibility(VisualElement element, bool value, BoolTest test)
 		{
-			var conditionalAttribute = attribute as ConditionalAttribute;
-			var sibling = property.GetSibling(conditionalAttribute.SourceName);
-			var trigger = CreateChangeTrigger(element, property, sibling);
-
-			element.Add(trigger);
+			element.SetDisplayed((value && test == BoolTest.ShowIfTrue) || (!value && test == BoolTest.ShowIfFalse));
 		}
 
-		private PropertyWatcher CreateChangeTrigger(VisualElement element, SerializedProperty property, SerializedProperty sibling)
-		{
-			var conditionalAttribute = attribute as ConditionalAttribute;
-
-			if (sibling != null)
-			{
-				switch (sibling.propertyType)
-				{
-					case SerializedPropertyType.Boolean:
-					{
-						UpdateVisibility(element, sibling.boolValue, conditionalAttribute.BoolValue, conditionalAttribute.Test);
-						return new ChangeTrigger<bool>(sibling, (_, oldValue, newValue) => UpdateVisibility(element, newValue, conditionalAttribute.BoolValue, conditionalAttribute.Test));
-					}
-					case SerializedPropertyType.Integer:
-					{
-						UpdateVisibility(element, sibling.intValue, conditionalAttribute.IntValue, conditionalAttribute.Test);
-						return new ChangeTrigger<int>(sibling, (_, oldValue, newValue) => UpdateVisibility(element, newValue, conditionalAttribute.IntValue, conditionalAttribute.Test));
-					}
-					case SerializedPropertyType.Float:
-					{
-						UpdateVisibility(element, sibling.floatValue, conditionalAttribute.FloatValue, conditionalAttribute.Test);
-						return new ChangeTrigger<float>(sibling, (_, oldValue, newValue) => UpdateVisibility(element, newValue, conditionalAttribute.FloatValue, conditionalAttribute.Test));
-					}
-					case SerializedPropertyType.String:
-					{
-						UpdateVisibility(element, sibling.stringValue, conditionalAttribute.StringValue, conditionalAttribute.Test);
-						return new ChangeTrigger<string>(sibling, (_, oldValue, newValue) => UpdateVisibility(element, newValue, conditionalAttribute.StringValue, conditionalAttribute.Test));
-					}
-					case SerializedPropertyType.Enum:
-					{
-						UpdateVisibility(element, sibling.intValue, conditionalAttribute.IntValue, conditionalAttribute.Test);
-						return new ChangeTrigger<Enum>(sibling, (_, oldValue, newValue) => UpdateVisibility(element, sibling.intValue, conditionalAttribute.IntValue, conditionalAttribute.Test));
-					}
-					case SerializedPropertyType.ObjectReference:
-					{
-						UpdateVisibility(element, sibling.objectReferenceValue, conditionalAttribute.BoolValue, conditionalAttribute.Test);
-						return new ChangeTrigger<Object>(sibling, (_, oldValue, newValue) => UpdateVisibility(element, sibling.objectReferenceValue, conditionalAttribute.BoolValue, conditionalAttribute.Test));
-					}
-				}
-
-				Debug.LogWarningFormat(_invalidSiblingWarning, property.propertyPath, conditionalAttribute.SourceName);
-			}
-			else
-			{
-				Debug.LogWarningFormat(_missingSiblingWarning, property.propertyPath, conditionalAttribute.SourceName, fieldInfo.DeclaringType.Name);
-			}
-
-			return null;
-		}
-
-		private void SetupFieldCondition(VisualElement element, SerializedProperty property)
-		{
-			var conditionalAttribute = attribute as ConditionalAttribute;
-			var field = fieldInfo.DeclaringType.GetField(conditionalAttribute.SourceName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-			if (field != null)
-			{
-				var owner = field.IsStatic ? null : property.GetOwner<object>();
-
-				if (field.FieldType == typeof(bool))
-					element.schedule.Execute(() => UpdateVisibility(element, (bool)field.GetValue(owner), conditionalAttribute.BoolValue, conditionalAttribute.Test)).Every(100);
-				else if (field.FieldType == typeof(int))
-					element.schedule.Execute(() => UpdateVisibility(element, (int)field.GetValue(owner), conditionalAttribute.IntValue, conditionalAttribute.Test)).Every(100);
-				else if (field.FieldType == typeof(float))
-					element.schedule.Execute(() => UpdateVisibility(element, (float)field.GetValue(owner), conditionalAttribute.FloatValue, conditionalAttribute.Test)).Every(100);
-				else if (field.FieldType == typeof(string))
-					element.schedule.Execute(() => UpdateVisibility(element, (string)field.GetValue(owner), conditionalAttribute.StringValue, conditionalAttribute.Test)).Every(100);
-				else if (typeof(Object).IsAssignableFrom(field.FieldType))
-					element.schedule.Execute(() => UpdateVisibility(element, (Object)field.GetValue(owner), conditionalAttribute.BoolValue, conditionalAttribute.Test)).Every(100);
-				else
-					Debug.LogWarningFormat(_invalidFieldWarning, property.propertyPath, conditionalAttribute.SourceName);
-			}
-			else
-			{
-				Debug.LogWarningFormat(_missingFieldWarning, property.propertyPath, conditionalAttribute.SourceName, fieldInfo.DeclaringType.Name);
-			}
-		}
-
-		private void SetupPropertyCondition(VisualElement element, SerializedProperty property)
-		{
-			var conditionalAttribute = attribute as ConditionalAttribute;
-			var propertyInfo = fieldInfo.DeclaringType.GetProperty(conditionalAttribute.SourceName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-			if (propertyInfo != null)
-			{
-				var owner = propertyInfo.GetGetMethod().IsStatic ? null : property.GetOwner<object>();
-
-				if (propertyInfo.PropertyType == typeof(bool))
-					element.schedule.Execute(() => UpdateVisibility(element, (bool)propertyInfo.GetValue(owner), conditionalAttribute.BoolValue, conditionalAttribute.Test)).Every(100);
-				else if (propertyInfo.PropertyType == typeof(int))
-					element.schedule.Execute(() => UpdateVisibility(element, (int)propertyInfo.GetValue(owner), conditionalAttribute.IntValue, conditionalAttribute.Test)).Every(100);
-				else if (propertyInfo.PropertyType == typeof(float))
-					element.schedule.Execute(() => UpdateVisibility(element, (float)propertyInfo.GetValue(owner), conditionalAttribute.FloatValue, conditionalAttribute.Test)).Every(100);
-				else if (propertyInfo.PropertyType == typeof(string))
-					element.schedule.Execute(() => UpdateVisibility(element, (string)propertyInfo.GetValue(owner), conditionalAttribute.StringValue, conditionalAttribute.Test)).Every(100);
-				else if (typeof(Object).IsAssignableFrom(propertyInfo.PropertyType))
-					element.schedule.Execute(() => UpdateVisibility(element, (Object)propertyInfo.GetValue(owner), conditionalAttribute.BoolValue, conditionalAttribute.Test)).Every(100);
-				else
-					Debug.LogWarningFormat(_invalidPropertyWarning, property.propertyPath, conditionalAttribute.SourceName);
-			}
-			else
-			{
-				Debug.LogWarningFormat(_missingPropertyWarning, property.propertyPath, conditionalAttribute.SourceName, fieldInfo.DeclaringType.Name);
-			}
-		}
-
-		private void SetupMethodCondition(VisualElement element, SerializedProperty property)
-		{
-			var conditionalAttribute = attribute as ConditionalAttribute;
-			var methodInfo = fieldInfo.DeclaringType.GetMethod(conditionalAttribute.SourceName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-			if (methodInfo != null)
-			{
-				if (methodInfo.HasSignature(null))
-				{
-					var owner = methodInfo.IsStatic ? null : property.GetOwner<object>();
-
-					if (methodInfo.ReturnType == typeof(bool))
-						element.schedule.Execute(() => UpdateVisibility(element, (bool)methodInfo.Invoke(owner, null), conditionalAttribute.BoolValue, conditionalAttribute.Test)).Every(100);
-					else if (methodInfo.ReturnType == typeof(int))
-						element.schedule.Execute(() => UpdateVisibility(element, (int)methodInfo.Invoke(owner, null), conditionalAttribute.IntValue, conditionalAttribute.Test)).Every(100);
-					else if (methodInfo.ReturnType == typeof(float))
-						element.schedule.Execute(() => UpdateVisibility(element, (float)methodInfo.Invoke(owner, null), conditionalAttribute.FloatValue, conditionalAttribute.Test)).Every(100);
-					else if (methodInfo.ReturnType == typeof(string))
-						element.schedule.Execute(() => UpdateVisibility(element, (string)methodInfo.Invoke(owner, null), conditionalAttribute.StringValue, conditionalAttribute.Test)).Every(100);
-					else if (typeof(Object).IsAssignableFrom(methodInfo.ReturnType))
-						element.schedule.Execute(() => UpdateVisibility(element, (Object)methodInfo.Invoke(owner, null), conditionalAttribute.BoolValue, conditionalAttribute.Test)).Every(100);
-					else
-						Debug.LogWarningFormat(_invalidMethodReturnWarning, property.propertyPath, conditionalAttribute.SourceName);
-				}
-				else
-				{
-					Debug.LogWarningFormat(_invalidMethodParametersWarning, property.propertyPath, conditionalAttribute.SourceName);
-				}
-			}
-			else
-			{
-				Debug.LogWarningFormat(_missingMethodWarning, property.propertyPath, conditionalAttribute.SourceName, fieldInfo.DeclaringType.Name);
-			}
-		}
-
-		private static void UpdateVisibility<T>(VisualElement element, T value, T condition, ConditionalTest test) where T : IComparable<T>
+		private static void UpdateNumberVisibility<T>(VisualElement element, T value, T condition, NumberTest test) where T : IComparable<T>
 		{
 			var comparison = value.CompareTo(condition);
 			var visible = false;
 
 			switch (test)
 			{
-				case ConditionalTest.Equal: visible = comparison == 0; break;
-				case ConditionalTest.Inequal: visible = comparison != 0; break;
-				case ConditionalTest.LessThan: visible = comparison < 0; break;
-				case ConditionalTest.GreaterThan: visible = comparison > 0; break;
-				case ConditionalTest.LessThanOrEqual: visible = comparison <= 0; break;
-				case ConditionalTest.GreaterThanOrEqual: visible = comparison >= 0; break;
+				case NumberTest.ShowIfEqual: visible = comparison == 0; break;
+				case NumberTest.ShowIfInequal: visible = comparison != 0; break;
+				case NumberTest.ShowIfLessThan: visible = comparison < 0; break;
+				case NumberTest.ShowIfGreaterThan: visible = comparison > 0; break;
+				case NumberTest.ShowIfLessThanOrEqual: visible = comparison <= 0; break;
+				case NumberTest.ShowIfGreaterThanOrEqual: visible = comparison >= 0; break;
 			}
 
 			element.SetDisplayed(visible);
+		}
+
+		private static void UpdateStringVisibility(VisualElement element, string value, string comparison, StringTest test)
+		{
+			var visible = false;
+
+			switch (test)
+			{
+				case StringTest.ShowIfEqual: visible = value == comparison; break;
+				case StringTest.ShowIfInequal: visible = value != comparison; break;
+				case StringTest.ShowIfEmpty: visible = string.IsNullOrEmpty(value); break;
+				case StringTest.ShowIfNotEmpty: visible = string.IsNullOrEmpty(value); break;
+			}
+
+
+			element.SetDisplayed(visible);
+		}
+
+
+		private static void UpdateEnumVisibility(VisualElement element, Enum value, int comparison, EnumTest test)
+		{
+			var visible = false;
+
+			if (value != null)
+			{
+				var type = value.GetType();
+				var intValue = (int)Enum.Parse(type, value.ToString());
+
+				switch (test)
+				{
+					case EnumTest.ShowIfEqual: visible = intValue == comparison; break;
+					case EnumTest.ShowIfInequal: visible = intValue != comparison; break;
+				}
+			}
+
+			element.SetDisplayed(visible);
+		}
+
+		private static void UpdateObjectVisibility(VisualElement element, Object value, ObjectTest test)
+		{
+			element.SetDisplayed((value && test == ObjectTest.ShowIfSet) || (!value && test == ObjectTest.ShowIfNotSet));
 		}
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -10,6 +9,11 @@ namespace PiRhoSoft.Utilities.Editor
 	class DictionaryDrawer : PropertyDrawer
 	{
 		private const string _invalidTypeWarning = "(PUDDIT) invalid type for DictionaryAttribute on field '{0}': Dictionary can only be applied to SerializedDictionary fields";
+		private const string _invalidAddCallbackWarning = "(PUDDIAC) invalid add callback for DictionaryAttribute on field '{0}': The method must accept a string or have no parameters";
+		private const string _invalidAddReferenceCallbackWarning = "(PUDDIAC) invalid add callback for DictionaryAttribute on field '{0}': The method must accept a string and/or an object or have no parameters";
+		private const string _invalidRemoveCallbackWarning = "(PUDDIRMC) invalid remove callback for DictionaryAttribute on field '{0}': The method must accept an string or have no parameters";
+		private const string _invalidReorderCallbackWarning = "(PUDDIROC) invalid reorder callback for DictionaryAttribute on field '{0}': The method must accept two ints or have no parameters";
+		private const string _invalidChangeCallbackWarning = "(PUDDICC) invalid change callback for DictionaryAttribute on field '{0}': The method must have no parameters";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -64,7 +68,7 @@ namespace PiRhoSoft.Utilities.Editor
 					proxy.CanAddCallback = ReflectionHelper.CreateFunctionCallback<string, bool>(property, declaringType, dictionaryAttribute.AllowAdd, nameof(DictionaryAttribute), nameof(DictionaryAttribute.AllowRemove));
 					if (proxy.CanAddCallback == null)
 					{
-						var canRemove = ReflectionHelper.CreateValueSourceFunction(property, field, declaringType, dictionaryAttribute.AllowAdd, ReflectionSource.All, true, nameof(DictionaryAttribute), nameof(DictionaryAttribute.AllowRemove));
+						var canRemove = ReflectionHelper.CreateValueSourceFunction(property, field, declaringType, dictionaryAttribute.AllowAdd, true, nameof(DictionaryAttribute), nameof(DictionaryAttribute.AllowRemove));
 						proxy.CanAddCallback = index => canRemove();
 					}
 				}
@@ -83,6 +87,8 @@ namespace PiRhoSoft.Utilities.Editor
 							var addCallbackKey = ReflectionHelper.CreateActionCallback<string>(property, declaringType, dictionaryAttribute.AddCallback, nameof(DictionaryAttribute), nameof(DictionaryAttribute.AddCallback));
 							if (addCallbackKey != null)
 								field.RegisterCallback<DictionaryField.ItemAddedEvent>(evt => addCallbackKey.Invoke(evt.Key));
+							else
+								Debug.LogWarningFormat(_invalidAddCallbackWarning, property.propertyPath);
 						}
 					}
 					else
@@ -111,6 +117,8 @@ namespace PiRhoSoft.Utilities.Editor
 									var addCallbackKeyObject = ReflectionHelper.CreateActionCallback<string, object>(property, declaringType, dictionaryAttribute.AddCallback, nameof(DictionaryAttribute), nameof(DictionaryAttribute.AddCallback));
 									if (addCallbackKeyObject != null)
 										field.RegisterCallback<DictionaryField.ItemAddedEvent>(evt => addCallbackKeyObject.Invoke(evt.Key, evt.Item));
+									else
+										Debug.LogWarningFormat(_invalidAddReferenceCallbackWarning, property.propertyPath);
 								}
 							}
 						}
@@ -128,7 +136,7 @@ namespace PiRhoSoft.Utilities.Editor
 					proxy.CanRemoveCallback = ReflectionHelper.CreateFunctionCallback<string, bool>(property, declaringType, dictionaryAttribute.AllowRemove, nameof(DictionaryAttribute), nameof(DictionaryAttribute.AllowRemove));
 					if (proxy.CanRemoveCallback == null)
 					{
-						var canRemove = ReflectionHelper.CreateValueSourceFunction(property, field, declaringType, dictionaryAttribute.AllowRemove, ReflectionSource.All, true, nameof(DictionaryAttribute), nameof(DictionaryAttribute.AllowRemove));
+						var canRemove = ReflectionHelper.CreateValueSourceFunction(property, field, declaringType, dictionaryAttribute.AllowRemove, true, nameof(DictionaryAttribute), nameof(DictionaryAttribute.AllowRemove));
 						proxy.CanRemoveCallback = index => canRemove();
 					}
 				}
@@ -145,6 +153,8 @@ namespace PiRhoSoft.Utilities.Editor
 						var removeCallbackKey = ReflectionHelper.CreateActionCallback<string>(property, declaringType, dictionaryAttribute.RemoveCallback, nameof(DictionaryAttribute), nameof(DictionaryAttribute.RemoveCallback));
 						if (removeCallbackKey != null)
 							field.RegisterCallback<DictionaryField.ItemRemovedEvent>(evt => removeCallbackKey.Invoke(evt.Key));
+						else
+							Debug.LogWarningFormat(_invalidRemoveCallbackWarning, property.propertyPath);
 					}
 				}
 			}
@@ -166,6 +176,8 @@ namespace PiRhoSoft.Utilities.Editor
 						var reorderCallbackFromTo = ReflectionHelper.CreateActionCallback<int, int>(property, declaringType, dictionaryAttribute.ReorderCallback, nameof(DictionaryAttribute), nameof(DictionaryAttribute.ReorderCallback));
 						if (reorderCallbackFromTo != null)
 							field.RegisterCallback<DictionaryField.ItemReorderedEvent>(evt => reorderCallbackFromTo.Invoke(evt.FromIndex, evt.ToIndex));
+						else
+							Debug.LogWarningFormat(_invalidReorderCallbackWarning, property.propertyPath);
 					}
 				}
 			}
@@ -178,6 +190,8 @@ namespace PiRhoSoft.Utilities.Editor
 				var changeCallback = ReflectionHelper.CreateActionCallback(property, declaringType, dictionaryAttribute.ChangeCallback, nameof(DictionaryAttribute), nameof(DictionaryAttribute.AllowRemove));
 				if (changeCallback != null)
 					field.RegisterCallback<DictionaryField.ItemsChangedEvent>(evt => changeCallback.Invoke());
+				else
+					Debug.LogWarningFormat(_invalidChangeCallbackWarning, property.propertyPath);
 			}
 		}
 	}

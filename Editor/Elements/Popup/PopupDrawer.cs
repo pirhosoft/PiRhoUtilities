@@ -31,8 +31,8 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			var popup = new PopupField<T>();
 
-			ReflectionHelper.SetupValueSourceCallback<IList<T>>(popupAttribute.ValuesSource, ReflectionSource.All, property, popup, fieldInfo.DeclaringType, defaultValues, popupAttribute.AutoUpdate, nameof(PopupAttribute), nameof(PopupAttribute.ValuesSource), values => popup.Values = values.ToList());
-			ReflectionHelper.SetupValueSourceCallback<IList<string>>(popupAttribute.OptionsSource, ReflectionSource.All, property, popup, fieldInfo.DeclaringType, popupAttribute.Options, popupAttribute.AutoUpdate, nameof(PopupAttribute), nameof(PopupAttribute.OptionsSource), options => popup.Options = options.ToList());
+			ReflectionHelper.SetupValueSourceCallback<IList<T>>(popupAttribute.ValuesSource, property, popup, fieldInfo.DeclaringType, defaultValues, popupAttribute.AutoUpdate, nameof(PopupAttribute), nameof(PopupAttribute.ValuesSource), values => popup.Values = values.ToList());
+			ReflectionHelper.SetupValueSourceCallback<IList<string>>(popupAttribute.OptionsSource, property, popup, fieldInfo.DeclaringType, popupAttribute.Options, popupAttribute.AutoUpdate, nameof(PopupAttribute), nameof(PopupAttribute.OptionsSource), options => popup.Options = options.ToList());
 
 			return popup.ConfigureProperty(property);
 		}

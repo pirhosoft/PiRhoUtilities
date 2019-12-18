@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -12,13 +11,11 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string UssClassName = "pirho-trait-button";
 		public const string SideUssClassName = UssClassName + "--side";
 
-		private const string _missingMethodWarning = "(PUBDMM) invalid method for ButtonAttribute on field '{0}': the method '{1}' could not be found on type '{2}'";
-		private const string _invalidMethodWarning = "(PUBDIM) invalid method for ButtonAttribute on field '{0}': the method '{1}' on type '{2}' should not take parameters";
+		private const string _invalidMethodWarning = "(PUBDIM) invalid method for ButtonAttribute on field '{0}': a parameterless method named '{1}' colud not be found on type '{2}'";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
 			var buttonAttribute = attribute as ButtonAttribute;
-			var method = fieldInfo.DeclaringType.GetMethod(buttonAttribute.Method, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			var element = this.CreateNextElement(property);
 			var container = new VisualElement();
 
@@ -26,19 +23,16 @@ namespace PiRhoSoft.Utilities.Editor
 			container.AddToClassList(UssClassName);
 			container.Add(element);
 
+			var method = ReflectionHelper.CreateActionCallback(property, fieldInfo.DeclaringType, buttonAttribute.Method, nameof(ButtonAttribute), nameof(ButtonAttribute.Method));
+
 			if (method == null)
-			{
-				Debug.LogWarningFormat(_missingMethodWarning, property.propertyPath, buttonAttribute.Method, fieldInfo.DeclaringType.Name);
-			}
-			else if (!method.HasSignature(null))
 			{
 				Debug.LogWarningFormat(_invalidMethodWarning, property.propertyPath, buttonAttribute.Method, fieldInfo.DeclaringType.Name);
 			}
 			else
 			{
-				var owner = method.IsStatic ? null : property.GetOwner<object>();
 				var text = string.IsNullOrEmpty(buttonAttribute.Label) ? buttonAttribute.Method : buttonAttribute.Label;
-				var button = new Button(() => method.Invoke(owner, null))
+				var button = new Button(method)
 				{
 					text = text,
 					tooltip = buttonAttribute.Tooltip
