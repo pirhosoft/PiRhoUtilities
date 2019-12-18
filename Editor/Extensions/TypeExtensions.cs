@@ -59,6 +59,11 @@ namespace PiRhoSoft.Utilities.Editor
 			return null;
 		}
 
+		public static bool IsCreatable(this Type type)
+		{
+			return type.IsValueType || type.GetConstructor(Type.EmptyTypes) != null;
+		}
+
 		public static bool IsCreatableAs<BaseType>(this Type type)
 		{
 			return type.IsCreatableAs(typeof(BaseType));

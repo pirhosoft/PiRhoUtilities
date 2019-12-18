@@ -34,6 +34,10 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Public Interface
 
+		public Placeholder() : this(null)
+		{
+		}
+
 		public Placeholder(string text) : base(text)
 		{
 			pickingMode = PickingMode.Ignore;
@@ -71,9 +75,26 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#endregion
 
-		#region UXML Support
+		#region Events
 
-		public Placeholder() : this(null) { }
+		public override void HandleEvent(EventBase evt)
+		{
+			// Capture ChangeEvents so they aren't handled by the parent TextField.
+
+			if (evt is ChangeEvent<string>)
+			{
+				evt.StopPropagation();
+				evt.PreventDefault();
+			}
+			else
+			{
+				base.HandleEvent(evt);
+			}
+		}
+
+		#endregion
+
+		#region UXML Support
 
 		public new class UxmlFactory : UxmlFactory<Placeholder, UxmlTraits> { }
 		public new class UxmlTraits : Label.UxmlTraits
@@ -85,7 +106,9 @@ namespace PiRhoSoft.Utilities.Editor
 				var field = element as Placeholder;
 
 				if (field.parent is TextField textField)
+				{
 					field.AddToField(textField);
+				}
 				else
 				{
 					field.RemoveFromHierarchy();

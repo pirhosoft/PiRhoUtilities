@@ -56,7 +56,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public override void AddItem()
 		{
-			if (ItemType != null && ItemType.IsCreatableAs(ItemType))
+			if (ItemType != null && ItemType.IsCreatable())
 				Items.Add(Activator.CreateInstance(ItemType));
 		}
 

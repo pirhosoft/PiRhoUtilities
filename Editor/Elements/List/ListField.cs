@@ -109,6 +109,7 @@ namespace PiRhoSoft.Utilities.Editor
 		#region Log Messages
 
 		private const string _invalidBindingError = "(PUELFIB) invalid binding '{0}' for ListField: property '{1}' is type '{2}' but should be an array";
+		private const string _invalidTypeError = "(PUEDFIT) invalid item type '{0}' for ListField: the item type must be a default constructable class when used with allowDerived = false";
 
 		#endregion
 
@@ -254,8 +255,25 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public void SetItemType(Type type, bool allowDerived)
 		{
-			_itemType = type;
-			_allowDerived = type != null && allowDerived;
+			if (type == null)
+			{
+				_itemType = null;
+				_allowDerived = false;
+			}
+			else if (allowDerived)
+			{
+				_itemType = type;
+				_allowDerived = true;
+			}
+			else if (type.IsCreatable())
+			{
+				_itemType = type;
+				_allowDerived = false;
+			}
+			else
+			{
+				Debug.LogWarningFormat(_invalidTypeError, type.FullName);
+			}
 
 			UpdateItemType();
 		}
@@ -491,7 +509,16 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			if (_allowAdd && _proxy.CanAdd())
 			{
-				_proxy.AddItem();
+				if (_itemType != null)
+				{
+					var item = Activator.CreateInstance(_itemType);
+					_proxy.AddItem(item);
+				}
+				else
+				{
+					_proxy.AddItem();
+				}
+
 				UpdateItemsWithoutNotify();
 
 				using (var e = ItemAddedEvent.GetPooled(_proxy.ItemCount - 1, null))
