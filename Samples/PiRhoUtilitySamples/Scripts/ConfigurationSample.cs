@@ -33,7 +33,6 @@ namespace PiRhoSoft.Utilities
 		[CustomLabel("Show/Hide")]
 		public bool Toggle;
 
-		[Conditional(nameof(Toggle), true)]
 		public int ConditionalInt;
 	}
 }

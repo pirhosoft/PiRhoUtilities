@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -10,23 +9,11 @@ namespace PiRhoSoft.Utilities.Editor
 	class ListDrawer : PropertyDrawer
 	{
 		private const string _invalidTypeWarning = "(PULDIT) invalid type for ListAttribute on field '{0}': List can only be applied to SerializedList or SerializedArray fields";
-
-		private const string _missingAllowAddMethodWarning = "(PULDMAAM) invalid method for AllowAdd on field '{0}': the method '{1}' could not be found on type '{2}'";
-		private const string _missingAllowRemoveMethodWarning = "(PULDMARM) invalid method for AllowRemove on field '{0}': the method '{1}' could not be found on type '{2}'";
-		private const string _invalidAllowAddMethodWarning = "(PULDIAAM) invalid method for AllowAdd on field '{0}': the method '{1}' should take no parameters";
-		private const string _invalidAllowRemoveMethodWarning = "(PULDIARM) invalid method for AllowRemove on field '{0}': the method '{1}' should take an 0 or 1 int parameters";
-
-		private const string _missingAddMethodWarning = "(PULDMAM) invalid method for AddCallback on field '{0}': the method '{1}' could not be found on type '{2}'";
-		private const string _missingRemoveMethodWarning = "(PULDMRM) invalid method for RemoveCallback on field '{0}': the method '{1}' could not be found on type '{2}'";
-		private const string _missingReorderMethodWarning = "(PULDMROM) invalid method for ReorderCallback on field '{0}': the method '{1}' could not be found on type '{2}'";
-		private const string _missingChangeMethodWarning = "(PULDMCM) invalid method for ChangeCallback on field '{0}': the method '{1}' could not be found on type '{2}'";
-		private const string _invalidAddMethodWarning = "(PULDIAM) invalid method for AddCallback on field '{0}': the method '{1}' should take no parameters";
-		private const string _invalidRemoveMethodWarning = "(PULDIRM) invalid method for RemoveCallback on field '{0}': the method '{1}' should take an 0 or 1 int parameters";
-		private const string _invalidReorderMethodWarning = "(PULDIROM) invalid method for ReorderCallback on field '{0}': the method '{1}' should take 0, 1, or 2 int parameters";
-		private const string _invalidChangeMethodWarning = "(PULDICM) invalid method for ChangeCallback on field '{0}': the method '{1}' should take no parameters";
-
-		private static readonly object[] _oneParameter = new object[1];
-		private static readonly object[] _twoParameters = new object[2];
+		private const string _invalidAddCallbackWarning = "(PULDIAC) invalid add callback for ListAttribute on field '{0}': The method must accept an int or have no parameters";
+		private const string _invalidAddReferenceCallbackWarning = "(PULDIAC) invalid add callback for ListAttribute on field '{0}': The method must accept an int and/or an object in either order or have no parameters";
+		private const string _invalidRemoveCallbackWarning = "(PULDIRMC) invalid remove callback for ListAttribute on field '{0}': The method must accept an int or have no parameters";
+		private const string _invalidReorderCallbackWarning = "(PULDIROC) invalid reorder callback for ListAttribute on field '{0}': The method must accept two ints or have no parameters";
+		private const string _invalidChangeCallbackWarning = "(PULDICC) invalid change callback for ListAttribute on field '{0}': The method must have no parameters";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -36,11 +23,10 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				var isReference = fieldInfo.FieldType.BaseType.GetGenericTypeDefinition() == typeof(ReferenceList<>);
 				var referenceType = isReference ? fieldInfo.GetFieldType() : null;
+				var declaringType = fieldInfo.DeclaringType;
 				var listAttribute = attribute as ListAttribute;
-				var parent = property.GetOwner<object>();
 				var drawer = this.GetNextDrawer();
 				var proxy = new PropertyListProxy(items, drawer);
-				var path = property.propertyPath;
 
 				var field = new ListField();
 				field.SetItemType(referenceType, true);
@@ -55,23 +41,10 @@ namespace PiRhoSoft.Utilities.Editor
 				field.AllowRemove = listAttribute.AllowRemove != ListAttribute.Never;
 				field.AllowReorder = listAttribute.AllowReorder;
 
-				if (TryGetMethod(listAttribute.AllowAdd, _missingAllowAddMethodWarning, path, out var allowAddMethod))
-					AddConditional(proxy.CanAddCallback, parent, allowAddMethod, _invalidAllowAddMethodWarning, path);
-
-				if (TryGetMethod(listAttribute.AllowRemove, _missingAllowRemoveMethodWarning, path, out var allowRemoveMethod))
-					AddConditional(proxy.CanRemoveCallback, parent, allowRemoveMethod, _invalidAllowRemoveMethodWarning, path);
-
-				if (TryGetMethod(listAttribute.AddCallback, _missingAddMethodWarning, path, out var addMethod))
-					SetupAddCallback(field, parent, addMethod, _invalidAddMethodWarning, path);
-
-				if (TryGetMethod(listAttribute.RemoveCallback, _missingRemoveMethodWarning, path, out var removeMethod))
-					SetupRemoveCallback(field, parent, removeMethod, _invalidRemoveMethodWarning, path);
-
-				if (TryGetMethod(listAttribute.ReorderCallback, _missingReorderMethodWarning, path, out var reorderMethod))
-					SetupReorderCallback(field, parent, reorderMethod, _invalidReorderMethodWarning, path);
-
-				if (TryGetMethod(listAttribute.ChangeCallback, _missingChangeMethodWarning, path, out var changeMethod))
-					SetupChangeCallback(field, parent, changeMethod, _invalidChangeMethodWarning, path);
+				SetupAdd(listAttribute, proxy, field, property, declaringType, isReference);
+				SetupRemove(listAttribute, proxy, field, property, declaringType);
+				SetupReorder(listAttribute, field, property, declaringType);
+				SetupChange(listAttribute, field, property, declaringType);
 
 				return field;
 			}
@@ -82,124 +55,144 @@ namespace PiRhoSoft.Utilities.Editor
 			}
 		}
 
-		private bool TryGetMethod(string name, string warning, string propertyPath, out MethodInfo method)
+		private void SetupAdd(ListAttribute listAttribute, PropertyListProxy proxy, ListField field, SerializedProperty property, Type declaringType, bool isReference)
 		{
-			method = null;
-
-			if (!string.IsNullOrEmpty(name))
+			if (field.AllowAdd)
 			{
-				method = fieldInfo.DeclaringType.GetMethod(name, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-				if (method == null)
-					Debug.LogWarningFormat(warning, propertyPath, name, fieldInfo.DeclaringType.Name);
-			}
+				if (!string.IsNullOrEmpty(listAttribute.AllowAdd))
+				{
+					proxy.CanAddCallback = ReflectionHelper.CreateValueSourceFunction(property, field, declaringType, listAttribute.AllowAdd, true, nameof(ListAttribute), nameof(ListAttribute.AllowAdd));
+				}
 
-			return method != null;
-		}
-
-		private void SetupAddCallback(ListField field, object parent, MethodInfo method, string warning, string propertyPath)
-		{
-			var owner = method.IsStatic ? null : parent;
-
-			if (method.HasSignature(null))
-				field.RegisterCallback<ListField.ItemAddedEvent>(e => NoneCallback(method, owner));
-			else if (method.HasSignature(null, typeof(int)))
-				field.RegisterCallback<ListField.ItemAddedEvent>(e => OneCallback(e.Index, method, owner));
-			else
-				Debug.LogWarningFormat(warning, propertyPath, method.Name);
-		}
-
-		private void SetupRemoveCallback(ListField field, object parent, MethodInfo method, string warning, string propertyPath)
-		{
-			var owner = method.IsStatic ? null : parent;
-
-			if (method.HasSignature(null))
-				field.RegisterCallback<ListField.ItemRemovedEvent>(e => NoneCallback(method, owner));
-			else if (method.HasSignature(null, typeof(int)))
-				field.RegisterCallback<ListField.ItemRemovedEvent>(e => OneCallback(e.Index, method, owner));
-			else
-				Debug.LogWarningFormat(warning, propertyPath, method.Name);
-		}
-
-		private void SetupReorderCallback(ListField field, object parent, MethodInfo method, string warning, string propertyPath)
-		{
-			var owner = method.IsStatic ? null : parent;
-
-			if (method.HasSignature(null))
-				field.RegisterCallback<ListField.ItemReorderedEvent>(e => NoneCallback(method, owner));
-			else if (method.HasSignature(null, typeof(int)))
-				field.RegisterCallback<ListField.ItemReorderedEvent>(e => OneCallback(e.ToIndex, method, owner));
-			else if (method.HasSignature(null, typeof(int), typeof(int)))
-				field.RegisterCallback<ListField.ItemReorderedEvent>(e => TwoCallback(e.FromIndex, e.ToIndex, method, owner));
-			else
-				Debug.LogWarningFormat(warning, propertyPath, method.Name);
-		}
-
-		private void SetupChangeCallback(ListField field, object parent, MethodInfo method, string warning, string propertyPath)
-		{
-			var owner = method.IsStatic ? null : parent;
-
-			if (method.HasSignature(null))
-				field.RegisterCallback<ListField.ItemsChangedEvent>(e => NoneCallback(method, owner));
-			else
-				Debug.LogWarningFormat(warning, propertyPath, method.Name);
-		}
-
-		private void AddConditional(Func<bool> callback, object parent, MethodInfo method, string warning, string propertyPath)
-		{
-			var owner = method.IsStatic ? null : parent;
-
-			if (method.HasSignature(typeof(bool)))
-				callback += () => NoneConditional(method, owner);
-			else
-				Debug.LogWarningFormat(warning, propertyPath, method.Name);
-		}
-
-		private void AddConditional(Func<int, bool> callback, object parent, MethodInfo method, string warning, string propertyPath)
-		{
-			var owner = method.IsStatic ? null : parent;
-
-			if (method.HasSignature(typeof(bool)))
-				callback += index => NoneConditional(method, owner);
-			else if (method.HasSignature(typeof(bool), typeof(string)))
-				callback += index => OneConditional(index, method, owner);
-			else
-				Debug.LogWarningFormat(warning, propertyPath, method.Name);
-		}
-
-		private void NoneCallback(MethodInfo method, object owner)
-		{
-			if (!EditorApplication.isPlaying)
-				method.Invoke(owner, null);
-		}
-
-		private void OneCallback(int index, MethodInfo method, object owner)
-		{
-			if (!EditorApplication.isPlaying)
-			{
-				_oneParameter[0] = index;
-				method.Invoke(owner, _oneParameter);
+				if (!string.IsNullOrEmpty(listAttribute.AddCallback))
+				{
+					if (!isReference)
+					{
+						var addCallback = ReflectionHelper.CreateActionCallback(property, declaringType, listAttribute.AddCallback, nameof(ListAttribute), nameof(ListAttribute.AddCallback));
+						if (addCallback != null)
+						{
+							field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallback.Invoke());
+						}
+						else
+						{
+							var addCallbackIndex = ReflectionHelper.CreateActionCallback<int>(property, declaringType, listAttribute.AddCallback, nameof(ListAttribute), nameof(ListAttribute.AddCallback));
+							if (addCallbackIndex != null)
+								field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallbackIndex.Invoke(evt.Index));
+							else
+								Debug.LogWarningFormat(_invalidAddCallbackWarning, property.propertyPath);
+						}
+					}
+					else
+					{
+						var addCallback = ReflectionHelper.CreateActionCallback(property, declaringType, listAttribute.AddCallback, nameof(ListAttribute), nameof(ListAttribute.AddCallback));
+						if (addCallback != null)
+						{
+							field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallback.Invoke());
+						}
+						else
+						{
+							var addCallbackIndex = ReflectionHelper.CreateActionCallback<int>(property, declaringType, listAttribute.AddCallback, nameof(ListAttribute), nameof(ListAttribute.AddCallback));
+							if (addCallbackIndex != null)
+							{
+								field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallbackIndex.Invoke(evt.Index));
+							}
+							else
+							{
+								var addCallbackObject = ReflectionHelper.CreateActionCallback<object>(property, declaringType, listAttribute.AddCallback, nameof(ListAttribute), nameof(ListAttribute.AddCallback));
+								if (addCallbackObject != null)
+								{
+									field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallbackObject.Invoke(evt.Item));
+								}
+								else
+								{
+									var addCallbackIndexObject = ReflectionHelper.CreateActionCallback<int, object>(property, declaringType, listAttribute.AddCallback, nameof(ListAttribute), nameof(ListAttribute.AddCallback));
+									if (addCallbackIndexObject != null)
+									{
+										field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallbackIndexObject.Invoke(evt.Index, evt.Item));
+									}
+									else
+									{
+										var addCallbackObjectIndex = ReflectionHelper.CreateActionCallback<object, int>(property, declaringType, listAttribute.AddCallback, nameof(ListAttribute), nameof(ListAttribute.AddCallback));
+										if (addCallbackObjectIndex != null)
+											field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallbackObjectIndex.Invoke(evt.Item, evt.Index));
+										else
+											Debug.LogWarningFormat(_invalidAddReferenceCallbackWarning, property.propertyPath);
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 
-		private void TwoCallback(int from, int to, MethodInfo method, object owner)
+		private void SetupRemove(ListAttribute listAttribute, PropertyListProxy proxy, ListField field, SerializedProperty property, Type declaringType)
 		{
-			if (!EditorApplication.isPlaying)
+			if (field.AllowRemove)
 			{
-				_twoParameters[0] = from;
-				_twoParameters[1] = to;
-				method.Invoke(owner, _twoParameters);
+				if (!string.IsNullOrEmpty(listAttribute.AllowRemove))
+				{
+					proxy.CanRemoveCallback = ReflectionHelper.CreateFunctionCallback<int, bool>(property, declaringType, listAttribute.AllowRemove, nameof(ListAttribute), nameof(ListAttribute.AllowRemove));
+
+					if (proxy.CanRemoveCallback == null)
+					{
+						var canRemove = ReflectionHelper.CreateValueSourceFunction(property, field, declaringType, listAttribute.AllowRemove, true, nameof(ListAttribute), nameof(ListAttribute.AllowRemove));
+						proxy.CanRemoveCallback = index => canRemove();
+					}
+				}
+
+				if (!string.IsNullOrEmpty(listAttribute.RemoveCallback))
+				{
+					var removeCallback = ReflectionHelper.CreateActionCallback(property, declaringType, listAttribute.RemoveCallback, nameof(ListAttribute), nameof(ListAttribute.RemoveCallback));
+					if (removeCallback != null)
+					{
+						field.RegisterCallback<ListField.ItemRemovedEvent>(evt => removeCallback.Invoke());
+					}
+					else
+					{
+						var removeCallbackIndex = ReflectionHelper.CreateActionCallback<int>(property, declaringType, listAttribute.RemoveCallback, nameof(ListAttribute), nameof(ListAttribute.RemoveCallback));
+						if (removeCallbackIndex != null)
+							field.RegisterCallback<ListField.ItemRemovedEvent>(evt => removeCallbackIndex.Invoke(evt.Index));
+						else
+							Debug.LogWarningFormat(_invalidRemoveCallbackWarning, property.propertyPath);
+					}
+				}
 			}
 		}
 
-		private bool NoneConditional(MethodInfo method, object owner)
+		private void SetupReorder(ListAttribute listAttribute, ListField field, SerializedProperty property, Type declaringType)
 		{
-			return (bool)method.Invoke(owner, null);
+			if (field.AllowReorder)
+			{
+				if (!string.IsNullOrEmpty(listAttribute.ReorderCallback))
+				{
+					var reorderCallback = ReflectionHelper.CreateActionCallback(property, declaringType, listAttribute.ReorderCallback, nameof(ListAttribute), nameof(ListAttribute.ReorderCallback));
+					if (reorderCallback != null)
+					{
+						field.RegisterCallback<ListField.ItemReorderedEvent>(evt => reorderCallback.Invoke());
+					}
+					else
+					{
+						var reorderCallbackFromTo = ReflectionHelper.CreateActionCallback<int, int>(property, declaringType, listAttribute.ReorderCallback, nameof(ListAttribute), nameof(ListAttribute.ReorderCallback));
+						if (reorderCallbackFromTo != null)
+							field.RegisterCallback<ListField.ItemReorderedEvent>(evt => reorderCallbackFromTo.Invoke(evt.FromIndex, evt.ToIndex));
+						else
+							Debug.LogWarningFormat(_invalidReorderCallbackWarning, property.propertyPath);
+					}
+				}
+			}
 		}
 
-		private bool OneConditional(int index, MethodInfo method, object owner)
+		private void SetupChange(ListAttribute listAttribute, ListField field, SerializedProperty property, Type declaringType)
 		{
-			_oneParameter[0] = index;
-			return (bool)method.Invoke(owner, _oneParameter);
+			if (!string.IsNullOrEmpty(listAttribute.ChangeCallback))
+			{
+				var changeCallback = ReflectionHelper.CreateActionCallback(property, declaringType, listAttribute.ChangeCallback, nameof(ListAttribute), nameof(ListAttribute.AllowRemove));
+				if (changeCallback != null)
+					field.RegisterCallback<ListField.ItemsChangedEvent>(evt => changeCallback.Invoke());
+				else
+					Debug.LogWarningFormat(_invalidChangeCallbackWarning, property.propertyPath);
+			}
 		}
 	}
 }

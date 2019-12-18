@@ -61,6 +61,10 @@ namespace PiRhoSoft.Utilities.Editor
 			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
 		}
 
+		public ComboBoxField() : this(null, null)
+		{
+		}
+
 		public ComboBoxField(string label, List<string> options) : this(label)
 		{
 			Options = options;
@@ -93,16 +97,19 @@ namespace PiRhoSoft.Utilities.Editor
 				get => _options;
 				set
 				{
-					_options = value;
-					_menu = new GenericMenu();
-
-					if (_options != null)
+					if (value != _options)
 					{
-						foreach (var option in _options)
-							_menu.AddItem(new GUIContent(option), false, () => SelectItem(option));
-					}
+						_options = value;
+						_menu = new GenericMenu();
 
-					_dropdownButton.SetEnabled(_options != null && _options.Count > 0);
+						if (_options != null)
+						{
+							foreach (var option in _options)
+								_menu.AddItem(new GUIContent(option), false, () => SelectItem(option));
+						}
+
+						_dropdownButton.SetEnabled(_options != null && _options.Count > 0);
+					}
 				}
 			}
 
@@ -148,8 +155,6 @@ namespace PiRhoSoft.Utilities.Editor
 		#endregion
 
 		#region UXML Support
-
-		public ComboBoxField() : this(null, null) { }
 
 		public new class UxmlFactory : UxmlFactory<ComboBoxField, UxmlTraits> { }
 		public new class UxmlTraits : BaseFieldTraits<string, UxmlStringAttributeDescription>

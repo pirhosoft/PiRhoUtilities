@@ -3,12 +3,18 @@
 	public class CustomLabelAttribute : PropertyTraitAttribute
 	{
 		public string Label { get; private set; }
-		public string Resolve { get; private set; }
+		public string LabelSource { get; private set; }
+		public bool AutoUpdate { get; private set; }
 
-		public CustomLabelAttribute(string label = null, string resolve = null) : base(PerContainerPhase, 0)
+		public CustomLabelAttribute(string label) : base(PerContainerPhase, 0)
 		{
 			Label = label;
-			Resolve = resolve;
+		}
+
+		public CustomLabelAttribute(string labelSource, bool autoUpdate) : base(PerContainerPhase, 0)
+		{
+			LabelSource = labelSource;
+			AutoUpdate = autoUpdate;
 		}
 	}
 }

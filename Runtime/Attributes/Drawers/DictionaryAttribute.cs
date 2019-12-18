@@ -8,6 +8,7 @@
 		public string AllowAdd = Always;
 		public string AllowRemove = Always;
 		public bool AllowReorder = true;
+		public string AddPlaceholder = null;
 		public string EmptyLabel = null;
 
 		public string AddCallback = null;

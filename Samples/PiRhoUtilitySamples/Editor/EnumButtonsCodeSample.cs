@@ -1,7 +1,6 @@
 ﻿using PiRhoSoft.Utilities.Editor;
 using System;
 using System.Collections.Generic;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -58,7 +57,7 @@ namespace PiRhoSoft.Utilities.Samples
 			enumButtons.RegisterValueChangedCallback(ValueChanged);
 			root.Add(enumButtons);
 
-			var typePopup = new PopupField<Type>("Type", _types, 0, type => type.Name, type => type.Name);
+			var typePopup = new UnityEditor.UIElements.PopupField<Type>("Type", _types, 0, type => type.Name, type => type.Name);
 			typePopup.RegisterValueChangedCallback(e => enumButtons.Type = e.newValue);
 			root.Add(typePopup);
 
