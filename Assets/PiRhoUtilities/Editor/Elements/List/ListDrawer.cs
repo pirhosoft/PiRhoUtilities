@@ -9,6 +9,11 @@ namespace PiRhoSoft.Utilities.Editor
 	class ListDrawer : PropertyDrawer
 	{
 		private const string _invalidTypeWarning = "(PULDIT) invalid type for ListAttribute on field '{0}': List can only be applied to SerializedList or SerializedArray fields";
+		private const string _invalidAddCallbackWarning = "(PULDIAC) invalid add callback for ListAttribute on field '{0}': The method must accept an int or have no parameters";
+		private const string _invalidAddReferenceCallbackWarning = "(PULDIAC) invalid add callback for ListAttribute on field '{0}': The method must accept an int and/or an object in either order or have no parameters";
+		private const string _invalidRemoveCallbackWarning = "(PULDIRMC) invalid remove callback for ListAttribute on field '{0}': The method must accept an int or have no parameters";
+		private const string _invalidReorderCallbackWarning = "(PULDIROC) invalid reorder callback for ListAttribute on field '{0}': The method must accept two ints or have no parameters";
+		private const string _invalidChangeCallbackWarning = "(PULDICC) invalid change callback for ListAttribute on field '{0}': The method must have no parameters";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -56,7 +61,7 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				if (!string.IsNullOrEmpty(listAttribute.AllowAdd))
 				{
-					proxy.CanAddCallback = ReflectionHelper.CreateValueSourceFunction(property, field, declaringType, listAttribute.AllowAdd, ReflectionSource.All, true, nameof(ListAttribute), nameof(ListAttribute.AllowAdd));
+					proxy.CanAddCallback = ReflectionHelper.CreateValueSourceFunction(property, field, declaringType, listAttribute.AllowAdd, true, nameof(ListAttribute), nameof(ListAttribute.AllowAdd));
 				}
 
 				if (!string.IsNullOrEmpty(listAttribute.AddCallback))
@@ -73,6 +78,8 @@ namespace PiRhoSoft.Utilities.Editor
 							var addCallbackIndex = ReflectionHelper.CreateActionCallback<int>(property, declaringType, listAttribute.AddCallback, nameof(ListAttribute), nameof(ListAttribute.AddCallback));
 							if (addCallbackIndex != null)
 								field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallbackIndex.Invoke(evt.Index));
+							else
+								Debug.LogWarningFormat(_invalidAddCallbackWarning, property.propertyPath);
 						}
 					}
 					else
@@ -107,9 +114,9 @@ namespace PiRhoSoft.Utilities.Editor
 									{
 										var addCallbackObjectIndex = ReflectionHelper.CreateActionCallback<object, int>(property, declaringType, listAttribute.AddCallback, nameof(ListAttribute), nameof(ListAttribute.AddCallback));
 										if (addCallbackObjectIndex != null)
-										{
 											field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallbackObjectIndex.Invoke(evt.Item, evt.Index));
-										}
+										else
+											Debug.LogWarningFormat(_invalidAddReferenceCallbackWarning, property.propertyPath);
 									}
 								}
 							}
@@ -129,10 +136,11 @@ namespace PiRhoSoft.Utilities.Editor
 
 					if (proxy.CanRemoveCallback == null)
 					{
-						var canRemove = ReflectionHelper.CreateValueSourceFunction(property, field, declaringType, listAttribute.AllowRemove, ReflectionSource.All, true, nameof(ListAttribute), nameof(ListAttribute.AllowRemove));
+						var canRemove = ReflectionHelper.CreateValueSourceFunction(property, field, declaringType, listAttribute.AllowRemove, true, nameof(ListAttribute), nameof(ListAttribute.AllowRemove));
 						proxy.CanRemoveCallback = index => canRemove();
 					}
 				}
+
 				if (!string.IsNullOrEmpty(listAttribute.RemoveCallback))
 				{
 					var removeCallback = ReflectionHelper.CreateActionCallback(property, declaringType, listAttribute.RemoveCallback, nameof(ListAttribute), nameof(ListAttribute.RemoveCallback));
@@ -145,6 +153,8 @@ namespace PiRhoSoft.Utilities.Editor
 						var removeCallbackIndex = ReflectionHelper.CreateActionCallback<int>(property, declaringType, listAttribute.RemoveCallback, nameof(ListAttribute), nameof(ListAttribute.RemoveCallback));
 						if (removeCallbackIndex != null)
 							field.RegisterCallback<ListField.ItemRemovedEvent>(evt => removeCallbackIndex.Invoke(evt.Index));
+						else
+							Debug.LogWarningFormat(_invalidRemoveCallbackWarning, property.propertyPath);
 					}
 				}
 			}
@@ -166,6 +176,8 @@ namespace PiRhoSoft.Utilities.Editor
 						var reorderCallbackFromTo = ReflectionHelper.CreateActionCallback<int, int>(property, declaringType, listAttribute.ReorderCallback, nameof(ListAttribute), nameof(ListAttribute.ReorderCallback));
 						if (reorderCallbackFromTo != null)
 							field.RegisterCallback<ListField.ItemReorderedEvent>(evt => reorderCallbackFromTo.Invoke(evt.FromIndex, evt.ToIndex));
+						else
+							Debug.LogWarningFormat(_invalidReorderCallbackWarning, property.propertyPath);
 					}
 				}
 			}
@@ -178,6 +190,8 @@ namespace PiRhoSoft.Utilities.Editor
 				var changeCallback = ReflectionHelper.CreateActionCallback(property, declaringType, listAttribute.ChangeCallback, nameof(ListAttribute), nameof(ListAttribute.AllowRemove));
 				if (changeCallback != null)
 					field.RegisterCallback<ListField.ItemsChangedEvent>(evt => changeCallback.Invoke());
+				else
+					Debug.LogWarningFormat(_invalidChangeCallbackWarning, property.propertyPath);
 			}
 		}
 	}

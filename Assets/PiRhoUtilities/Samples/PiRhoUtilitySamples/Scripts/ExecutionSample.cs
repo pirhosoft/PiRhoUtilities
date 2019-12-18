@@ -5,7 +5,7 @@ namespace PiRhoSoft.Utilities
 	[AddComponentMenu("PiRho Utilities/Execution")]
 	public class ExecutionSample : MonoBehaviour
 	{
-		[Button(nameof(Clicked), Label = "Click")]
+		[Button(nameof(Clicked), "Click")]
 		[ChangeTrigger(nameof(Changed))]
 		[InspectTrigger(nameof(Inspect))]
 		public bool Toggle;

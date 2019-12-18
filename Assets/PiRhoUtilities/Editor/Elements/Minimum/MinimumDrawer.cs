@@ -16,14 +16,14 @@ namespace PiRhoSoft.Utilities.Editor
 
 			if (property.propertyType == SerializedPropertyType.Integer)
 			{
-				var min = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, minimumAttribute.MinimumSource, ReflectionSource.All, Mathf.RoundToInt(minimumAttribute.Minimum), nameof(MinimumAttribute), nameof(MinimumAttribute.MinimumSource));
+				var min = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, minimumAttribute.MinimumSource, Mathf.RoundToInt(minimumAttribute.Minimum), nameof(MinimumAttribute), nameof(MinimumAttribute.MinimumSource));
 
 				Clamp(property, min());
 				element.RegisterCallback<FocusOutEvent>(e => Clamp(property, min()));
 			}
 			else if (property.propertyType == SerializedPropertyType.Float)
 			{
-				var min = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, minimumAttribute.MinimumSource, ReflectionSource.All, minimumAttribute.Minimum, nameof(MinimumAttribute), nameof(MinimumAttribute.MinimumSource));
+				var min = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, minimumAttribute.MinimumSource, minimumAttribute.Minimum, nameof(MinimumAttribute), nameof(MinimumAttribute.MinimumSource));
 
 				Clamp(property, min());
 				element.RegisterCallback<FocusOutEvent>(e => Clamp(property, min()));

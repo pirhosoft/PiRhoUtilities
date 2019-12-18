@@ -1,58 +1,113 @@
 ﻿namespace PiRhoSoft.Utilities
 {
-	public enum ConditionalSource
+	public enum NumberTest
 	{
-		Sibling,
-		Field,
-		Property,
-		Method
+		ShowIfEqual,
+		ShowIfInequal,
+		ShowIfLessThan,
+		ShowIfGreaterThan,
+		ShowIfLessThanOrEqual,
+		ShowIfGreaterThanOrEqual
 	}
 
-	public enum ConditionalTest
+	public enum BoolTest
 	{
-		Equal,
-		Inequal,
-		LessThan,
-		GreaterThan,
-		LessThanOrEqual,
-		GreaterThanOrEqual
+		ShowIfTrue,
+		ShowIfFalse
+	}
+
+	public enum ObjectTest
+	{
+		ShowIfSet,
+		ShowIfNotSet
+	}
+
+	public enum StringTest
+	{
+		ShowIfEmpty,
+		ShowIfNotEmpty,
+		ShowIfEqual,
+		ShowIfInequal
+	}
+
+	public enum EnumTest
+	{
+		ShowIfEqual,
+		ShowIfInequal
 	}
 
 	public class ConditionalAttribute : PropertyTraitAttribute
 	{
-		public const int Order = 0;
+		public enum TestType
+		{
+			Bool,
+			Int,
+			Float,
+			String,
+			Enum,
+			Object
+		}
 
-		public string SourceName { get; private set; }
-		public bool BoolValue { get; private set; }
+		public string ValueSource { get; private set; }
+		public TestType Type { get; private set; }
+
 		public int IntValue { get; private set; }
 		public float FloatValue { get; private set; }
+		public NumberTest NumberTest { get; private set; }
+
 		public string StringValue { get; private set; }
+		public StringTest StringTest { get; private set; }
 
-		public ConditionalSource Source { get; set; }
-		public ConditionalTest Test { get; set; }
+		public BoolTest BoolTest { get; private set; }
+		public EnumTest EnumTest { get; private set; }
+		public ObjectTest ObjectTest { get; private set; }
 
-		public ConditionalAttribute(string source, bool boolValue) : base(TestPhase, Order)
+		public ConditionalAttribute(string valueSource, int intValue, NumberTest test = NumberTest.ShowIfEqual) : base(TestPhase, 0)
 		{
-			SourceName = source;
-			BoolValue = boolValue;
-		}
-
-		public ConditionalAttribute(string source, int intValue) : base(TestPhase, Order)
-		{
-			SourceName = source;
+			ValueSource = valueSource;
 			IntValue = intValue;
+			NumberTest = test;
+			Type = TestType.Int;
 		}
 
-		public ConditionalAttribute(string source, float floatValue) : base(TestPhase, Order)
+		public ConditionalAttribute(string valueSource, float floatValue, NumberTest test = NumberTest.ShowIfEqual) : base(TestPhase, 0)
 		{
-			SourceName = source;
+			ValueSource = valueSource;
 			FloatValue = floatValue;
+			NumberTest = test;
+			Type = TestType.Float;
 		}
 
-		public ConditionalAttribute(string source, string stringValue) : base(TestPhase, Order)
+		public ConditionalAttribute(string valueSource, string stringValue, StringTest test = StringTest.ShowIfEqual) : base(TestPhase, 0)
 		{
-			SourceName = source;
+			ValueSource = valueSource;
 			StringValue = stringValue;
+			StringTest = test;
+			Type = TestType.String;
+		}
+
+		public ConditionalAttribute(string valueSource, BoolTest test = BoolTest.ShowIfTrue) : base(TestPhase, 0)
+		{
+			ValueSource = valueSource;
+			BoolTest = test;
+			Type = TestType.Bool;
+		}
+
+
+		public ConditionalAttribute(string valueSource, int valueAsInt, EnumTest test = EnumTest.ShowIfEqual) : base(TestPhase, 0)
+		{
+			ValueSource = valueSource;
+			IntValue = valueAsInt;
+			EnumTest = test;
+			Type = TestType.Enum;
+		}
+
+
+		public ConditionalAttribute(string valueSource, ObjectTest test = ObjectTest.ShowIfSet) : base(TestPhase, 0)
+		{
+			ValueSource = valueSource;
+			ObjectTest = test;
+			Type = TestType.Object;
 		}
 	}
 }

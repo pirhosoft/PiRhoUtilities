@@ -18,7 +18,7 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				case SerializedPropertyType.Integer:
 				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, ReflectionSource.All, Mathf.RoundToInt(snapAttribute.Number), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
+					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, Mathf.RoundToInt(snapAttribute.Number), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
 
 					Snap(property, snap());
 					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
@@ -26,7 +26,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 				case SerializedPropertyType.Float:
 				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, ReflectionSource.All, snapAttribute.Number, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
+					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, snapAttribute.Number, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
 
 					Snap(property, snap());
 					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
@@ -34,7 +34,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 				case SerializedPropertyType.Vector2:
 				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, ReflectionSource.All, (Vector2)snapAttribute.Vector, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
+					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, (Vector2)snapAttribute.Vector, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
 
 					Snap(property, snap());
 					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
@@ -42,7 +42,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 				case SerializedPropertyType.Vector2Int:
 				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, ReflectionSource.All, Vector2Int.RoundToInt(snapAttribute.Vector), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
+					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, Vector2Int.RoundToInt(snapAttribute.Vector), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
 
 					Snap(property, snap());
 					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
@@ -50,7 +50,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 				case SerializedPropertyType.Vector3:
 				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, ReflectionSource.All, (Vector3)snapAttribute.Vector, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
+					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, (Vector3)snapAttribute.Vector, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
 
 					Snap(property, snap());
 					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
@@ -58,7 +58,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 				case SerializedPropertyType.Vector3Int:
 				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, ReflectionSource.All, Vector3Int.RoundToInt(snapAttribute.Vector), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
+					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, Vector3Int.RoundToInt(snapAttribute.Vector), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
 
 					Snap(property, snap());
 					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
@@ -66,7 +66,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 				case SerializedPropertyType.Vector4:
 				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, ReflectionSource.All, snapAttribute.Vector, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
+					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, snapAttribute.Vector, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
 
 					Snap(property, snap());
 					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
@@ -74,7 +74,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 				case SerializedPropertyType.Rect:
 				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, ReflectionSource.All, new Rect(snapAttribute.Vector.x, snapAttribute.Vector.y, snapAttribute.Vector.y, snapAttribute.Vector.w), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
+					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, new Rect(snapAttribute.Vector.x, snapAttribute.Vector.y, snapAttribute.Vector.y, snapAttribute.Vector.w), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
 
 					Snap(property, snap());
 					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
@@ -82,7 +82,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 				case SerializedPropertyType.RectInt:
 				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, ReflectionSource.All, new RectInt(Mathf.RoundToInt(snapAttribute.Vector.x), Mathf.RoundToInt(snapAttribute.Vector.y), Mathf.RoundToInt(snapAttribute.Vector.y), Mathf.RoundToInt(snapAttribute.Vector.w)), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
+					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, new RectInt(Mathf.RoundToInt(snapAttribute.Vector.x), Mathf.RoundToInt(snapAttribute.Vector.y), Mathf.RoundToInt(snapAttribute.Vector.y), Mathf.RoundToInt(snapAttribute.Vector.w)), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
 
 					Snap(property, snap());
 					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
@@ -90,7 +90,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 				case SerializedPropertyType.Bounds:
 				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, ReflectionSource.All, snapAttribute.Bounds, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
+					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, snapAttribute.Bounds, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
 
 					Snap(property, snap());
 					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
@@ -98,7 +98,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 				case SerializedPropertyType.BoundsInt:
 				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, ReflectionSource.All, new BoundsInt(Vector3Int.RoundToInt(snapAttribute.Bounds.center), Vector3Int.RoundToInt(snapAttribute.Bounds.extents)), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
+					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, new BoundsInt(Vector3Int.RoundToInt(snapAttribute.Bounds.center), Vector3Int.RoundToInt(snapAttribute.Bounds.extents)), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
 
 					Snap(property, snap());
 					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));

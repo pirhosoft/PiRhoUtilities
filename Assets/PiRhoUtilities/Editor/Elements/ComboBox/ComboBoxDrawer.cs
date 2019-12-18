@@ -18,7 +18,7 @@ namespace PiRhoSoft.Utilities.Editor
 				var comboBoxAttribute = attribute as ComboBoxAttribute;
 				var comboBox = new ComboBoxField();
 
-				ReflectionHelper.SetupValueSourceCallback<IEnumerable<string>>(comboBoxAttribute.OptionsSource, ReflectionSource.All, property, comboBox, fieldInfo.DeclaringType, comboBoxAttribute.Options, comboBoxAttribute.AutoUpdate, nameof(ComboBoxAttribute), nameof(ComboBoxAttribute.OptionsSource), options => comboBox.Options = options.ToList());
+				ReflectionHelper.SetupValueSourceCallback<IEnumerable<string>>(comboBoxAttribute.OptionsSource, property, comboBox, fieldInfo.DeclaringType, comboBoxAttribute.Options, comboBoxAttribute.AutoUpdate, nameof(ComboBoxAttribute), nameof(ComboBoxAttribute.OptionsSource), options => comboBox.Options = options.ToList());
 
 				return comboBox.ConfigureProperty(property);
 			}
