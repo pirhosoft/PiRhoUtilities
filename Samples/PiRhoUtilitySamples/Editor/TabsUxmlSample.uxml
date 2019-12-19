@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UXML
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="UnityEngine.UIElements"
+	xmlns:editor="UnityEditor.UIElements"
+	xmlns:pirho="PiRhoSoft.Utilities.Editor"
+	xsi:noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
+	xsi:schemaLocation="UnityEngine.UIElements ../UIElementsSchema/UnityEngine.UIElements.xsd">
+
+	<pirho:Tabs>
+		<pirho:TabPage label="Stats">
+			<Slider label="Hp"></Slider>
+			<Slider label="Attack"></Slider>
+			<Slider label="Defense"></Slider>
+			<Slider label="Speed"></Slider>
+		</pirho:TabPage>
+		<pirho:TabPage label="Equipment" is-active="true">
+			<TextField label="Helmet"></TextField>
+			<TextField label="Gloves"></TextField>
+			<TextField label="Sword"></TextField>
+			<TextField label="Shield"></TextField>
+			<TextField label="Boots"></TextField>
+		</pirho:TabPage>
+		<pirho:TabPage label="Inventory">
+			<editor:IntegerField label="Money"></editor:IntegerField>
+			<editor:IntegerField label="Potions"></editor:IntegerField>
+		</pirho:TabPage>
+	</pirho:Tabs>
+</UXML>

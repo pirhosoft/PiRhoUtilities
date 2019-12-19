@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
@@ -13,15 +14,14 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string ContentUssClassName = UssClassName + "__content";
 		public const string TabUssClassName = UssClassName + "__tab";
 		public const string TabSelectedUssClassName = TabUssClassName + "--selected";
-		public const string TabContentUssClassName = TabUssClassName + "__content";
-		public const string TabContentSelectedUssClassName = TabContentUssClassName + "--selected";
+		public const string PageUssClassName = UssClassName + "__page";
+		public const string PageSelectedUssClassName = PageUssClassName + "--selected";
 
 		#endregion
 
 		#region Members
 
-		private readonly Dictionary<string, Tab> _tabs = new Dictionary<string, Tab>();
-		private Tab _currentTab;
+		private TabPage _activePage;
 
 		#endregion
 
@@ -29,6 +29,10 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public VisualElement Header { get; private set; }
 		public VisualElement Content { get; private set; }
+		public IEnumerable<TabPage> Pages => Content.Children().Cast<TabPage>().Where(page => page != null);
+		public TabPage ActivePage => _activePage;
+
+		public override VisualElement contentContainer => Content;
 
 		public Tabs()
 		{
@@ -38,67 +42,53 @@ namespace PiRhoSoft.Utilities.Editor
 			Content = new VisualElement();
 			Content.AddToClassList(ContentUssClassName);
 
-			Add(Header);
-			Add(Content);
+			hierarchy.Add(Header);
+			hierarchy.Add(Content);
 
 			AddToClassList(UssClassName);
 			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
 		}
 
-		public void AddElement(string tabName, VisualElement element)
+		public void UpdateTabs()
 		{
-			if (_tabs.TryGetValue(tabName, out var tab))
+			var pages = Pages;
+
+			_activePage = null;
+			Header.Clear();
+
+			foreach (var page in pages)
 			{
-				tab.Content.Add(element);
+				Header.Add(page.Button);
+
+				if (page.IsActive && _activePage == null)
+					_activePage = page;
 			}
-			else
+
+			if (_activePage == null && Content.childCount > 0)
+				_activePage = Content[0] as TabPage;
+
+			foreach (var page in pages)
 			{
-				AddTab(tabName);
-				AddElement(tabName, element);
+				page.IsActive = page == _activePage;
+				page.EnableInClassList(PageSelectedUssClassName, page.IsActive);
+				page.Button.EnableInClassList(TabSelectedUssClassName, page.IsActive);
 			}
 		}
 
 		#endregion
 
-		#region Tab Management
+		#region UXML
 
-		private void AddTab(string tabName)
+		public new class UxmlFactory : UxmlFactory<Tabs, UxmlTraits> { }
+
+		public new class UxmlTraits : VisualElement.UxmlTraits
 		{
-			var tab = new Tab() { text = tabName };
-			tab.clicked += () =>
+			public override IEnumerable<UxmlChildElementDescription> uxmlChildElementsDescription
 			{
-				if (_currentTab != tab)
-					SelectTab(tab);
-			};
-
-			if (_tabs.Count == 0)
-				SelectTab(tab);
-
-			_tabs.Add(tabName, tab);
-
-			Header.Add(tab);
-			Content.Add(tab.Content);
-		}
-
-		private void SelectTab(Tab tab)
-		{
-			_currentTab?.RemoveFromClassList(TabSelectedUssClassName);
-			_currentTab?.Content.RemoveFromClassList(TabContentSelectedUssClassName);
-			_currentTab = tab;
-			_currentTab.AddToClassList(TabSelectedUssClassName);
-			_currentTab.Content.AddToClassList(TabContentSelectedUssClassName);
-		}
-
-		private class Tab : Button
-		{
-			public VisualElement Content { get; private set; }
-
-			public Tab()
-			{
-				AddToClassList(TabUssClassName);
-
-				Content = new VisualElement();
-				Content.AddToClassList(TabContentUssClassName);
+				get
+				{
+					yield return new UxmlChildElementDescription(typeof(TabPage));
+				}
 			}
 		}
 
