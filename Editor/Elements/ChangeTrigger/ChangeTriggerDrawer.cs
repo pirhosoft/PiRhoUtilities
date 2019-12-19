@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -62,7 +61,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private PropertyWatcher CreateControl<T>(SerializedProperty property, Type declaringType, string method)
 		{
-			var none = ReflectionHelper.CreateActionCallback(property, declaringType, method, nameof(ChangeTriggerAttribute), nameof(ChangeTriggerAttribute.Method));
+			var none = ReflectionHelper.CreateActionCallback(method, declaringType, property);
 			if (none != null)
 			{
 				return new ChangeTrigger<T>(property, (_, oldValue, newValue) =>
@@ -73,7 +72,7 @@ namespace PiRhoSoft.Utilities.Editor
 			}
 			else
 			{
-				var one = ReflectionHelper.CreateActionCallback<T>(property, declaringType, method, nameof(ChangeTriggerAttribute), nameof(ChangeTriggerAttribute.Method));
+				var one = ReflectionHelper.CreateActionCallback<T>(method, declaringType, property);
 				if (one != null)
 				{
 					return new ChangeTrigger<T>(property, (_, oldValue, newValue) =>
@@ -84,7 +83,7 @@ namespace PiRhoSoft.Utilities.Editor
 				}
 				else
 				{
-					var two = ReflectionHelper.CreateActionCallback<T, T>(property, declaringType, method, nameof(ChangeTriggerAttribute), nameof(ChangeTriggerAttribute.Method));
+					var two = ReflectionHelper.CreateActionCallback<T, T>(method, declaringType, property);
 					if (two != null)
 					{
 						return new ChangeTrigger<T>(property, (_, oldValue, newValue) =>
