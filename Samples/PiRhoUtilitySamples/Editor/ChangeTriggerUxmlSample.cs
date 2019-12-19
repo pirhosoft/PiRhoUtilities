@@ -21,6 +21,7 @@ namespace PiRhoSoft.Utilities.Samples
 			root.Q<ChangeTriggerString>("string-trigger").SetAction(PropertyChanged);
 			root.Q<ChangeTriggerColor>("color-trigger").SetAction(PropertyChanged);
 			root.Q<ChangeTriggerObject>("object-trigger").SetAction(PropertyChanged);
+			root.Q<ChangeTriggerLayerMask>("layer-mask-trigger").SetAction(PropertyChanged);
 			root.Q<ChangeTriggerEnum>("enum-trigger").SetAction(PropertyChanged);
 			root.Q<ChangeTriggerVector2>("vector2-trigger").SetAction(PropertyChanged);
 			root.Q<ChangeTriggerVector3>("vector3-trigger").SetAction(PropertyChanged);

@@ -19,6 +19,8 @@
 	<pirho:ChangeTriggerColor name="color-trigger" binding-path="Color"></pirho:ChangeTriggerColor>;
 	<editor:PropertyField binding-path="Object"></editor:PropertyField>
 	<pirho:ChangeTriggerObject name="object-trigger" binding-path="Object"></pirho:ChangeTriggerObject>;
+	<editor:PropertyField binding-path="Layer"></editor:PropertyField>
+	<pirho:ChangeTriggerLayerMask name="layer-mask-trigger" binding-path="Layer"></pirho:ChangeTriggerLayerMask>;
 	<editor:PropertyField binding-path="Enum"></editor:PropertyField>
 	<pirho:ChangeTriggerEnum name="enum-trigger" binding-path="Enum"></pirho:ChangeTriggerEnum>;
 	<editor:PropertyField binding-path="Vector2"></editor:PropertyField>
