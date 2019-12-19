@@ -16,11 +16,8 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string LabelUssClassName = UssClassName + "__label";
 		public const string NoLabelUssClassName = UssClassName + "__label--none";
 		public const string ContentUssClassName = UssClassName + "__content";
-		public const string FooterUssClassName = UssClassName + "__footer";
 		public const string HeaderButtonsUssClassName = UssClassName + "__header-buttons";
-		public const string FooterButtonsUssClassName = UssClassName + "__footer-buttons";
 		public const string HeaderButtonUssClassName = UssClassName + "__header-button";
-		public const string FooterButtonUssClassName = UssClassName + "__footer-button";
 		public const string CollapseButtonUssClassName = UssClassName + "__collapse-button";
 		public const string CollapsableUssClassName = UssClassName + "--collapsable";
 		public const string ExpandedUssClassName = UssClassName + "--expanded";
@@ -63,10 +60,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public VisualElement Header { get; private set; }
 		public VisualElement Content { get; private set; }
-		public VisualElement Footer { get; private set; }
 
 		public VisualElement HeaderButtons { get; private set; }
-		public VisualElement FooterButtons { get; private set; }
 
 		public Frame()
 		{
@@ -111,18 +106,6 @@ namespace PiRhoSoft.Utilities.Editor
 				button.AddToClassList(ussClassName);
 
 			HeaderButtons.Add(button);
-			return button;
-		}
-
-		public IconButton AddFooterButton(Texture icon, string tooltip, string ussClassName, Action action)
-		{
-			var button = new IconButton(icon, tooltip, action);
-			button.AddToClassList(FooterButtonUssClassName);
-
-			if (!string.IsNullOrEmpty(ussClassName))
-				button.AddToClassList(ussClassName);
-
-			FooterButtons.Add(button);
 			return button;
 		}
 
@@ -176,6 +159,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region UI
 
+		public override VisualElement contentContainer => Content;
+
 		private void BuildUi()
 		{
 			AddToClassList(UssClassName);
@@ -183,7 +168,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			Header = new VisualElement();
 			Header.AddToClassList(HeaderUssClassName);
-			Add(Header);
+			hierarchy.Add(Header);
 
 			_collapseButton = new IconButton(CollapseIcon.Texture, CollapseTooltip, () => IsCollapsed = !IsCollapsed);
 			_collapseButton.AddToClassList(CollapseButtonUssClassName);
@@ -199,15 +184,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			Content = new VisualElement();
 			Content.AddToClassList(ContentUssClassName);
-			Add(Content);
-
-			Footer = new VisualElement();
-			Footer.AddToClassList(FooterUssClassName);
-			Add(Footer);
-
-			FooterButtons = new VisualElement();
-			FooterButtons.AddToClassList(FooterButtonsUssClassName);
-			Footer.Add(FooterButtons);
+			hierarchy.Add(Content);
 
 			UpdateCollapse();
 			UpdateLabel();
@@ -270,17 +247,17 @@ namespace PiRhoSoft.Utilities.Editor
 			}
 		}
 
-		private bool GetExpandedProperty(SerializedProperty property)
+		private static bool GetExpandedProperty(SerializedProperty property)
 		{
 			return property.isExpanded;
 		}
 
-		private void SetExpandedProperty(SerializedProperty property, bool value)
+		private static void SetExpandedProperty(SerializedProperty property, bool value)
 		{
 			property.isExpanded = value;
 		}
 
-		private bool CompareExpandedProperties(bool value, SerializedProperty property, Func<SerializedProperty, bool> getter)
+		private static bool CompareExpandedProperties(bool value, SerializedProperty property, Func<SerializedProperty, bool> getter)
 		{
 			var currentValue = getter(property);
 			return value == currentValue;
@@ -308,7 +285,7 @@ namespace PiRhoSoft.Utilities.Editor
 				frame.IsCollapsable = _collapsable.GetValueFromBag(bag, cc);
 				frame.IsCollapsed = _collapsed.GetValueFromBag(bag, cc);
 
-				// header buttons, footer buttons, content
+				// header buttons, content
 			}
 		}
 

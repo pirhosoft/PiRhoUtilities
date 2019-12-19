@@ -38,6 +38,7 @@ namespace PiRhoSoft.Utilities.Samples
 			public string String;
 			public Color Color;
 			public Texture2D Object;
+			public LayerMask Layer;
 			public TextureImporterType Enum;
 			public Vector2 Vector2;
 			public Vector3 Vector3;
@@ -67,6 +68,7 @@ namespace PiRhoSoft.Utilities.Samples
 			CreateTrigger<string>(root, obj, nameof(SampleAsset.String));
 			CreateTrigger<Color>(root, obj, nameof(SampleAsset.Color));
 			CreateTrigger<Object>(root, obj, nameof(SampleAsset.Object));
+			CreateTrigger<int>(root, obj, nameof(SampleAsset.Layer));
 			CreateTrigger<Enum>(root, obj, nameof(SampleAsset.Enum));
 			CreateTrigger<Vector2>(root, obj, nameof(SampleAsset.Vector2));
 			CreateTrigger<Vector3>(root, obj, nameof(SampleAsset.Vector3));
