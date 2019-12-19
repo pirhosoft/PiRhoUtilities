@@ -13,6 +13,12 @@ namespace PiRhoSoft.Utilities.Editor
 
 	public class MessageBox : VisualElement
 	{
+		#region Log Messages
+
+		private const string _invalidTypeWarning = "(PUEMBIT) invalid message type '{0}' for MessageBox: message-type must be one of 'Info', 'Warning', or 'Error'";
+
+		#endregion
+
 		#region Class Names
 
 		public const string Stylesheet = "MessageBox/MessageBox.uss";
@@ -125,8 +131,9 @@ namespace PiRhoSoft.Utilities.Editor
 				{
 					return (MessageBoxType)Enum.Parse(typeof(MessageBoxType), valueName);
 				}
-				catch (Exception exception) when (exception is ArgumentException || exception is OverflowException)
+				catch
 				{
+					Debug.LogWarningFormat(_invalidTypeWarning, valueName);
 					return DefaultType;
 				}
 			}
