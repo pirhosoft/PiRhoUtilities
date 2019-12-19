@@ -64,7 +64,7 @@ namespace PiRhoSoft.Utilities.Samples
 
 		public class SampleAsset : ScriptableObject
 		{
-			public IntDictionary Ints = new IntDictionary();
+			public IntDictionary Primitives = new IntDictionary();
 			public SampleItemBoolDictionary Classes = new SampleItemBoolDictionary();
 			public SampleItemDictionary References = new SampleItemDictionary();
 		}
@@ -191,7 +191,7 @@ namespace PiRhoSoft.Utilities.Samples
 				new ProxySelect("Generic Primitive", new DictionaryProxy(genericPrimitives, CreateInt), typeof(int), false, genericPrimitives),
 				new ProxySelect("Generic Class", new DictionaryProxy(genericClasses, CreateSampleItemBool), typeof(SampleItemBool), false, genericClasses),
 				new ProxySelect("Generic Reference", new DictionaryProxy(genericReferences, CreateSampleItem), typeof(ISampleItem), true, genericReferences),
-				new ProxySelect("Property Primitive", CreatePropertyProxy(obj, nameof(SampleAsset.Ints)), null, false, asset.Ints),
+				new ProxySelect("Property Primitive", CreatePropertyProxy(obj, nameof(SampleAsset.Primitives)), null, false, asset.Primitives),
 				new ProxySelect("Property Class", CreatePropertyProxy(obj, nameof(SampleAsset.Classes)), null, false, asset.Classes),
 				new ProxySelect("Property Reference", CreatePropertyProxy(obj, nameof(SampleAsset.References)), typeof(ISampleItem), true, asset.References),
 				new ProxySelect("None", null, null, false, null)
