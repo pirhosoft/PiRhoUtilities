@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UXML
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="UnityEngine.UIElements"
+	xmlns:pirho="PiRhoSoft.Utilities.Editor"
+	xsi:noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
+	xsi:schemaLocation="UnityEngine.UIElements ../UIElementsSchema/UnityEngine.UIElements.xsd">
+
+	<pirho:MessageBox message-type="Info" message="Here is something that might be useful to know"></pirho:MessageBox>
+	<pirho:MessageBox message-type="Warning" message="Something happened but everything is still going to work"></pirho:MessageBox>
+	<pirho:MessageBox message-type="Error" message="Something failed that will probably cause unwanted behavior"></pirho:MessageBox>
+</UXML>
