@@ -2,7 +2,19 @@
 <UXML
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="UnityEngine.UIElements"
+	xmlns:editor="UnityEngine.UIElements.Editor"
 	xmlns:pirho="PiRhoSoft.Utilities.Editor"
 	xsi:noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
 	xsi:schemaLocation="UnityEngine.UIElements ../UIElementsSchema/UnityEngine.UIElements.xsd">
+
+	<pirho:Frame label="Bound Class" tooltip="This frame is bound to a class" is-collapsable="true" binding-path="BoundClass">
+	</pirho:Frame>
+	<pirho:Frame label="Bound Fields" tooltip="This frame has custom content" is-collapsable="true" is-collapsed="false">
+		<Label text="Title"></Label>
+		<TextField text="The Starry Night" binding-path="BoundFields.Title"></TextField>
+		<Label text="Artist"></Label>
+		<TextField text="Vincent van Gogh" binding-path="BoundFields.Author"></TextField>
+		<Label text="Period"></Label>
+		<TextField text="Post-Impressionism" binding-path="BoundFields.Period"></TextField>
+	</pirho:Frame>
 </UXML>

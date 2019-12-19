@@ -118,11 +118,7 @@ namespace PiRhoSoft.Utilities.Editor
 			if (_isCollapsable != isCollapsable)
 			{
 				_isCollapsable = isCollapsable;
-
-				if (!isCollapsable && _isCollapsed)
-					IsCollapsed = false;
-				else
-					UpdateCollapse();
+				UpdateCollapse();
 			}
 		}
 
@@ -228,6 +224,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 			if (this.TryGetPropertyBindEvent(evt, out var property))
 			{
+				// TODO: Support binding expanded state directly to a bool?
+
 				BindingExtensions.CreateBind(this, property, GetExpandedProperty, SetExpandedProperty, CompareExpandedProperties);
 				Label =_label ?? property.displayName;
 				Tooltip = _tooltip ?? property.GetTooltip();
@@ -285,7 +283,7 @@ namespace PiRhoSoft.Utilities.Editor
 				frame.IsCollapsable = _collapsable.GetValueFromBag(bag, cc);
 				frame.IsCollapsed = _collapsed.GetValueFromBag(bag, cc);
 
-				// header buttons, content
+				// TODO: Figure out how to support header buttons
 			}
 		}
 
