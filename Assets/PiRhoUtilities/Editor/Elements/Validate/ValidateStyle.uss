@@ -1,0 +1,36 @@
+﻿.pirho-validate
+{
+	flex-direction: column;
+}
+
+.pirho-validate--side
+{
+	flex-direction: row;
+}
+
+.pirho-validate--side > *
+{
+	flex-grow: 1;
+}
+
+.pirho-validate__button
+{
+}
+
+.pirho-validate__message--above
+{
+}
+
+.pirho-validate__message--below
+{
+}
+
+.pirho-validate__message--left
+{
+	margin-right: 0px;
+}
+
+.pirho-validate__message--right
+{
+	margin-left: 0px;
+}

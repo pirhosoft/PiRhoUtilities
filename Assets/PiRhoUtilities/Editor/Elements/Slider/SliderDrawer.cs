@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -9,43 +8,37 @@ namespace PiRhoSoft.Utilities.Editor
 	class SliderDrawer : PropertyDrawer
 	{
 		private const string _invalidTypeWarning = "(PUSLDIT) invalid type for SliderAttribute on field {0}: Slider can only be applied to int, float, or Vector2 fields";
+		private const string _invalidMinimumSourceError = "(PUSLDIMNS) invalid minimum source for SliderAttribute on field '{0}': a field, method, or property of type '{1}' named '{2}' could not be found";
+		private const string _invalidMaximumSourceError = "(PUSLDIMXS) invalid maximum source for SliderAttribute on field '{0}': a field, method, or property of type '{1}' named '{2}' could not be found";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
 			var sliderAttribute = attribute as SliderAttribute;
 
 			if (property.propertyType == SerializedPropertyType.Integer)
-			{
-				var slider = new SliderIntField();
-
-				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, property, slider, fieldInfo.DeclaringType, Mathf.RoundToInt(sliderAttribute.Minimum), sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MinimumSource), minimum => slider.Minimum = minimum);
-				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, property, slider, fieldInfo.DeclaringType, Mathf.RoundToInt(sliderAttribute.Maximum), sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MaximumSource), maximum => slider.Maximum = maximum);
-
-				return slider.ConfigureProperty(property);
-			}
+				return CreateSlider(new SliderIntField(), sliderAttribute, property, Mathf.RoundToInt(sliderAttribute.Minimum), Mathf.RoundToInt(sliderAttribute.Maximum));
 			else if (property.propertyType == SerializedPropertyType.Float)
-			{
-				var slider = new SliderFloatField();
-
-				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, property, slider, fieldInfo.DeclaringType, sliderAttribute.Minimum, sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MinimumSource), minimum => slider.Minimum = minimum);
-				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, property, slider, fieldInfo.DeclaringType, sliderAttribute.Maximum, sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MaximumSource), maximum => slider.Maximum = maximum);
-
-				return slider.ConfigureProperty(property);
-			}
+				return CreateSlider(new SliderFloatField(), sliderAttribute, property, sliderAttribute.Minimum, sliderAttribute.Maximum);
 			else if (property.propertyType == SerializedPropertyType.Vector2)
-			{
-				var slider = new MinMaxSliderField();
-
-				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, property, slider, fieldInfo.DeclaringType, Mathf.RoundToInt(sliderAttribute.Minimum), sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MinimumSource), minimum => slider.Minimum = minimum);
-				ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, property, slider, fieldInfo.DeclaringType, Mathf.RoundToInt(sliderAttribute.Maximum), sliderAttribute.AutoUpdate, nameof(SliderAttribute), nameof(SliderAttribute.MaximumSource), maximum => slider.Maximum = maximum);
-
-				return slider.ConfigureProperty(property);
-			}
+				return CreateSlider(new MinMaxSliderField(), sliderAttribute, property, new Vector2(sliderAttribute.Minimum, property.vector2Value.x), new Vector2(property.vector2Value.y, sliderAttribute.Maximum));
 			else
-			{
 				Debug.LogWarningFormat(property.serializedObject.targetObject, _invalidTypeWarning, property.propertyPath);
-				return new FieldContainer(property.displayName);
-			}
+
+			return new FieldContainer(property.displayName);
+		}
+
+		private VisualElement CreateSlider<T>(SliderField<T> slider, SliderAttribute sliderAttribute, SerializedProperty property, T defaultMinimum, T defaultMaximum)
+		{
+			void setMin(T value) => slider.Minimum = value;
+			void setMax(T value) => slider.Maximum = value;
+
+			if (!ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, fieldInfo.DeclaringType, property, slider, defaultMinimum, sliderAttribute.AutoUpdate, setMin))
+				Debug.LogWarningFormat(_invalidMinimumSourceError, property.propertyPath, nameof(T), sliderAttribute.MinimumSource);
+
+			if (!ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MaximumSource, fieldInfo.DeclaringType, property, slider, defaultMaximum, sliderAttribute.AutoUpdate, setMax))
+				Debug.LogWarningFormat(_invalidMaximumSourceError, property.propertyPath, nameof(T), sliderAttribute.MaximumSource);
+
+			return slider.ConfigureProperty(property);
 		}
 	}
 }

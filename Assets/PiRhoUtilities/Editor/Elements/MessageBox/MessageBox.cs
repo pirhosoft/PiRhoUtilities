@@ -4,13 +4,6 @@ using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
 {
-	public enum MessageBoxType
-	{
-		Info,
-		Warning,
-		Error
-	}
-
 	public class MessageBox : VisualElement
 	{
 		#region Class Names

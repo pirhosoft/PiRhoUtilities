@@ -7,7 +7,7 @@ namespace PiRhoSoft.Utilities.Editor
 	[CustomPropertyDrawer(typeof(DelayAttribute))]
 	class DelayDrawer : PropertyDrawer
 	{
-		private const string _invalidDrawerWarning = "(PUMDID) invalid drawer for DelayedAttribute on field {0}: the element does not have a TextInputBaseField";
+		private const string _invalidDrawerWarning = "(PUDDID) invalid drawer for DelayedAttribute on field {0}: the element does not have a TextInputBaseField";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
