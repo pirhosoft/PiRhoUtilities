@@ -596,20 +596,13 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void ReorderItem(int from, int to)
 		{
-			if (_allowReorder)
+			Proxy.ReorderItem(from, to);
+			UpdateItemsWithoutNotify();
+
+			using (var e = ItemReorderedEvent.GetPooled(from, to))
 			{
-				var item = _itemsContainer.ElementAt(from);
-				_itemsContainer.RemoveAt(from);
-				_itemsContainer.Insert(to, item);
-
-				Proxy.ReorderItem(from, to);
-				UpdateItemsWithoutNotify();
-
-				using (var e = ItemReorderedEvent.GetPooled(from, to))
-				{
-					e.target = this;
-					SendEvent(e);
-				}
+				e.target = this;
+				SendEvent(e);
 			}
 		}
 
@@ -619,7 +612,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void StartDrag(MouseDownEvent e, VisualElement item)
 		{
-			if (e.button == (int)MouseButton.LeftMouse)
+			if (_allowReorder && e.button == (int)MouseButton.LeftMouse)
 			{
 				var index = GetIndex(item);
 				var mousePosition = _itemsContainer.WorldToLocal(e.mousePosition);
