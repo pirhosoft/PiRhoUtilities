@@ -98,7 +98,7 @@ namespace PiRhoSoft.Utilities
 			Debug.LogFormat("Object changed from '{0}' to '{1}'", from, to);
 		}
 
-		private void LayerChanged(LayerMask from, LayerMask to)
+		private void LayerChanged(int from, int to)
 		{
 			Debug.LogFormat("Layer changed from '{0}' to '{1}'", from, to);
 		}

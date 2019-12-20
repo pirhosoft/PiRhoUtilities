@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UXML
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="UnityEngine.UIElements"
+	xmlns:pirho="PiRhoSoft.Utilities.Editor"
+	xsi:noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
+	xsi:schemaLocation="UnityEngine.UIElements ../UIElementsSchema/UnityEngine.UIElements.xsd">
+
+	<VisualElement style="flex-direction:row;align-items:center">
+		<pirho:IconButton icon="Add"></pirho:IconButton>
+		<pirho:IconButton icon="CustomAdd"></pirho:IconButton>
+		<pirho:IconButton icon="Remove"></pirho:IconButton>
+		<pirho:IconButton icon="Inspect"></pirho:IconButton>
+		<pirho:IconButton icon="Expanded"></pirho:IconButton>
+		<pirho:IconButton icon="Collapsed"></pirho:IconButton>
+		<pirho:IconButton icon="Refresh"></pirho:IconButton>
+		<pirho:IconButton icon="Load"></pirho:IconButton>
+		<pirho:IconButton icon="Unload"></pirho:IconButton>
+		<pirho:IconButton icon="Close"></pirho:IconButton>
+		<pirho:IconButton icon="LeftArrow"></pirho:IconButton>
+		<pirho:IconButton icon="RightArrow"></pirho:IconButton>
+		<pirho:IconButton icon="Info"></pirho:IconButton>
+		<pirho:IconButton icon="Warning"></pirho:IconButton>
+		<pirho:IconButton icon="Error"></pirho:IconButton>
+		<pirho:IconButton icon="Settings"></pirho:IconButton>
+		<pirho:IconButton icon="View"></pirho:IconButton>
+		<pirho:IconButton icon="Locked"></pirho:IconButton>
+		<pirho:IconButton icon="Unlocked"></pirho:IconButton>
+	</VisualElement>
+</UXML>

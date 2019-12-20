@@ -10,7 +10,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		private const string _invalidTypeWarning = "(PUDDIT) invalid type for DictionaryAttribute on field '{0}': Dictionary can only be applied to SerializedDictionary fields";
 		private const string _invalidAddCallbackWarning = "(PUDDIAC) invalid add callback for DictionaryAttribute on field '{0}': The method must accept a string or have no parameters";
-		private const string _invalidAddReferenceCallbackWarning = "(PUDDIAC) invalid add callback for DictionaryAttribute on field '{0}': The method must accept a string and/or an object or have no parameters";
+		private const string _invalidAddReferenceCallbackWarning = "(PUDDIAC) invalid add callback for DictionaryAttribute on field '{0}': The method must accept a string or have no parameters";
 		private const string _invalidRemoveCallbackWarning = "(PUDDIRMC) invalid remove callback for DictionaryAttribute on field '{0}': The method must accept an string or have no parameters";
 		private const string _invalidReorderCallbackWarning = "(PUDDIROC) invalid reorder callback for DictionaryAttribute on field '{0}': The method must accept two ints or have no parameters";
 		private const string _invalidChangeCallbackWarning = "(PUDDICC) invalid change callback for DictionaryAttribute on field '{0}': The method must have no parameters";
@@ -30,8 +30,7 @@ namespace PiRhoSoft.Utilities.Editor
 				var proxy = new PropertyDictionaryProxy(property, keys, values, drawer);
 
 				var field = new DictionaryField();
-				field.SetItemType(referenceType, true);
-				field.Proxy = proxy;
+				field.SetProxy(proxy, referenceType, true);
 				field.IsCollapsable = dictionaryAttribute.IsCollapsable;
 				field.bindingPath = property.propertyPath;
 				// TODO: other stuff from ConfigureField
@@ -66,11 +65,11 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				if (!string.IsNullOrEmpty(dictionaryAttribute.AllowAdd))
 				{
-					proxy.CanAddCallback = ReflectionHelper.CreateFunctionCallback<string, bool>(dictionaryAttribute.AllowAdd, declaringType, property);
-					if (proxy.CanAddCallback == null)
+					proxy.CanAddKeyCallback = ReflectionHelper.CreateFunctionCallback<string, bool>(dictionaryAttribute.AllowAdd, declaringType, property);
+					if (proxy.CanAddKeyCallback == null)
 					{
-						var canRemove = ReflectionHelper.CreateValueSourceFunction(dictionaryAttribute.AllowAdd, property, field, declaringType, true);
-						proxy.CanAddCallback = index => canRemove();
+						var canAdd = ReflectionHelper.CreateValueSourceFunction(dictionaryAttribute.AllowAdd, property, field, declaringType, true);
+						proxy.CanAddKeyCallback = index => canAdd();
 					}
 				}
 
@@ -103,25 +102,9 @@ namespace PiRhoSoft.Utilities.Editor
 						{
 							var addCallbackKey = ReflectionHelper.CreateActionCallback<string>(dictionaryAttribute.AddCallback, declaringType, property);
 							if (addCallbackKey != null)
-							{
 								field.RegisterCallback<DictionaryField.ItemAddedEvent>(evt => addCallbackKey.Invoke(evt.Key));
-							}
 							else
-							{
-								var addCallbackObject = ReflectionHelper.CreateActionCallback<object>(dictionaryAttribute.AddCallback, declaringType, property);
-								if (addCallbackObject != null)
-								{
-									field.RegisterCallback<DictionaryField.ItemAddedEvent>(evt => addCallbackObject.Invoke(evt.Item));
-								}
-								else
-								{
-									var addCallbackKeyObject = ReflectionHelper.CreateActionCallback<string, object>(dictionaryAttribute.AddCallback, declaringType, property);
-									if (addCallbackKeyObject != null)
-										field.RegisterCallback<DictionaryField.ItemAddedEvent>(evt => addCallbackKeyObject.Invoke(evt.Key, evt.Item));
-									else
-										Debug.LogWarningFormat(_invalidAddReferenceCallbackWarning, property.propertyPath);
-								}
-							}
+								Debug.LogWarningFormat(_invalidAddReferenceCallbackWarning, property.propertyPath);
 						}
 					}
 				}

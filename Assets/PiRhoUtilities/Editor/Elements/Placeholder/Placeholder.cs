@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
@@ -10,12 +9,6 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public const string Stylesheet = "Placeholder/PlaceholderStyle.uss";
 		public const string UssClassName = "pirho-placeholder";
-
-		#endregion
-
-		#region Log Messages
-
-		private const string _invalidParentWarning = "(PUPCIP) Invalid parent for Placeholder: Placeholders can only be added to TextFields";
 
 		#endregion
 
@@ -34,12 +27,18 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Public Interface
 
+		public Placeholder() : this(null)
+		{
+		}
+
 		public Placeholder(string text) : base(text)
 		{
 			pickingMode = PickingMode.Ignore;
 
 			AddToClassList(UssClassName);
 			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+
+			RegisterCallback<AttachToPanelEvent>(OnAttached);
 		}
 
 		public void AddToField(TextField textField)
@@ -69,30 +68,36 @@ namespace PiRhoSoft.Utilities.Editor
 			}).StartingIn(0);
 		}
 
+		private void OnAttached(AttachToPanelEvent evt)
+		{
+			if (parent is TextField textField)
+				AddToField(textField);
+		}
+
+		#endregion
+
+		#region Events
+
+		public override void HandleEvent(EventBase evt)
+		{
+			// Capture ChangeEvents so they aren't handled by the parent TextField.
+
+			if (evt is ChangeEvent<string>)
+			{
+				evt.StopPropagation();
+				evt.PreventDefault();
+			}
+			else
+			{
+				base.HandleEvent(evt);
+			}
+		}
+
 		#endregion
 
 		#region UXML Support
 
-		public Placeholder() : this(null) { }
-
 		public new class UxmlFactory : UxmlFactory<Placeholder, UxmlTraits> { }
-		public new class UxmlTraits : Label.UxmlTraits
-		{
-			public override void Init(VisualElement element, IUxmlAttributes bag, CreationContext cc)
-			{
-				base.Init(element, bag, cc);
-
-				var field = element as Placeholder;
-
-				if (field.parent is TextField textField)
-					field.AddToField(textField);
-				else
-				{
-					field.RemoveFromHierarchy();
-					Debug.LogWarning(_invalidParentWarning);
-				}
-			}
-		}
 
 		#endregion
 	}

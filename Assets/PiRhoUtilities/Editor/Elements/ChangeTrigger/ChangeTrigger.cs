@@ -112,7 +112,7 @@ namespace PiRhoSoft.Utilities.Editor
 	public class ChangeTriggerString : ChangeTrigger<string> { public new class UxmlFactory : UxmlFactory<ChangeTriggerString, UxmlTraits> { } }
 	public class ChangeTriggerColor : ChangeTrigger<Color> { public new class UxmlFactory : UxmlFactory<ChangeTriggerColor, UxmlTraits> { } }
 	public class ChangeTriggerObject : ChangeTrigger<Object> { public new class UxmlFactory : UxmlFactory<ChangeTriggerObject, UxmlTraits> { } }
-	public class ChangeTriggerLayerMask : ChangeTrigger<LayerMask> { public new class UxmlFactory : UxmlFactory<ChangeTriggerLayerMask, UxmlTraits> { } }
+	public class ChangeTriggerLayerMask : ChangeTrigger<int> { public new class UxmlFactory : UxmlFactory<ChangeTriggerLayerMask, UxmlTraits> { } }
 	public class ChangeTriggerEnum : ChangeTrigger<Enum> { public new class UxmlFactory : UxmlFactory<ChangeTriggerEnum, UxmlTraits> { } }
 	public class ChangeTriggerVector2 : ChangeTrigger<Vector2> { public new class UxmlFactory : UxmlFactory<ChangeTriggerVector2, UxmlTraits> { } }
 	public class ChangeTriggerVector3 : ChangeTrigger<Vector3> { public new class UxmlFactory : UxmlFactory<ChangeTriggerVector3, UxmlTraits> { } }

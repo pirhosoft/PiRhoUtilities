@@ -2396,7 +2396,7 @@ MonoBehaviour:
     m_Extent: {x: 0, y: 0, z: 0}
   BoundsInt:
     m_Position: {x: 0, y: 0, z: 0}
-    m_Size: {x: 0, y: 0, z: 0}
+    m_Size: {x: 5, y: 0, z: 0}
   Character: 0
   AnimationCurve:
     serializedVersion: 2
@@ -2433,7 +2433,7 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  Quaternion: {x: 0, y: 0, z: 0, w: 0}
+  Quaternion: {x: 0.04357788, y: 0.043577872, z: -0.0019026513, w: 0.99809736}
   ManagedReference:
     id: 0
   references:

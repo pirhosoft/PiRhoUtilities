@@ -34,7 +34,7 @@ namespace PiRhoSoft.Utilities.Editor
 				case SerializedPropertyType.String: return CreateControl<string>(property, declaringType, method);
 				case SerializedPropertyType.Color: return CreateControl<Color>(property, declaringType, method);
 				case SerializedPropertyType.ObjectReference: return CreateControl<Object>(property, declaringType, method);
-				case SerializedPropertyType.LayerMask: return CreateControl<LayerMask>(property, declaringType, method);
+				case SerializedPropertyType.LayerMask: return CreateControl<int>(property, declaringType, method);
 				case SerializedPropertyType.Enum: return CreateControl<Enum>(property, declaringType, method);
 				case SerializedPropertyType.Vector2: return CreateControl<Vector2>(property, declaringType, method);
 				case SerializedPropertyType.Vector2Int: return CreateControl<Vector2Int>(property, declaringType, method);

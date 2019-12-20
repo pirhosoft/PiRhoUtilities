@@ -26,11 +26,10 @@ namespace PiRhoSoft.Utilities.Editor
 				var declaringType = fieldInfo.DeclaringType;
 				var listAttribute = attribute as ListAttribute;
 				var drawer = this.GetNextDrawer();
-				var proxy = new PropertyListProxy(items, drawer);
+				var proxy = new PropertyListProxy(property, drawer);
 
 				var field = new ListField();
-				field.SetItemType(referenceType, true);
-				field.Proxy = proxy;
+				field.SetProxy(proxy, referenceType, true);
 				field.IsCollapsable = listAttribute.IsCollapsable;
 				field.bindingPath = property.propertyPath;
 				// TODO: other stuff from ConfigureField
@@ -92,33 +91,9 @@ namespace PiRhoSoft.Utilities.Editor
 						{
 							var addCallbackIndex = ReflectionHelper.CreateActionCallback<int>(listAttribute.AddCallback, declaringType, property);
 							if (addCallbackIndex != null)
-							{
 								field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallbackIndex.Invoke(evt.Index));
-							}
 							else
-							{
-								var addCallbackObject = ReflectionHelper.CreateActionCallback<object>(listAttribute.AddCallback, declaringType, property);
-								if (addCallbackObject != null)
-								{
-									field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallbackObject.Invoke(evt.Item));
-								}
-								else
-								{
-									var addCallbackIndexObject = ReflectionHelper.CreateActionCallback<int, object>(listAttribute.AddCallback, declaringType, property);
-									if (addCallbackIndexObject != null)
-									{
-										field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallbackIndexObject.Invoke(evt.Index, evt.Item));
-									}
-									else
-									{
-										var addCallbackObjectIndex = ReflectionHelper.CreateActionCallback<object, int>(listAttribute.AddCallback, declaringType, property);
-										if (addCallbackObjectIndex != null)
-											field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallbackObjectIndex.Invoke(evt.Item, evt.Index));
-										else
-											Debug.LogWarningFormat(_invalidAddReferenceCallbackWarning, property.propertyPath);
-									}
-								}
-							}
+								Debug.LogWarningFormat(_invalidAddReferenceCallbackWarning, property.propertyPath);
 						}
 					}
 				}
