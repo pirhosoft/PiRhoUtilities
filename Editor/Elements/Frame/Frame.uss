@@ -4,7 +4,7 @@
 	border-color: #555555;
 	border-width: 1px;
 	border-radius: 2px;
-	margin: 3px 0;
+	margin: 1px 3px;
 }
 
 .pirho-frame__header

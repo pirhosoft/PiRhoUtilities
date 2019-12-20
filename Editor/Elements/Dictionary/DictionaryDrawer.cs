@@ -32,6 +32,7 @@ namespace PiRhoSoft.Utilities.Editor
 				var field = new DictionaryField();
 				field.SetItemType(referenceType, true);
 				field.Proxy = proxy;
+				field.IsCollapsable = dictionaryAttribute.IsCollapsable;
 				field.bindingPath = property.propertyPath;
 				// TODO: other stuff from ConfigureField
 

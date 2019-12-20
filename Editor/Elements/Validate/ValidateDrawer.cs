@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace PiRhoSoft.Utilities.Editor
 {
@@ -17,28 +18,25 @@ namespace PiRhoSoft.Utilities.Editor
 		public const string LeftUssClassName = MessageUssClassName + "--left";
 		public const string RightUssClassName = MessageUssClassName + "--right";
 
-		private const string _invalidMethodWarning = "(PUVDMM) invalid method for ValidateAttribute on field '{0}': a parameterless, bool method named '{1}' could not be found on type '{2}'";
+		private const string _invalidTypeWarning = "(PUVDIT) invalid type for ValidateAttribute on field '{0}': Validate can only be applied to serializable fields";
+		private const string _invalidMethodWarning = "(PUVDIM) invalid method for ValidateAttribute on field '{0}': the method '{1}' should return a bool and take 0, or 1 parameter of type '{2}'";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
-			var validateAttribute = attribute as ValidateAttribute;
 			var element = this.CreateNextElement(property);
+			var validateAttribute = attribute as ValidateAttribute;
 
-			var method = ReflectionHelper.CreateFunctionCallback<bool>(validateAttribute.Method, fieldInfo.DeclaringType, property);
-			if (method != null)
+			var message = new MessageBox(validateAttribute.Type, validateAttribute.Message);
+			message.AddToClassList(MessageUssClassName);
+
+			var change = CreateControl(message, property, fieldInfo.DeclaringType, validateAttribute.Method);
+			if (change != null)
 			{
 				var container = new VisualElement();
 				container.AddToClassList(UssClassName);
 				container.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
 				container.Add(element);
-
-				var message = new MessageBox(validateAttribute.Type, validateAttribute.Message);
-				message.AddToClassList(MessageUssClassName);
-
-				Validate(message, method);
-				element.Add(ChangeTrigger.Create(property, (_) => Validate(message, method)));
-
-				message.AddToClassList(MessageUssClassName);
+				container.Add(change);
 
 				if (validateAttribute.Location == TraitLocation.Above)
 				{
@@ -65,18 +63,71 @@ namespace PiRhoSoft.Utilities.Editor
 
 				return container;
 			}
-			else
-			{
-				Debug.LogWarningFormat(_invalidMethodWarning, property.propertyPath, validateAttribute.Method, fieldInfo.DeclaringType.Name);
-			}
 
 			return element;
 		}
-
-		private void Validate(VisualElement message, Func<bool> validate)
+		
+		private PropertyWatcher CreateControl(MessageBox message, SerializedProperty property, Type declaringType, string method)
 		{
-			var valid = validate();
-			message.SetDisplayed(!valid);
+			switch (property.propertyType)
+			{
+				case SerializedPropertyType.Integer: return CreateControl<int>(message, property, declaringType, method);
+				case SerializedPropertyType.Boolean: return CreateControl<bool>(message, property, declaringType, method);
+				case SerializedPropertyType.Float: return CreateControl<float>(message, property, declaringType, method);
+				case SerializedPropertyType.String: return CreateControl<string>(message, property, declaringType, method);
+				case SerializedPropertyType.Color: return CreateControl<Color>(message, property, declaringType, method);
+				case SerializedPropertyType.ObjectReference: return CreateControl<Object>(message, property, declaringType, method);
+				case SerializedPropertyType.LayerMask: return CreateControl<LayerMask>(message, property, declaringType, method);
+				case SerializedPropertyType.Enum: return CreateControl<Enum>(message, property, declaringType, method);
+				case SerializedPropertyType.Vector2: return CreateControl<Vector2>(message, property, declaringType, method);
+				case SerializedPropertyType.Vector2Int: return CreateControl<Vector2Int>(message, property, declaringType, method);
+				case SerializedPropertyType.Vector3: return CreateControl<Vector3>(message, property, declaringType, method);
+				case SerializedPropertyType.Vector3Int: return CreateControl<Vector3Int>(message, property, declaringType, method);
+				case SerializedPropertyType.Vector4: return CreateControl<Vector4>(message, property, declaringType, method);
+				case SerializedPropertyType.Rect: return CreateControl<Rect>(message, property, declaringType, method);
+				case SerializedPropertyType.RectInt: return CreateControl<RectInt>(message, property, declaringType, method);
+				case SerializedPropertyType.Bounds: return CreateControl<Bounds>(message, property, declaringType, method);
+				case SerializedPropertyType.BoundsInt: return CreateControl<BoundsInt>(message, property, declaringType, method);
+				case SerializedPropertyType.Character: return CreateControl<char>(message, property, declaringType, method);
+				case SerializedPropertyType.AnimationCurve: return CreateControl<AnimationCurve>(message, property, declaringType, method);
+				case SerializedPropertyType.Gradient: return CreateControl<Gradient>(message, property, declaringType, method);
+				case SerializedPropertyType.Quaternion: return CreateControl<Quaternion>(message, property, declaringType, method);
+				case SerializedPropertyType.ExposedReference: return CreateControl<Object>(message, property, declaringType, method);
+				case SerializedPropertyType.FixedBufferSize: return CreateControl<int>(message, property, declaringType, method);
+				case SerializedPropertyType.ManagedReference: return CreateControl<object>(message, property, declaringType, method);
+			}
+
+			Debug.LogWarningFormat(_invalidTypeWarning, property.propertyPath, this.GetFieldType().Name);
+			return null;
+		}
+
+		private PropertyWatcher CreateControl<T>(MessageBox message, SerializedProperty property, Type declaringType, string method)
+		{
+			var none = ReflectionHelper.CreateFunctionCallback<bool>(method, declaringType, property);
+			if (none != null)
+			{
+				Validated(message, none());
+				return new ChangeTrigger<T>(property, (_, oldValue, newValue) => Validated(message, none()));
+			}
+			else
+			{
+				var one = ReflectionHelper.CreateFunctionCallback<T, bool>(method, declaringType, property);
+				if (one != null)
+				{
+					var change = new ChangeTrigger<T>(property, (_, oldValue, newValue) => Validated(message, one(newValue)));
+					Validated(message, one(change.value));
+					return change;
+				}
+			}
+
+			Debug.LogWarningFormat(_invalidMethodWarning, property.propertyPath, method, typeof(T).Name);
+			return null;
+		}
+
+		private void Validated(MessageBox message, bool valid)
+		{
+			if (!EditorApplication.isPlaying)
+				message.SetDisplayed(!valid);
 		}
 	}
 }

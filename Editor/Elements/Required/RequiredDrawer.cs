@@ -1,6 +1,8 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace PiRhoSoft.Utilities.Editor
 {
@@ -17,31 +19,25 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			var element = this.CreateNextElement(property);
 
-			if (property.propertyType == SerializedPropertyType.String || property.propertyType == SerializedPropertyType.ObjectReference)
+			if (property.propertyType == SerializedPropertyType.String || property.propertyType == SerializedPropertyType.ObjectReference || property.propertyType == SerializedPropertyType.ManagedReference)
 			{
+				var requiredAttribute = attribute as RequiredAttribute;
 				var required = new VisualElement();
 				required.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
 				required.AddToClassList(UssClassName);
 
-				var requiredAttribute = attribute as RequiredAttribute;
 				var message = new MessageBox((MessageBoxType)(int)requiredAttribute.Type, requiredAttribute.Message);
 				message.AddToClassList(MessageBoxUssClassName);
 
+				if (property.propertyType == SerializedPropertyType.String)
+					CreateControl(property, element, message, UpdateString, property.stringValue);
+				else if (property.propertyType == SerializedPropertyType.ObjectReference)
+					CreateControl(property, element, message, UpdateObject, property.objectReferenceValue);
+				else if (property.propertyType == SerializedPropertyType.ManagedReference)
+					CreateControl(property, element, message, UpdateReference, property.GetManagedReferenceValue());
+
 				required.Add(element);
 				required.Add(message);
-
-				if (property.propertyType == SerializedPropertyType.String)
-				{
-					var change = new ChangeTrigger<string>(property, (_, previous, current) => UpdateString(message, current));
-					UpdateString(message, property.stringValue);
-					element.Add(change);
-				}
-				else if (property.propertyType == SerializedPropertyType.ObjectReference)
-				{
-					var change = new ChangeTrigger<Object>(property, (_, previous, current) => UpdateObject(message, current));
-					UpdateObject(message, property.objectReferenceValue);
-					element.Add(change);
-				}
 
 				return required;
 			}
@@ -52,6 +48,13 @@ namespace PiRhoSoft.Utilities.Editor
 			}
 		}
 
+		private void CreateControl<T>(SerializedProperty property, VisualElement container, MessageBox message, Action<MessageBox, T> updateAction, T defaultValue)
+		{
+			var change = new ChangeTrigger<T>(property, (_, previous, current) => updateAction(message, current));
+			updateAction(message, defaultValue);
+			container.Add(change);
+		}
+
 		private void UpdateString(MessageBox message, string value)
 		{
 			message.SetDisplayed(string.IsNullOrEmpty(value));
@@ -60,6 +63,11 @@ namespace PiRhoSoft.Utilities.Editor
 		private void UpdateObject(MessageBox message, Object value)
 		{
 			message.SetDisplayed(!value);
+		}
+
+		private void UpdateReference(MessageBox message, object value)
+		{
+			message.SetDisplayed(value == null);
 		}
 	}
 }

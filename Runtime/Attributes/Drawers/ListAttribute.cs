@@ -7,7 +7,10 @@
 
 		public string AllowAdd = Always;
 		public string AllowRemove = Always;
+
 		public bool AllowReorder = true;
+		public bool IsCollapsable = true;
+
 		public string EmptyLabel = null;
 
 		public string AddCallback = null;

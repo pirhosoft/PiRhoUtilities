@@ -5,7 +5,7 @@ namespace PiRhoSoft.Utilities
 	[AddComponentMenu("PiRho Utilities/Button")]
 	public class ButtonSample : MonoBehaviour
 	{
-		[MessageBox("The [Button] attribute adds a button next to the field that calls a method when clicked. The method can be public/private, optionally static, and takes no parameters", MessageBoxType.Info, Location = TraitLocation.Above)]
+		[MessageBox("The [Button] attribute adds a button next to the field that calls a method when clicked. The method can be public/private, optionally static, and takes no parameters.", MessageBoxType.Info, Location = TraitLocation.Above)]
 
 		[Button(nameof(PublicStatic), "Public/Static", Location = TraitLocation.Above)]
 		public string Above;

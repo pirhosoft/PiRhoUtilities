@@ -23,7 +23,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 				void setText(string value) => placeholder.text = value;
 
-				if (!ReflectionHelper.SetupValueSourceCallback(placeholderAttribute.TextSource, fieldInfo.DeclaringType, property, placeholder, placeholderAttribute.Text, placeholderAttribute.AutoUpdate, setText))
+				if (!ReflectionHelper.SetupValueSourceCallback(placeholderAttribute.TextSource, fieldInfo.DeclaringType, property, element, placeholderAttribute.Text, placeholderAttribute.AutoUpdate, setText))
 					Debug.LogWarningFormat(_invalidSourceError, property.propertyPath, placeholderAttribute.TextSource);
 
 				return element;
