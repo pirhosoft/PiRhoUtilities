@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
-using Object = UnityEngine.Object;
 
 namespace PiRhoSoft.Utilities.Editor
 {
@@ -130,10 +128,7 @@ namespace PiRhoSoft.Utilities.Editor
 			var sibling = property.GetSibling(sourceName);
 
 			if (sibling != null)
-			{
-				if (ValidateProperty(sibling, typeof(FieldType)))
-					return new ChangeTrigger<FieldType>(property, (changedProperty, oldValue, newValue) => updateAction?.Invoke(newValue));
-			}
+				return new ChangeTrigger<FieldType>(sibling, (changedProperty, oldValue, newValue) => updateAction?.Invoke(newValue));
 
 			return null;
 		}
@@ -293,40 +288,6 @@ namespace PiRhoSoft.Utilities.Editor
 				element.schedule.Execute(action).Every(100);
 			else
 				action.Invoke();
-		}
-
-		private static bool ValidateProperty(SerializedProperty property, Type type)
-		{
-			switch (property.propertyType)
-			{
-				case SerializedPropertyType.Generic: return false;
-				case SerializedPropertyType.Integer: return type == typeof(int);
-				case SerializedPropertyType.Boolean: return type == typeof(bool);
-				case SerializedPropertyType.Float: return type == typeof(float);
-				case SerializedPropertyType.String: return type == typeof(string);
-				case SerializedPropertyType.Color: return type == typeof(Color);
-				case SerializedPropertyType.ObjectReference: return typeof(Object).IsAssignableFrom(type);
-				case SerializedPropertyType.LayerMask: return type == typeof(LayerMask);
-				case SerializedPropertyType.Enum: return type == typeof(Enum) || type.IsEnum;
-				case SerializedPropertyType.Vector2: return type == typeof(Vector2);
-				case SerializedPropertyType.Vector3: return type == typeof(Vector3);
-				case SerializedPropertyType.Vector4: return type == typeof(Vector4);
-				case SerializedPropertyType.Rect: return type == typeof(Rect);
-				case SerializedPropertyType.ArraySize: return type == typeof(int);
-				case SerializedPropertyType.Character: return type == typeof(char);
-				case SerializedPropertyType.AnimationCurve: return type == typeof(AnimationCurve);
-				case SerializedPropertyType.Bounds: return type == typeof(Bounds);
-				case SerializedPropertyType.Gradient: return type == typeof(Gradient);
-				case SerializedPropertyType.Quaternion: return type == typeof(Quaternion);
-				case SerializedPropertyType.ExposedReference: return false;
-				case SerializedPropertyType.FixedBufferSize: return false;
-				case SerializedPropertyType.Vector2Int: return type == typeof(Vector2Int);
-				case SerializedPropertyType.Vector3Int: return type == typeof(Vector3Int);
-				case SerializedPropertyType.RectInt: return type == typeof(RectInt);
-				case SerializedPropertyType.BoundsInt: return type == typeof(BoundsInt);
-				case SerializedPropertyType.ManagedReference: var managed = property.GetManagedReferenceValue(); return managed == null || type.IsAssignableFrom(managed.GetType());
-				default: return false;
-			}
 		}
 	}
 }

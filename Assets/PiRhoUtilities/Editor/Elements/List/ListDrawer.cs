@@ -31,6 +31,7 @@ namespace PiRhoSoft.Utilities.Editor
 				var field = new ListField();
 				field.SetItemType(referenceType, true);
 				field.Proxy = proxy;
+				field.IsCollapsable = listAttribute.IsCollapsable;
 				field.bindingPath = property.propertyPath;
 				// TODO: other stuff from ConfigureField
 

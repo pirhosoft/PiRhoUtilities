@@ -75,6 +75,12 @@ namespace PiRhoSoft.Utilities.Editor
 			set => SetReferenceType(value);
 		}
 
+		public bool IsCollapsable
+		{
+			get => _frame.IsCollapsable;
+			set => _frame.IsCollapsable = value;
+		}
+
 		public IReferenceDrawer Drawer
 		{
 			get => _drawer;
@@ -242,6 +248,8 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				if (property.propertyType == SerializedPropertyType.ManagedReference)
 				{
+					BindingExtensions.CreateBind(_frame, property, GetExpandedProperty, SetExpandedProperty, CompareExpandedProperties);
+
 					if (_label == null)
 						Label = property.displayName;
 
@@ -260,6 +268,22 @@ namespace PiRhoSoft.Utilities.Editor
 
 				evt.StopPropagation();
 			}
+		}
+
+		private bool GetExpandedProperty(SerializedProperty property)
+		{
+			return property.isExpanded;
+		}
+
+		private void SetExpandedProperty(SerializedProperty property, bool value)
+		{
+			property.isExpanded = value;
+		}
+
+		private bool CompareExpandedProperties(bool value, SerializedProperty property, Func<SerializedProperty, bool> getter)
+		{
+			var currentValue = getter(property);
+			return value == currentValue;
 		}
 
 		#endregion

@@ -197,6 +197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc477b932fb366243aa6f2118e3cb28f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NoLabel: <- notice how there is no label over there
 --- !u!1 &56478176
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,6 +241,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5663e61f6a78e744ca181a62fcdbc9e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMinimumOf0: 0
+  FieldMinimumValue: 3
+  MinimumFromField: 3
+  PropertyMinimumValue: 2
+  MinimumFromProperty: 2
+  MethodMinimumValue: 7
+  FromMethod: 7
 --- !u!1 &107769644
 GameObject:
   m_ObjectHideFlags: 0
@@ -283,6 +291,113 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a5d755edd1c6e64aa912140dcabce03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Integer: 1
+  Boolean: 1
+  Float: 2
+  String: He
+  Color: {r: 0.2830189, g: 0.06407975, b: 0.06407975, a: 0}
+  ObjectReference: {fileID: 107769644}
+  LayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  Enum: 1
+  Vector2: {x: 1, y: 0}
+  Vector2Int: {x: 0, y: 2}
+  Vector3: {x: 2, y: 0, z: 0}
+  Vector3Int: {x: 3, y: 0, z: 0}
+  Vector4: {x: 5, y: 0, z: 0, w: 0}
+  Rect:
+    serializedVersion: 2
+    x: 5
+    y: 0
+    width: 0
+    height: 0
+  RectInt:
+    x: 4
+    y: 0
+    width: 0
+    height: 0
+  Bounds:
+    m_Center: {x: 0.5, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  BoundsInt:
+    m_Position: {x: 0, y: 1, z: 0}
+    m_Size: {x: 0, y: 0, z: 0}
+  Character: 97
+  AnimationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  Gradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 1, g: 1, b: 1, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 27949
+    ctime2: 65535
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 3
+    m_NumAlphaKeys: 2
+  Quaternion: {x: 0, y: 2, z: 0, w: 0}
+  ManagedReference:
+    id: 0
+  PublicStaticParameterless: 0
+  PublicStaticOneParameter: 0
+  PublicStaticTwoParameters: 0
+  PublicInstanceParameterless: 1
+  PublicInstanceOneParameter: 0
+  PublicInstanceTwoParameters: 0
+  PrivateStaticParameterless: 0
+  PrivateStaticOneParameter: 0
+  PrivateStaticTwoParameters: 0
+  PrivateInstanceParameterless: 0
+  PrivateInstanceOneParameter: 0
+  PrivateInstanceTwoParameters: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: ChangeTriggerSample/Dog, ns: PiRhoSoft.Utilities, asm: Assembly-CSharp}
+      data:
+        Value: 0
 --- !u!1 &112579357
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,6 +477,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71023c1c3ad98a242998e0e1fdfd6e8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMultiplesOfPoint5: 0
+  FieldSnapValue: 5
+  SnapFromField: 0
+  PropertySnapValue: 5
+  SnapFromProperty: 0
+  MethodSnapValue: 0
+  FromMethod: 0
 --- !u!1 &197423215
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,6 +527,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df266df4d1a95142ab51795585c01e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Integer: 1
+  Float: 0
+  String: 
+  Vector2: {x: 0, y: 0}
+  Vector2Int: {x: 0, y: 0}
+  Vector3: {x: 0, y: 0, z: 0}
+  Vector3Int: {x: 0, y: 0, z: 0}
+  Quaternion: {x: 0, y: 0, z: 0, w: 1}
+  Rect:
+    serializedVersion: 2
+    x: 1
+    y: 0
+    width: 0
+    height: 0
+  RectInt:
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  Bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  BoundsInt:
+    m_Position: {x: 0, y: 0, z: 0}
+    m_Size: {x: 0, y: 0, z: 0}
+  Character: 0
 --- !u!1 &210680770
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,6 +596,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbc98f663a2fc094aa050a266b645dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Stretch: "Stretch is useful for things like \nmultiline text fields that benefit\nfrom
+    a large editable space."
 --- !u!1 &243003935
 GameObject:
   m_ObjectHideFlags: 0
@@ -577,6 +727,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 347b5d288ecaa1446911cd95a3810c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Message: ^ That is a message ^
 --- !u!1 &628182141
 GameObject:
   m_ObjectHideFlags: 0
@@ -663,6 +814,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa88de4b0b2166d49960c8aca6960756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMultiplesOf5:
+    m_Center: {x: 5, y: 0, z: 5}
+    m_Extent: {x: 5, y: 5, z: 5}
+  FieldSnapValue:
+    m_Center: {x: 2, y: 2, z: 2}
+    m_Extent: {x: 2, y: 2, z: 2}
+  SnapFromField:
+    m_Center: {x: 4, y: 0, z: 0}
+    m_Extent: {x: 2, y: 0, z: 0}
+  PropertySnapValue:
+    m_Center: {x: 3, y: 3, z: 3}
+    m_Extent: {x: 1.5, y: 1.5, z: 1.5}
+  SnapFromProperty:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  MethodSnapValue:
+    m_Center: {x: 7, y: 7, z: 7}
+    m_Extent: {x: 3.5, y: 3.5, z: 3.5}
+  FromMethod:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
 --- !u!1 &667908392
 GameObject:
   m_ObjectHideFlags: 0
@@ -706,6 +878,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92518e921f648ab4888fd845494c6952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMultiplesOf5: {x: 0, y: 0, z: 0, w: 0}
+  FieldSnapValue: {x: 3, y: 3, z: 3, w: 3}
+  SnapFromField: {x: 0, y: 0, z: 0, w: 0}
+  PropertySnapValue: {x: 2, y: 2, z: 2, w: 2}
+  SnapFromProperty: {x: 0, y: 0, z: 0, w: 0}
+  MethodSnapValue: {x: 7, y: 7, z: 7, w: 7}
+  FromMethod: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &718595300
 GameObject:
   m_ObjectHideFlags: 0
@@ -835,6 +1014,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86b3420488b0fb54ab1441d2785a2672, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  String: 
+  Object: {fileID: 0}
+  Reference:
+    id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: , ns: , asm: }
 --- !u!1 &792703221
 GameObject:
   m_ObjectHideFlags: 0
@@ -921,6 +1108,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcf04a37d117cdf4e96cbda81131ebe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Above: 
+  Below: 
+  ToTheRight: 
+  ToTheLeft: 
 --- !u!1 &844038269
 GameObject:
   m_ObjectHideFlags: 0
@@ -1050,6 +1241,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6947486f338416d469a48eaa4261afe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowIfTrue: 1
+  VisibleIfTrue: Visible
+  ShowIfFalse: 0
+  VisibleIfFalse: Visible
+  ShowIfEqual0: 0
+  VisibleIfEqual0: Visible
+  ShowIfInequal0: 1
+  VisibleIfInequal0: Visible
+  ShowIfLess0: -1
+  VisibleIfLess0: Visible
+  ShowIfLessOrEqual0: -1
+  VisibleIfLessOrEqual0: Visible
+  ShowIfGreater0: 1
+  VisibleIfGreater0: Visible
+  ShowIfGreaterOrEqual0: 1
+  VisibleIfGreaterOrEqual0: Visible
+  ShowIfLess0f: -1.5
+  VisibleIfLess0f: Visible
+  ShowIfGreater0f: 1.5
+  VisibleIfGreater0f: Visible
+  ShowIfSet: 0
+  VisibleIfSet: Visible
+  ShowIfNotSet: 1
+  VisibleIfNotSet: Visible
+  ShowIfTest: Test
+  VisibleIfSame: Visible
+  ShowIfNotTest: 
+  VisibleIfDifferent: Visible
+  ShowIfNotNull: {fileID: 873610722}
+  VisibleNotNull: Visible
+  ShowIfNull: {fileID: 0}
+  VisibleIfNull: Visible
+  ControledByField: 1
+  ShownByField: Visible
+  ControledByProperty: 1
+  ShownByProperty: Visible
+  ControledByMethod: 1
+  ShownByMethod: Visible
 --- !u!1 &893876602
 GameObject:
   m_ObjectHideFlags: 0
@@ -1093,6 +1322,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91bfc34b89b3d7a4face42157c135719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaximumOf5Characters: 
+  PropertyValue: 0
+  MaximumFromProperty: 
+  MethodValue: 0
+  MaxmimumFromMethod: 
 --- !u!1 &917436047
 GameObject:
   m_ObjectHideFlags: 0
@@ -1168,6 +1402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a6518f8bd15879439c4354245f51d7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MultilineText: "This text has a \n newline in it"
 --- !u!1 &995603085
 GameObject:
   m_ObjectHideFlags: 0
@@ -1322,6 +1557,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a767c44418f097419387e7ece45fa99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMultiplesOf5:
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  FieldSnapValue:
+    x: 3
+    y: 3
+    width: 3
+    height: 3
+  SnapFromField:
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  PropertySnapValue:
+    x: 2
+    y: 2
+    width: 2
+    height: 2
+  SnapFromProperty:
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  MethodSnapValue:
+    x: 7
+    y: 7
+    width: 7
+    height: 7
+  FromMethod:
+    x: 0
+    y: 0
+    width: 0
+    height: 0
 --- !u!1 &1127111061
 GameObject:
   m_ObjectHideFlags: 0
@@ -1365,6 +1635,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ee8820a2191ba4fb6ea24e80ff4970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCoded: 
+  PropertyValue: 0
+  FromProperty: 
+  MethodValue: 0
+  FromMethod: 
 --- !u!1 &1139194144
 GameObject:
   m_ObjectHideFlags: 0
@@ -1408,6 +1683,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abffd39ed459a894ebfda0a74989f997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMultiplesOf5: {x: 0, y: 0}
+  FieldSnapValue: {x: 3, y: 3}
+  SnapFromField: {x: 0, y: 0}
+  PropertySnapValue: {x: 2, y: 2}
+  SnapFromProperty: {x: 0, y: 0}
+  MethodSnapValue: {x: 7, y: 7}
+  FromMethod: {x: 0, y: 0}
 --- !u!1 &1148389000
 GameObject:
   m_ObjectHideFlags: 0
@@ -1494,6 +1776,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 987814f27b521464aa6068a8e7c63810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ReadOnly: This string cannot be changed in the editor
 --- !u!1 &1292552753
 GameObject:
   m_ObjectHideFlags: 0
@@ -1580,6 +1863,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f0255d872c4dc04c8bc1d0d59780a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMultiplesOf5: {x: 0, y: 0, z: 0}
+  FieldSnapValue: {x: 3, y: 3, z: 3}
+  SnapFromField: {x: 0, y: 0, z: 0}
+  PropertySnapValue: {x: 2, y: 2, z: 2}
+  SnapFromProperty: {x: 0, y: 0, z: 0}
+  MethodSnapValue: {x: 7, y: 7, z: 7}
+  FromMethod: {x: 0, y: 0, z: 0}
 --- !u!1 &1321953293
 GameObject:
   m_ObjectHideFlags: 0
@@ -1623,6 +1913,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40a19089263b46c45a113a7963ecbcd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMultiplesOf5: {x: 0, y: 0}
+  FieldSnapValue: {x: 3, y: 3}
+  SnapFromField: {x: 0, y: 0}
+  PropertySnapValue: {x: 2, y: 2}
+  SnapFromProperty: {x: 0, y: 0}
+  MethodSnapValue: {x: 7, y: 7}
+  FromMethod: {x: 0, y: 0}
 --- !u!1 &1355538601
 GameObject:
   m_ObjectHideFlags: 0
@@ -1742,6 +2039,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e6adb262a56dd4c95adbc4625381b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PublicStatic: 
+  PrivateStatic: 
+  PublicInstance: 
+  PrivateInstance: 
 --- !u!1 &1551446145
 GameObject:
   m_ObjectHideFlags: 0
@@ -1865,6 +2166,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49e97aa5c793ddb49a205784b4678d78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMultiplesOf5:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  FieldSnapValue:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  SnapFromField:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  PropertySnapValue:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  SnapFromProperty:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  MethodSnapValue:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  FromMethod:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
 --- !u!1 &1586262693
 GameObject:
   m_ObjectHideFlags: 0
@@ -1908,6 +2251,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69f3c86f6ce9d9447910fb13a659bc05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMultiplesOf5: {x: 0, y: 0, z: 0}
+  FieldSnapValue: {x: 3, y: 3, z: 3}
+  SnapFromField: {x: 0, y: 0, z: 0}
+  PropertySnapValue: {x: 2, y: 2, z: 2}
+  SnapFromProperty: {x: 0, y: 0, z: 0}
+  MethodSnapValue: {x: 7, y: 7, z: 7}
+  FromMethod: {x: 0, y: 0, z: 0}
 --- !u!1 &1607366616
 GameObject:
   m_ObjectHideFlags: 0
@@ -1951,6 +2301,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccd02fe3886c1b4449d831cf4c1490fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMultiplesOf5:
+    m_Position: {x: 0, y: 0, z: 0}
+    m_Size: {x: 0, y: 0, z: 0}
+  FieldSnapValue:
+    m_Position: {x: 2, y: 2, z: 2}
+    m_Size: {x: 2, y: 2, z: 2}
+  SnapFromField:
+    m_Position: {x: 0, y: 0, z: 0}
+    m_Size: {x: 0, y: 0, z: 0}
+  PropertySnapValue:
+    m_Position: {x: 0, y: 0, z: 0}
+    m_Size: {x: 0, y: 0, z: 0}
+  SnapFromProperty:
+    m_Position: {x: 0, y: 0, z: 0}
+    m_Size: {x: 0, y: 0, z: 0}
+  MethodSnapValue:
+    m_Position: {x: 0, y: 0, z: 0}
+    m_Size: {x: 0, y: 0, z: 0}
+  FromMethod:
+    m_Position: {x: 0, y: 0, z: 0}
+    m_Size: {x: 0, y: 0, z: 0}
 --- !u!1 &1726021696
 GameObject:
   m_ObjectHideFlags: 0
@@ -1994,6 +2365,81 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94adb10a4c01c8542ae8d7d9f11d6f03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Integer: 3
+  Boolean: 0
+  Float: 0
+  String: 
+  Color: {r: 0, g: 0, b: 0, a: 0}
+  ObjectReference: {fileID: 0}
+  LayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  EnumValue: 0
+  Vector2: {x: 0, y: 0}
+  Vector2Int: {x: 0, y: 0}
+  Vector3: {x: 0, y: 0, z: 0}
+  Vector3Int: {x: 0, y: 0, z: 0}
+  Vector4: {x: 0, y: 0, z: 0, w: 0}
+  Rect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  RectInt:
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  Bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  BoundsInt:
+    m_Position: {x: 0, y: 0, z: 0}
+    m_Size: {x: 0, y: 0, z: 0}
+  Character: 0
+  AnimationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  Gradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  Quaternion: {x: 0, y: 0, z: 0, w: 0}
+  ManagedReference:
+    id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: , ns: , asm: }
 --- !u!1 &1738214926
 GameObject:
   m_ObjectHideFlags: 0
@@ -2037,6 +2483,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83de95558dabb624a9d2ccc7bd1dc862, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMultiplesOf5: 5
+  FieldSnapValue: 3
+  SnapFromField: 6
+  PropertySnapValue: 2
+  SnapFromProperty: 4
+  MethodSnapValue: 7
+  FromMethod: 0
 --- !u!1 &1768632107
 GameObject:
   m_ObjectHideFlags: 0
@@ -2162,6 +2615,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7fef8c38eb050743ba4c15fd2de7b1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCoded: 
+  FieldPlaceholderValue: field
+  FromField: 
+  PropertyPlaceholderValue: property
+  FromProperty: 
+  MethodPlaceholderValue: method
+  FromMethod: 
 --- !u!1 &1828266678
 GameObject:
   m_ObjectHideFlags: 0
@@ -2205,6 +2665,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d34ff68f4b891ed4993adf983d7bc95f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMinimumOf0: 0
+  FieldMinimumValue: 3
+  MinimumFromField: 0
+  PropertyMinimumValue: 2
+  MinimumFromProperty: 0
+  MethodMinimumValue: 7
+  FromMethod: 0
 --- !u!1 &1831809526
 GameObject:
   m_ObjectHideFlags: 0
@@ -2248,6 +2715,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee2b12685d253e946b788c5d29bd3aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMinimumOf0: 0
+  FieldMinimumValue: 3
+  MinimumFromField: 0
+  PropertyMinimumValue: 2
+  MinimumFromProperty: 0
+  MethodMinimumValue: 7
+  FromMethod: 0
 --- !u!1 &1834803048
 GameObject:
   m_ObjectHideFlags: 0
@@ -2291,6 +2765,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5ffa2eb1fab87847a11c50e4728c520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedMinimumOf0: 0
+  FieldMinimumValue: 3
+  MinimumFromField: 3
+  PropertyMinimumValue: 2
+  MinimumFromProperty: 2
+  MethodMinimumValue: 7
+  FromMethod: 7
 --- !u!1 &1906545090
 GameObject:
   m_ObjectHideFlags: 0

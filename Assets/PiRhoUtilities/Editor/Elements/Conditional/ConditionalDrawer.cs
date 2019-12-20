@@ -74,12 +74,9 @@ namespace PiRhoSoft.Utilities.Editor
 
 			switch (test)
 			{
-				case StringTest.ShowIfEqual: visible = value == comparison; break;
-				case StringTest.ShowIfInequal: visible = value != comparison; break;
-				case StringTest.ShowIfEmpty: visible = string.IsNullOrEmpty(value); break;
-				case StringTest.ShowIfNotEmpty: visible = string.IsNullOrEmpty(value); break;
+				case StringTest.ShowIfSame: visible = value == comparison; break;
+				case StringTest.ShowIfDifferent: visible = value != comparison; break;
 			}
-
 
 			element.SetDisplayed(visible);
 		}

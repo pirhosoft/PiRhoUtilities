@@ -146,7 +146,8 @@ namespace PiRhoSoft.Utilities.Editor
 			var height = Snap(property.boundsValue.extents.y, snap.extents.y);
 			var depth = Snap(property.boundsValue.extents.z, snap.extents.z);
 
-			property.boundsValue = new Bounds(new Vector3(x, y, z), new Vector3(width, height, depth));
+			// Multiply by 2 because the editor displays extents which is half of size
+			property.boundsValue = new Bounds(new Vector3(x, y, z), new Vector3(width * 2, height * 2, depth * 2));
 			property.serializedObject.ApplyModifiedProperties();
 		}
 
