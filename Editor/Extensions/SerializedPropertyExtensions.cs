@@ -265,7 +265,7 @@ namespace PiRhoSoft.Utilities.Editor
 				case SerializedPropertyType.String: if (type == typeof(string)) { value = (T)(object)property.stringValue; return true; } break;
 				case SerializedPropertyType.Color: if (type == typeof(Color)) { value = (T)(object)property.colorValue; return true; } break;
 				case SerializedPropertyType.ObjectReference: if (typeof(Object).IsAssignableFrom(type)) { value = (T)(object)property.objectReferenceValue; return true; } break;
-				case SerializedPropertyType.LayerMask: if (type == typeof(LayerMask)) { value = (T)(object)(LayerMask)property.intValue; return true; } break;
+				case SerializedPropertyType.LayerMask: if (type == typeof(LayerMask)) { value = (T)(object)(LayerMask)property.intValue; return true; } else if (type == typeof(int)) { value = (T)(object)property.intValue; return true; } break;
 				case SerializedPropertyType.Enum: if (type == typeof(Enum) || type.IsEnum) { value = (T)(object) property.GetEnumValue(); return true; } break;
 				case SerializedPropertyType.Vector2: if (type == typeof(Vector2)) { value = (T)(object)property.vector2Value; return true; } break;
 				case SerializedPropertyType.Vector3: if (type == typeof(Vector3)) { value = (T)(object)property.vector3Value; return true; } break;

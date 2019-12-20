@@ -1,182 +1,112 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
 {
-	public abstract class DictionaryProxy
+	public interface IDictionaryProxy
 	{
-		public virtual VisualElement CreateElement(int index)
-		{
-			var element = new VisualElement
-			{
-				userData = index
-			};
+		VisualElement CreateElement(int index, string key);
 
-			return element;
-		}
+		int Count { get; }
+		string GetKey(int index);
 
-		public virtual bool NeedsUpdate(VisualElement item, int index)
-		{
-			return !(item.userData is int i) || i != index;
-		}
+		bool CanAdd(string key);
+		bool CanAdd(Type type);
+		bool AddItem(string key, Type type);
 
-		public virtual bool CanAdd(string key) => true;
-		public virtual bool CanRemove(int index) => true;
+		bool CanRemove(int index, string key);
+		void RemoveItem(int index, string key);
 
-		public abstract int ItemCount { get; }
-		public abstract string GetKey(int index);
-
-		public abstract void AddItem(string key);
-		public abstract void AddItem(string key, object item);
-		public abstract void RemoveItem(int index);
-		public abstract void ReorderItem(int from, int to);
+		bool IsReorderable { get; }
+		void ReorderItem(int from, int to);
 	}
 
-	public class IDictionaryProxy : DictionaryProxy
+	public class DictionaryProxy : IDictionaryProxy
 	{
-		private IDictionary _items;
-		private List<string> _indexMap = new List<string>();
+		public IDictionary Items { get; private set; }
+		public Func<IDictionary, string, VisualElement> Creator { get; private set; }
 
-		public IDictionary Items { get => _items; set => SetItems(value); }
-		public Type ItemType { get; private set; }
-		public Action<string, VisualElement> Creator { get; private set; }
-
-		public IDictionaryProxy(IDictionary items, Action<string, VisualElement> creator)
+		public DictionaryProxy(IDictionary items, Func<IDictionary, string, VisualElement> creator)
 		{
 			Items = items;
 			Creator = creator;
 		}
 
-		public override VisualElement CreateElement(int index)
-		{
-			var key = GetKey(index);
-			var element = base.CreateElement(index);
-			Creator?.Invoke(key, element);
-			return element;
-		}
+		public VisualElement CreateElement(int index, string key) => Creator.Invoke(Items, key);
 
-		public override int ItemCount => Items.Count;
+		public int Count => Items.Count;
+		public string GetKey(int index) => Items.Keys.Cast<string>().ElementAt(index);
 
-		public override string GetKey(int index)
-		{
-			return index >= 0 && index < _indexMap.Count
-				? _indexMap[index]
-				: string.Empty;
-		}
+		public bool CanAdd(string key) => !Items.Contains(key);
+		public bool CanAdd(Type type) => type != null;
 
-		public override void AddItem(string key)
+		public bool AddItem(string key, Type type)
 		{
-			if (ItemType != null && ItemType.IsCreatableAs(ItemType))
+			try
 			{
-				_indexMap.Add(key);
-				Items.Add(key, Activator.CreateInstance(ItemType));
-			}
-		}
-
-		public override void AddItem(string key, object item)
-		{
-			if (ItemType == null || ItemType.IsAssignableFrom(item.GetType()))
-			{
-				_indexMap.Add(key);
+				var item = Activator.CreateInstance(type);
 				Items.Add(key, item);
 			}
+			catch
+			{
+				return false;
+			}
+
+			return true;
 		}
 
-		public override void RemoveItem(int index)
-		{
-			var key = GetKey(index);
-			Items.Remove(key);
-			_indexMap.RemoveAt(index);
-		}
+		public bool CanRemove(int index, string key) => true;
+		public void RemoveItem(int index, string key) => Items.Remove(key);
 
-		private void SetItems(IDictionary items)
-		{
-			_items = items;
-			_indexMap.Clear();
-
-			foreach (var item in Items.Keys)
-				_indexMap.Add(item.ToString());
-		}
-
-		public override void ReorderItem(int from, int to)
-		{
-		}
+		public bool IsReorderable => false;
+		public void ReorderItem(int from, int to) { }
 	}
 
-	public class DictionaryProxy<T> : DictionaryProxy
+	public class DictionaryProxy<T> : IDictionaryProxy
 	{
-		private Dictionary<string, T> _items = new Dictionary<string, T>();
-		private readonly List<string> _indexMap = new List<string>();
+		public IDictionary<string, T> Items { get; private set; }
+		public Func<IDictionary<string, T>, string, VisualElement> Creator { get; private set; }
 
-		public Dictionary<string, T> Items { get => _items; set => SetItems(value); }
-		public Action<string, VisualElement> Creator { get; private set; }
-
-		public DictionaryProxy(Dictionary<string, T> items, Action<string, VisualElement> creator)
+		public DictionaryProxy(Dictionary<string, T> items, Func<IDictionary<string, T>, string, VisualElement> creator)
 		{
 			Items = items;
 			Creator = creator;
 		}
 
-		public override VisualElement CreateElement(int index)
+		public VisualElement CreateElement(int index, string key) => Creator.Invoke(Items, key);
+
+		public int Count => Items.Count;
+		public string GetKey(int index) => Items.Keys.ElementAt(index);
+
+		public bool CanAdd(string key) => !Items.ContainsKey(key);
+		public bool CanAdd(Type type) => type == null || (type == typeof(T) && type.IsValueType) || type.IsCreatableAs<T>();
+
+		public bool AddItem(string key, Type type)
 		{
-			var key = GetKey(index);
-			var element = base.CreateElement(index);
-			Creator?.Invoke(key, element);
-			return element;
+			var item = type == null || type.IsValueType
+				? default
+				: (T)Activator.CreateInstance(type);
+
+			Items.Add(key, item);
+			return true;
 		}
 
-		public override int ItemCount => Items.Count;
+		public bool CanRemove(int index, string key) => true;
+		public void RemoveItem(int index, string key) => Items.Remove(key);
 
-		public override string GetKey(int index)
-		{
-			return index >= 0 && index < _indexMap.Count
-				? _indexMap[index]
-				: string.Empty;
-		}
-
-		public override void AddItem(string key)
-		{
-			_indexMap.Add(key);
-			Items.Add(key, default);
-		}
-
-		public override void AddItem(string key, object item)
-		{
-			if (item is T t)
-			{
-				_indexMap.Add(key);
-				Items.Add(key, t);
-			}
-		}
-
-		public override void RemoveItem(int index)
-		{
-			var key = GetKey(index);
-			Items.Remove(key);
-			_indexMap.RemoveAt(index);
-		}
-
-		private void SetItems(Dictionary<string, T> items)
-		{
-			_items = items;
-			_indexMap.Clear();
-
-			foreach (var item in Items)
-				_indexMap.Add(item.Key);
-		}
-
-		public override void ReorderItem(int from, int to)
-		{
-		}
+		public bool IsReorderable => false;
+		public void ReorderItem(int from, int to) { }
 	}
 
-	public class PropertyDictionaryProxy : DictionaryProxy
+	public class PropertyDictionaryProxy : IDictionaryProxy
 	{
-		public Func<string, bool> CanAddCallback;
+		public Func<string, bool> CanAddKeyCallback;
+		public Func<Type, bool> CanAddTypeCallback;
 		public Func<string, bool> CanRemoveCallback;
 
 		private readonly SerializedProperty _property;
@@ -192,23 +122,25 @@ namespace PiRhoSoft.Utilities.Editor
 			_drawer = drawer;
 		}
 
-		public override VisualElement CreateElement(int index)
+		public VisualElement CreateElement(int index, string key)
 		{
-			var key = _keysProperty.GetArrayElementAtIndex(index);
 			var value = _valuesProperty.GetArrayElementAtIndex(index);
 			var field = _drawer?.CreatePropertyGUI(value) ?? value.CreateField();
 
-			if (field == null) // this happens when a ManagedReference type name changes
-				return new VisualElement();
-
-			field.userData = index;
 			field.Bind(_property.serializedObject);
-			field.SetFieldLabel(key.stringValue); // TODO: for references this should include the type name
+
+			if (string.IsNullOrEmpty(key))
+				key = " "; // An empty label will cause the label to be removed
+
+			field.SetFieldLabel(key); // TODO: for references this should include the type name
 
 			return field;
 		}
 
-		public override bool CanAdd(string key)
+		public int Count => _keysProperty.arraySize;
+		public string GetKey(int index) => _keysProperty.GetArrayElementAtIndex(index).stringValue;
+
+		public bool CanAdd(string key)
 		{
 			for (var i = 0; i < _keysProperty.arraySize; i++)
 			{
@@ -217,66 +149,74 @@ namespace PiRhoSoft.Utilities.Editor
 					return false;
 			}
 
-			return CanAddCallback != null
-				? CanAddCallback.Invoke(key)
-				: base.CanAdd(key);
+			return CanAddKeyCallback != null
+				? CanAddKeyCallback.Invoke(key)
+				: true;
 		}
 
-		public override bool CanRemove(int index)
+		public bool CanAdd(Type type)
 		{
-			var property = _keysProperty.GetArrayElementAtIndex(index);
+			return type != null && CanAddTypeCallback != null
+				? CanAddTypeCallback.Invoke(type)
+				: true;
+		}
 
+		public bool AddItem(string key, Type type)
+		{
+			try
+			{
+				var newSize = _keysProperty.arraySize + 1;
+				_valuesProperty.ResizeArray(newSize);
+
+				if (type != null)
+				{
+					var newValue = Activator.CreateInstance(type);
+					var valueProperty = _valuesProperty.GetArrayElementAtIndex(newSize - 1);
+
+					if (!valueProperty.TrySetValue(newValue))
+					{
+						_valuesProperty.arraySize = newSize - 1;
+						return false;
+					}
+				}
+
+				_keysProperty.arraySize = newSize;
+				var newItem = _keysProperty.GetArrayElementAtIndex(newSize - 1);
+				newItem.stringValue = key;
+
+				_property.serializedObject.ApplyModifiedProperties(); // TODO: not applying new reference values for some reason
+				return true;
+			}
+			catch
+			{
+				// Technically a user could do something really wierd like set the item type on the DictionaryField
+				// to Float when the property is actually a string
+
+				// TODO: this also happens if the type is not Serializable (_valuesProperty will be null)
+				return false;
+			}
+		}
+
+		public bool CanRemove(int index, string key)
+		{
 			return CanRemoveCallback != null
-				? CanRemoveCallback.Invoke(property.stringValue)
-				: base.CanRemove(index);
+				? CanRemoveCallback.Invoke(key)
+				: true;
 		}
 
-		public override int ItemCount
-		{
-			get => _keysProperty.arraySize;
-		}
-
-		public override string GetKey(int index)
-		{
-			return index >= 0 && index < _keysProperty.arraySize
-				? _keysProperty.GetArrayElementAtIndex(index).stringValue
-				: string.Empty;
-		}
-
-		public override void AddItem(string key)
-		{
-			PushItem(key);
-			_property.serializedObject.ApplyModifiedProperties();
-		}
-
-		public override void AddItem(string key, object item)
-		{
-			var index = PushItem(key);
-			_valuesProperty.GetArrayElementAtIndex(index).TrySetValue(item);
-			_property.serializedObject.ApplyModifiedProperties();
-		}
-
-		private int PushItem(string key)
-		{
-			var newSize = _keysProperty.arraySize + 1;
-
-			_keysProperty.arraySize = newSize;
-			_valuesProperty.ResizeArray(newSize);
-
-			var newItem = _keysProperty.GetArrayElementAtIndex(newSize - 1);
-			newItem.stringValue = key;
-
-			return newSize - 1;
-		}
-
-		public override void RemoveItem(int index)
+		public void RemoveItem(int index, string key)
 		{
 			_keysProperty.RemoveFromArray(index);
 			_valuesProperty.RemoveFromArray(index);
 			_property.serializedObject.ApplyModifiedProperties();
 		}
 
-		public override void ReorderItem(int from, int to)
+		public bool IsReorderable
+		{
+			get => true;
+		}
+
+		public void ReorderItem(int from, int to)
 		{
 			_keysProperty.MoveArrayElement(from, to);
 			_valuesProperty.MoveArrayElement(from, to);

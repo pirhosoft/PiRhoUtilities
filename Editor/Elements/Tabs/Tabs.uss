@@ -38,12 +38,12 @@
 	background-color: #C2C2C2;
 }
 
-.pirho-tabs__tab__content
+.pirho-tabs__page
 {
 	display: none;
 }
 
-.pirho-tabs__tab__content--selected
+.pirho-tabs__page--selected
 {
 	display: flex;
 }

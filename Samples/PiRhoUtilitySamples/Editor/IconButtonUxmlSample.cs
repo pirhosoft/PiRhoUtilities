@@ -1,4 +1,6 @@
-﻿using UnityEngine.UIElements;
+﻿using PiRhoSoft.Utilities.Editor;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Samples
 {
@@ -6,6 +8,10 @@ namespace PiRhoSoft.Utilities.Samples
 	{
 		public override void Setup(VisualElement root)
 		{
+			root.Query<IconButton>().ForEach(button =>
+			{
+				button.SetAction(() => Debug.Log($"{button.image.name} Pressed"));
+			});
 		}
 	}
 }

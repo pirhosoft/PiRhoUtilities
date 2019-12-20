@@ -52,7 +52,7 @@ namespace PiRhoSoft.Utilities
 		[Validate(nameof(CharChanged), "Character cant be 'A'")] public char Character = 'A';
 		[Validate(nameof(AnimationChanged), "Animation must have more than 0 keys")] public AnimationCurve AnimationCurve;
 		[Validate(nameof(GradientChanged), "Gradient must be in Blend mode")] public Gradient Gradient;
-		[Validate(nameof(QuaternionChanged), "Quaternion can only have z rotation")] public Quaternion Quaternion;
+		[Validate(nameof(QuaternionChanged), "Quaternion can only have z rotation")] [Euler] public Quaternion Quaternion;
 		[Validate(nameof(ReferenceChanged), "Object cannot be null")] [SerializeReference] [Reference] public IAnimal ManagedReference = new Dog();
 
 		private bool IntChanged(int value) => value > 3;
@@ -61,7 +61,7 @@ namespace PiRhoSoft.Utilities
 		private bool StringChanged(string value) => !string.IsNullOrEmpty(value);
 		private bool ColorChanged(Color value) => value.r > 0;
 		private bool ObjectChanged(Object value) => value;
-		private bool LayerChanged(LayerMask value) => value > 0;
+		private bool LayerChanged(int value) => value > 0;
 		private bool EnumChanged(Enum value) => (Animal)Enum.Parse(typeof(Animal), value.ToString()) == Animal.Dog;
 		private bool Vector2Changed(Vector2 value) => value.x > 1;
 		private bool Vector2IntChanged(Vector2Int value) => value.x > 1;
