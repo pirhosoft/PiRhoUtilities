@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -14,9 +15,11 @@ namespace PiRhoSoft.Utilities.Editor
 			if (property.propertyType == SerializedPropertyType.Enum)
 			{
 				var flags = attribute as EnumButtonsAttribute;
+				var fieldType = this.GetFieldType();
 				var field = new EnumButtonsField
 				{
-					Type = this.GetFieldType()
+					Type = fieldType,
+					value = Enum.ToObject(fieldType, property.intValue) as Enum
 				};
 
 				if (flags.Flags.HasValue)
