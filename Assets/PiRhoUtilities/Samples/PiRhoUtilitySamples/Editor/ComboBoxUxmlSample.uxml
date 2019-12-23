@@ -5,4 +5,6 @@
 	xmlns:pirho="PiRhoSoft.Utilities.Editor"
 	xsi:noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
 	xsi:schemaLocation="UnityEngine.UIElements ../UIElementsSchema/UnityEngine.UIElements.xsd">
+
+	<pirho:ComboBoxField label="Ice Cream" is-delayed="true" options="Chocolate,Vanilla,Rocky Road,Cookies and Cream,Mint Chocolate Chip,Moose Tracks"></pirho:ComboBoxField>
 </UXML>
