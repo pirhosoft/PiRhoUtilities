@@ -14,16 +14,16 @@ namespace PiRhoSoft.Utilities.Editor
 			var element = this.CreateNextElement(property);
 			var inspectAttribute = attribute as InspectTriggerAttribute;
 
-			var method = ReflectionHelper.CreateActionCallback(property, fieldInfo.DeclaringType, inspectAttribute.Method, nameof(InspectTriggerAttribute), nameof(InspectTriggerAttribute.Method));
+			var method = ReflectionHelper.CreateActionCallback(inspectAttribute.Method, fieldInfo.DeclaringType, property);
 
-			if (method == null)
-			{
-				Debug.LogWarningFormat(_invalidMethodWarning, property.propertyPath, inspectAttribute.Method, fieldInfo.DeclaringType.Name);
-			}
-			else
+			if (method != null)
 			{
 				if (!EditorApplication.isPlaying)
 					method.Invoke();
+			}
+			else
+			{
+				Debug.LogWarningFormat(_invalidMethodWarning, property.propertyPath, inspectAttribute.Method, fieldInfo.DeclaringType.Name);
 			}
 
 			return element;

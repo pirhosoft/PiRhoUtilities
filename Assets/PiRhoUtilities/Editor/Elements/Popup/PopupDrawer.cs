@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -10,6 +9,8 @@ namespace PiRhoSoft.Utilities.Editor
 	class PopupDrawer : PropertyDrawer
 	{
 		private const string _invalidTypeError = "(PUPDIT) invalid type for PopupAttribute on field '{0}': Popup can only be applied to int, float, or string fields";
+		private const string _invalidValuesSourceError = "(PUPDIVS) invalid value source for PopupAttribute on field '{0}': a field, method, or property of type '{1}' named '{2}' could not be found";
+		private const string _invalidOptionsSourceError = "(PUPDIOS) invalid value source for PopupAttribute on field '{0}': a string field, method, or property named '{1}' could not be found";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -31,8 +32,14 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			var popup = new PopupField<T>();
 
-			ReflectionHelper.SetupValueSourceCallback<IList<T>>(popupAttribute.ValuesSource, property, popup, fieldInfo.DeclaringType, defaultValues, popupAttribute.AutoUpdate, nameof(PopupAttribute), nameof(PopupAttribute.ValuesSource), values => popup.Values = values.ToList());
-			ReflectionHelper.SetupValueSourceCallback<IList<string>>(popupAttribute.OptionsSource, property, popup, fieldInfo.DeclaringType, popupAttribute.Options, popupAttribute.AutoUpdate, nameof(PopupAttribute), nameof(PopupAttribute.OptionsSource), options => popup.Options = options.ToList());
+			void setValues(List<T> values) => popup.Values = values;
+			void setOptions(List<string> options) => popup.Options = options;
+
+			if (!ReflectionHelper.SetupValueSourceCallback(popupAttribute.ValuesSource, fieldInfo.DeclaringType, property, popup, defaultValues, popupAttribute.AutoUpdate, setValues))
+				Debug.LogWarningFormat(_invalidValuesSourceError, property.propertyPath, nameof(T), popupAttribute.ValuesSource);
+
+			if (!ReflectionHelper.SetupValueSourceCallback(popupAttribute.OptionsSource, fieldInfo.DeclaringType, property, popup, popupAttribute.Options, popupAttribute.AutoUpdate, setOptions))
+				Debug.LogWarningFormat(_invalidOptionsSourceError, property.propertyPath, popupAttribute.OptionsSource);
 
 			return popup.ConfigureProperty(property);
 		}

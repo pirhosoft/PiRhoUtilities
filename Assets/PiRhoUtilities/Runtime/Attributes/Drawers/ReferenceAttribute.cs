@@ -2,7 +2,9 @@
 {
 	public class ReferenceAttribute : PropertyTraitAttribute
 	{
-		public ReferenceAttribute() : base(ContainerPhase, 0)
+		public bool IsCollapsable = true;
+
+		public ReferenceAttribute() : base(ControlPhase, 0)
 		{
 		}
 	}

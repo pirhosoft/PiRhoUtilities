@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,6 +9,7 @@ namespace PiRhoSoft.Utilities.Editor
 	class MinimumDrawer : PropertyDrawer
 	{
 		private const string _invalidTypeWarning = "(PUMNDIT) invalid type for MinimumAttribute on field {0}: Minimum can only be applied to int or float fields";
+		private const string _invalidSourceError = "(PUMXDIS) invalid source for MinimumAttribute on field '{0}': a field, method, or property of type '{1}' named '{2}' could not be found";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -15,34 +17,37 @@ namespace PiRhoSoft.Utilities.Editor
 			var element = this.CreateNextElement(property);
 
 			if (property.propertyType == SerializedPropertyType.Integer)
-			{
-				var min = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, minimumAttribute.MinimumSource, Mathf.RoundToInt(minimumAttribute.Minimum), nameof(MinimumAttribute), nameof(MinimumAttribute.MinimumSource));
-
-				Clamp(property, min());
-				element.RegisterCallback<FocusOutEvent>(e => Clamp(property, min()));
-			}
+				SetupMinimum(minimumAttribute.MinimumSource, property, element, Mathf.RoundToInt(minimumAttribute.Minimum), ClampInt);
 			else if (property.propertyType == SerializedPropertyType.Float)
-			{
-				var min = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, minimumAttribute.MinimumSource, minimumAttribute.Minimum, nameof(MinimumAttribute), nameof(MinimumAttribute.MinimumSource));
-
-				Clamp(property, min());
-				element.RegisterCallback<FocusOutEvent>(e => Clamp(property, min()));
-			}
+				SetupMinimum(minimumAttribute.MinimumSource, property, element, minimumAttribute.Minimum, ClampFloat);
 			else
-			{
 				Debug.LogWarningFormat(property.serializedObject.targetObject, _invalidTypeWarning, property.propertyPath);
-			}
 
 			return element;
 		}
 
-		private void Clamp(SerializedProperty property, int minimum)
+		private void SetupMinimum<T>(string sourceName, SerializedProperty property, VisualElement element, T defaultValue, Action<SerializedProperty, T> clamp)
+		{
+			var min = ReflectionHelper.CreateValueSourceFunction(sourceName, property, element, fieldInfo.DeclaringType, defaultValue);
+
+			if (min != null)
+			{
+				clamp(property, min());
+				element.RegisterCallback<FocusOutEvent>(e => clamp(property, min()));
+			}
+			else
+			{
+				Debug.LogWarningFormat(_invalidSourceError, property.propertyPath, nameof(T), sourceName);
+			}
+		}
+
+		private void ClampInt(SerializedProperty property, int minimum)
 		{
 			property.intValue = Mathf.Max(minimum, property.intValue);
 			property.serializedObject.ApplyModifiedProperties();
 		}
 
-		private void Clamp(SerializedProperty property, float minimum)
+		private void ClampFloat(SerializedProperty property, float minimum)
 		{
 			property.floatValue = Mathf.Max(minimum, property.floatValue);
 			property.serializedObject.ApplyModifiedProperties();

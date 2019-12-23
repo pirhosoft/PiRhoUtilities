@@ -1,8 +1,5 @@
-﻿using System;
-
-namespace PiRhoSoft.Utilities
+﻿namespace PiRhoSoft.Utilities
 {
-	[AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
 	public class ButtonAttribute : PropertyTraitAttribute
 	{
 		public string Method { get; private set; }

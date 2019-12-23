@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -7,7 +8,8 @@ namespace PiRhoSoft.Utilities.Editor
 	[CustomPropertyDrawer(typeof(SnapAttribute))]
 	class SnapDrawer : PropertyDrawer
 	{
-		private const string _invalidTypeWarning = "(PUSDIT) invalid type for SnapAttribute on field {0}: Snap can only be applied to int, float, vector, rect, or bounds fields";
+		private const string _invalidTypeWarning = "(PUSNDIT) invalid type for SnapAttribute on field {0}: Snap can only be applied to int, float, vector, rect, or bounds fields";
+		private const string _invalidSourceError = "(PUSNDIS) invalid source for SnapAttribute on field '{0}': a field, method, or property of type '{1}' named '{2}' could not be found";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -16,94 +18,17 @@ namespace PiRhoSoft.Utilities.Editor
 
 			switch (property.propertyType)
 			{
-				case SerializedPropertyType.Integer:
-				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, Mathf.RoundToInt(snapAttribute.Number), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
-
-					Snap(property, snap());
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
-					break;
-				}
-				case SerializedPropertyType.Float:
-				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, snapAttribute.Number, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
-
-					Snap(property, snap());
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
-					break;
-				}
-				case SerializedPropertyType.Vector2:
-				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, (Vector2)snapAttribute.Vector, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
-
-					Snap(property, snap());
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
-					break;
-				}
-				case SerializedPropertyType.Vector2Int:
-				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, Vector2Int.RoundToInt(snapAttribute.Vector), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
-
-					Snap(property, snap());
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
-					break;
-				}
-				case SerializedPropertyType.Vector3:
-				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, (Vector3)snapAttribute.Vector, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
-
-					Snap(property, snap());
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
-					break;
-				}
-				case SerializedPropertyType.Vector3Int:
-				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, Vector3Int.RoundToInt(snapAttribute.Vector), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
-
-					Snap(property, snap());
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
-					break;
-				}
-				case SerializedPropertyType.Vector4:
-				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, snapAttribute.Vector, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
-
-					Snap(property, snap());
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
-					break;
-				}
-				case SerializedPropertyType.Rect:
-				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, new Rect(snapAttribute.Vector.x, snapAttribute.Vector.y, snapAttribute.Vector.y, snapAttribute.Vector.w), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
-
-					Snap(property, snap());
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
-					break;
-				}
-				case SerializedPropertyType.RectInt:
-				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, new RectInt(Mathf.RoundToInt(snapAttribute.Vector.x), Mathf.RoundToInt(snapAttribute.Vector.y), Mathf.RoundToInt(snapAttribute.Vector.y), Mathf.RoundToInt(snapAttribute.Vector.w)), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
-
-					Snap(property, snap());
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
-					break;
-				}
-				case SerializedPropertyType.Bounds:
-				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, snapAttribute.Bounds, nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
-
-					Snap(property, snap());
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
-					break;
-				}
-				case SerializedPropertyType.BoundsInt:
-				{
-					var snap = ReflectionHelper.CreateValueSourceFunction(property, element, fieldInfo.DeclaringType, snapAttribute.SnapSource, new BoundsInt(Vector3Int.RoundToInt(snapAttribute.Bounds.center), Vector3Int.RoundToInt(snapAttribute.Bounds.extents)), nameof(SnapAttribute), nameof(SnapAttribute.SnapSource));
-
-					Snap(property, snap());
-					element.RegisterCallback<FocusOutEvent>(e => Snap(property, snap()));
-					break;
-				}
+				case SerializedPropertyType.Integer: SetupSnap(snapAttribute.SnapSource, property, element, Mathf.RoundToInt(snapAttribute.Number), SnapInt); break;
+				case SerializedPropertyType.Float: SetupSnap(snapAttribute.SnapSource, property, element, snapAttribute.Number, SnapFloat); break;
+				case SerializedPropertyType.Vector2: SetupSnap(snapAttribute.SnapSource, property, element, (Vector2)snapAttribute.Vector, SnapVector2); break;
+				case SerializedPropertyType.Vector2Int: SetupSnap(snapAttribute.SnapSource, property, element, Vector2Int.RoundToInt(snapAttribute.Vector), SnapVector2Int); break;
+				case SerializedPropertyType.Vector3: SetupSnap(snapAttribute.SnapSource, property, element, (Vector3)snapAttribute.Vector, SnapVector3); break;
+				case SerializedPropertyType.Vector3Int: SetupSnap(snapAttribute.SnapSource, property, element, Vector3Int.RoundToInt(snapAttribute.Vector), SnapVector3Int); break;
+				case SerializedPropertyType.Vector4: SetupSnap(snapAttribute.SnapSource, property, element, snapAttribute.Vector, SnapVector4); break;
+				case SerializedPropertyType.Rect: SetupSnap(snapAttribute.SnapSource, property, element, new Rect(snapAttribute.Vector.x, snapAttribute.Vector.y, snapAttribute.Vector.y, snapAttribute.Vector.w), SnapRect); break;
+				case SerializedPropertyType.RectInt: SetupSnap(snapAttribute.SnapSource, property, element, new RectInt(Mathf.RoundToInt(snapAttribute.Vector.x), Mathf.RoundToInt(snapAttribute.Vector.y), Mathf.RoundToInt(snapAttribute.Vector.y), Mathf.RoundToInt(snapAttribute.Vector.w)), SnapRectInt); break;
+				case SerializedPropertyType.Bounds: SetupSnap(snapAttribute.SnapSource, property, element, snapAttribute.Bounds, SnapBounds); break;
+				case SerializedPropertyType.BoundsInt: SetupSnap(snapAttribute.SnapSource, property, element, new BoundsInt(Vector3Int.RoundToInt(snapAttribute.Bounds.center), Vector3Int.RoundToInt(snapAttribute.Bounds.extents)), SnapBoundsInt); break;
 				default:
 				{
 					Debug.LogWarningFormat(property.serializedObject.targetObject, _invalidTypeWarning, property.propertyPath);
@@ -114,19 +39,34 @@ namespace PiRhoSoft.Utilities.Editor
 			return element;
 		}
 
-		private void Snap(SerializedProperty property, int snap)
+		private void SetupSnap<T>(string sourceName, SerializedProperty property, VisualElement element, T defaultValue, Action<SerializedProperty, T> clamp)
+		{
+			var snap = ReflectionHelper.CreateValueSourceFunction(sourceName, property, element, fieldInfo.DeclaringType, defaultValue);
+
+			if (snap != null)
+			{
+				clamp(property, snap());
+				element.RegisterCallback<FocusOutEvent>(e => clamp(property, snap()));
+			}
+			else
+			{
+				Debug.LogWarningFormat(_invalidSourceError, property.propertyPath, nameof(T), sourceName);
+			}
+		}
+
+		private void SnapInt(SerializedProperty property, int snap)
 		{
 			property.intValue = Snap(property.intValue, snap);
 			property.serializedObject.ApplyModifiedProperties();
 		}
 
-		private void Snap(SerializedProperty property, float snap)
+		private void SnapFloat(SerializedProperty property, float snap)
 		{
 			property.floatValue = Snap(property.floatValue, snap);
 			property.serializedObject.ApplyModifiedProperties();
 		}
 
-		private void Snap(SerializedProperty property, Vector2 snap)
+		private void SnapVector2(SerializedProperty property, Vector2 snap)
 		{
 			var x = Snap(property.vector2Value.x, snap.x);
 			var y = Snap(property.vector2Value.y, snap.y);
@@ -135,7 +75,7 @@ namespace PiRhoSoft.Utilities.Editor
 			property.serializedObject.ApplyModifiedProperties();
 		}
 
-		private void Snap(SerializedProperty property, Vector2Int snap)
+		private void SnapVector2Int(SerializedProperty property, Vector2Int snap)
 		{
 			var x = Snap(property.vector2IntValue.x, snap.x);
 			var y = Snap(property.vector2IntValue.y, snap.y);
@@ -144,7 +84,7 @@ namespace PiRhoSoft.Utilities.Editor
 			property.serializedObject.ApplyModifiedProperties();
 		}
 
-		private void Snap(SerializedProperty property, Vector3 snap)
+		private void SnapVector3(SerializedProperty property, Vector3 snap)
 		{
 			var x = Snap(property.vector3Value.x, snap.x);
 			var y = Snap(property.vector3Value.y, snap.y);
@@ -154,7 +94,7 @@ namespace PiRhoSoft.Utilities.Editor
 			property.serializedObject.ApplyModifiedProperties();
 		}
 
-		private void Snap(SerializedProperty property, Vector3Int snap)
+		private void SnapVector3Int(SerializedProperty property, Vector3Int snap)
 		{
 			var x = Snap(property.vector3IntValue.x, snap.x);
 			var y = Snap(property.vector3IntValue.y, snap.y);
@@ -164,7 +104,7 @@ namespace PiRhoSoft.Utilities.Editor
 			property.serializedObject.ApplyModifiedProperties();
 		}
 
-		private void Snap(SerializedProperty property, Vector4 snap)
+		private void SnapVector4(SerializedProperty property, Vector4 snap)
 		{
 			var x = Snap(property.vector4Value.x, snap.x);
 			var y = Snap(property.vector4Value.y, snap.y);
@@ -175,7 +115,7 @@ namespace PiRhoSoft.Utilities.Editor
 			property.serializedObject.ApplyModifiedProperties();
 		}
 
-		private void Snap(SerializedProperty property, Rect snap)
+		private void SnapRect(SerializedProperty property, Rect snap)
 		{
 			var x = Snap(property.rectValue.x, snap.x);
 			var y = Snap(property.rectValue.y, snap.y);
@@ -186,7 +126,7 @@ namespace PiRhoSoft.Utilities.Editor
 			property.serializedObject.ApplyModifiedProperties();
 		}
 
-		private void Snap(SerializedProperty property, RectInt snap)
+		private void SnapRectInt(SerializedProperty property, RectInt snap)
 		{
 			var x = Snap(property.rectIntValue.x, snap.x);
 			var y = Snap(property.rectIntValue.y, snap.y);
@@ -197,7 +137,7 @@ namespace PiRhoSoft.Utilities.Editor
 			property.serializedObject.ApplyModifiedProperties();
 		}
 
-		private void Snap(SerializedProperty property, Bounds snap)
+		private void SnapBounds(SerializedProperty property, Bounds snap)
 		{
 			var x = Snap(property.boundsValue.center.x, snap.center.x);
 			var y = Snap(property.boundsValue.center.y, snap.center.y);
@@ -206,11 +146,12 @@ namespace PiRhoSoft.Utilities.Editor
 			var height = Snap(property.boundsValue.extents.y, snap.extents.y);
 			var depth = Snap(property.boundsValue.extents.z, snap.extents.z);
 
-			property.boundsValue = new Bounds(new Vector3(x, y, z), new Vector3(width, height, depth));
+			// Multiply by 2 because the editor displays extents which is half of size
+			property.boundsValue = new Bounds(new Vector3(x, y, z), new Vector3(width * 2, height * 2, depth * 2));
 			property.serializedObject.ApplyModifiedProperties();
 		}
 
-		private void Snap(SerializedProperty property, BoundsInt snap)
+		private void SnapBoundsInt(SerializedProperty property, BoundsInt snap)
 		{
 			var x = Snap(property.boundsIntValue.x, snap.x);
 			var y = Snap(property.boundsIntValue.y, snap.y);

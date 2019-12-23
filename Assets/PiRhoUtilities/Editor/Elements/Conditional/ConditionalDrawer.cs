@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
@@ -9,46 +10,39 @@ namespace PiRhoSoft.Utilities.Editor
 	class ConditionalDrawer : PropertyDrawer
 	{
 		public const string UssClassName = "pirho-conditional";
+		private const string _invalidSourceError = "(PUCDDIS) invalid value source for ConditionalAttribute on field '{0}': a field, method, or property of type '{1}' named '{2}' could not be found";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
+			var conditionalAttribute = attribute as ConditionalAttribute;
 			var element = this.CreateNextElement(property);
-			SetupCondition(element, property);
 			element.AddToClassList(UssClassName);
+
+			if (!SetupCondition(element, property, conditionalAttribute))
+				Debug.LogWarningFormat(_invalidSourceError, property.propertyPath, conditionalAttribute.Type.ToString(), conditionalAttribute.ValueSource);
+
 			return element;
 		}
 
-		private void SetupCondition(VisualElement element, SerializedProperty property)
+		private bool SetupCondition(VisualElement element, SerializedProperty property, ConditionalAttribute conditionalAttribute)
 		{
-			var conditionalAttribute = attribute as ConditionalAttribute;
-
 			switch (conditionalAttribute.Type)
 			{
 				case ConditionalAttribute.TestType.Bool:
-					ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, property, element, fieldInfo.DeclaringType, true, true, nameof(ConditionalAttribute), nameof(ConditionalAttribute.ValueSource),
-						value => UpdateBoolVisibility(element, value, conditionalAttribute.BoolTest));
-					break;
+					return ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, fieldInfo.DeclaringType, property, element, true, true, value => UpdateBoolVisibility(element, value, conditionalAttribute.BoolTest));
 				case ConditionalAttribute.TestType.Int:
-					ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, property, element, fieldInfo.DeclaringType, 0, true, nameof(ConditionalAttribute), nameof(ConditionalAttribute.ValueSource),
-						value => UpdateNumberVisibility(element, value, conditionalAttribute.IntValue, conditionalAttribute.NumberTest));
-					break;
+					return ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, fieldInfo.DeclaringType, property, element, 0, true, value => UpdateNumberVisibility(element, value, conditionalAttribute.IntValue, conditionalAttribute.NumberTest));
 				case ConditionalAttribute.TestType.Float:
-					ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, property, element, fieldInfo.DeclaringType, 0.0f, true, nameof(ConditionalAttribute), nameof(ConditionalAttribute.ValueSource),
-						value => UpdateNumberVisibility(element, value, conditionalAttribute.FloatValue, conditionalAttribute.NumberTest));
-					break;
+					return ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, fieldInfo.DeclaringType, property, element, 0.0f, true, value => UpdateNumberVisibility(element, value, conditionalAttribute.FloatValue, conditionalAttribute.NumberTest));
 				case ConditionalAttribute.TestType.String:
-					ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, property, element, fieldInfo.DeclaringType, string.Empty, true, nameof(ConditionalAttribute), nameof(ConditionalAttribute.ValueSource),
-						value => UpdateStringVisibility(element, value, conditionalAttribute.StringValue, conditionalAttribute.StringTest));
-					break;
+					return ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, fieldInfo.DeclaringType, property, element, string.Empty, true, value => UpdateStringVisibility(element, value, conditionalAttribute.StringValue, conditionalAttribute.StringTest));
 				case ConditionalAttribute.TestType.Enum:
-					ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, property, element, fieldInfo.DeclaringType, default(Enum), true, nameof(ConditionalAttribute), nameof(ConditionalAttribute.ValueSource),
-						value => UpdateEnumVisibility(element, value, conditionalAttribute.IntValue, conditionalAttribute.EnumTest));
-					break;
+					return ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, fieldInfo.DeclaringType, property, element, default(Enum), true, value => UpdateEnumVisibility(element, value, conditionalAttribute.IntValue, conditionalAttribute.EnumTest));
 				case ConditionalAttribute.TestType.Object:
-					ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, property, element, fieldInfo.DeclaringType, (Object)null, true, nameof(ConditionalAttribute), nameof(ConditionalAttribute.ValueSource),
-						value => UpdateObjectVisibility(element, value, conditionalAttribute.ObjectTest));
-					break;
+					return ReflectionHelper.SetupValueSourceCallback(conditionalAttribute.ValueSource, fieldInfo.DeclaringType, property, element, (Object)null, true, value => UpdateObjectVisibility(element, value, conditionalAttribute.ObjectTest));
 			}
+
+			return false;
 		}
 
 		private static void UpdateBoolVisibility(VisualElement element, bool value, BoolTest test)
@@ -80,16 +74,12 @@ namespace PiRhoSoft.Utilities.Editor
 
 			switch (test)
 			{
-				case StringTest.ShowIfEqual: visible = value == comparison; break;
-				case StringTest.ShowIfInequal: visible = value != comparison; break;
-				case StringTest.ShowIfEmpty: visible = string.IsNullOrEmpty(value); break;
-				case StringTest.ShowIfNotEmpty: visible = string.IsNullOrEmpty(value); break;
+				case StringTest.ShowIfSame: visible = value == comparison; break;
+				case StringTest.ShowIfDifferent: visible = value != comparison; break;
 			}
-
 
 			element.SetDisplayed(visible);
 		}
-
 
 		private static void UpdateEnumVisibility(VisualElement element, Enum value, int comparison, EnumTest test)
 		{

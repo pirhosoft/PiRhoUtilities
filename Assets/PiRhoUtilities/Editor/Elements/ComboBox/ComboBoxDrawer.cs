@@ -10,6 +10,7 @@ namespace PiRhoSoft.Utilities.Editor
 	class ComboBoxDrawer : PropertyDrawer
 	{
 		private const string _invalidTypeError = "(PUCBDIT) invalid type for ComboBoxAttribute on field '{0}': ComboBox can only be applied to string fields";
+		private const string _invalidOptionsError = "(PUCBDIO) invalid options source for ComboBoxAttribute on field '{0}': a List<string> field, method, or property nameed '{1}' could not be found";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -18,7 +19,10 @@ namespace PiRhoSoft.Utilities.Editor
 				var comboBoxAttribute = attribute as ComboBoxAttribute;
 				var comboBox = new ComboBoxField();
 
-				ReflectionHelper.SetupValueSourceCallback<IEnumerable<string>>(comboBoxAttribute.OptionsSource, property, comboBox, fieldInfo.DeclaringType, comboBoxAttribute.Options, comboBoxAttribute.AutoUpdate, nameof(ComboBoxAttribute), nameof(ComboBoxAttribute.OptionsSource), options => comboBox.Options = options.ToList());
+				void options(IEnumerable<string> value) => comboBox.Options = value.ToList();
+
+				if (!ReflectionHelper.SetupValueSourceCallback(comboBoxAttribute.OptionsSource, fieldInfo.DeclaringType, property, comboBox, comboBoxAttribute.Options, comboBoxAttribute.AutoUpdate, options))
+					Debug.LogWarningFormat(_invalidOptionsError, property.propertyPath, comboBoxAttribute.OptionsSource);
 
 				return comboBox.ConfigureProperty(property);
 			}
