@@ -216,7 +216,7 @@ namespace PiRhoSoft.Utilities.Editor
 				var valueName = _value.GetValueFromBag(bag, cc);
 
 				if (!string.IsNullOrEmpty(typeName))
-					field.Type = Type.GetType(typeName, false);
+					field.Type = TypeHelper.FindType(typeName);
 
 				if (!string.IsNullOrEmpty(valueName))
 					field.SetValueWithoutNotify(AssetDatabase.LoadAssetAtPath(valueName, field.Type));
