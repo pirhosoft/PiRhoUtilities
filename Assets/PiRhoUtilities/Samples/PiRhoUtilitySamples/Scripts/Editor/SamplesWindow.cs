@@ -74,7 +74,7 @@ namespace PiRhoSoft.Utilities.Samples
 		private void OnEnable()
 		{
 			if (string.IsNullOrEmpty(RootPath))
-				RootPath = AssetHelper.FindEditorPath(nameof(SamplesWindow), "PiRhoUtilitySamples/Editor/", "");
+				RootPath = AssetHelper.FindEditorPath(nameof(SamplesWindow), "PiRhoUtilitySamples/Scripts/Editor/", "");
 
 			rootVisualElement.AddUxml(RootPath, Uxml);
 			rootVisualElement.AddStyleSheet(RootPath, Stylesheet);
