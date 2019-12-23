@@ -6,8 +6,8 @@ namespace PiRhoSoft.Utilities.Editor
 {
 	public class PropertyReferenceDrawer : IReferenceDrawer
 	{
-		private SerializedProperty _property;
-		private PropertyDrawer _drawer;
+		private readonly SerializedProperty _property;
+		private readonly PropertyDrawer _drawer;
 
 		public PropertyReferenceDrawer(SerializedProperty property, PropertyDrawer drawer)
 		{

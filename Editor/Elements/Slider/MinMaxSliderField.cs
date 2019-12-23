@@ -16,16 +16,16 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#endregion
 
-		public new float Minimum
+		public float MinimumLimit
 		{
-			get => _control.Minimum.x;
-			set => _control.Minimum = new Vector2(value, rawValue.x);
+			get => Minimum.x;
+			set => Minimum = new Vector2(value, rawValue.x);
 		}
 
-		public new float Maximum
+		public float MaximumLimit
 		{
-			get => _control.Maximum.y;
-			set => _control.Maximum = new Vector2(rawValue.y, value);
+			get => Maximum.y;
+			set => Maximum = new Vector2(rawValue.y, value);
 		}
 
 		public MinMaxSliderField() : this(null)
@@ -38,8 +38,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public MinMaxSliderField(string label, float min, float max) : this(label)
 		{
-			Minimum = min;
-			Maximum = max;
+			MinimumLimit = min;
+			MaximumLimit = max;
 		}
 
 		public MinMaxSliderField(float min, float max) : this(null, min, max)
@@ -99,8 +99,8 @@ namespace PiRhoSoft.Utilities.Editor
 				var field = element as MinMaxSliderField;
 				var maxValue = _minValue.GetValueFromBag(bag, cc);
 				var minValue = _maxValue.GetValueFromBag(bag, cc);
-				field.Minimum = _minimum.GetValueFromBag(bag, cc);
-				field.Maximum = _maximum.GetValueFromBag(bag, cc);
+				field.MinimumLimit = _minimum.GetValueFromBag(bag, cc);
+				field.MaximumLimit = _maximum.GetValueFromBag(bag, cc);
 
 				field.SetValueWithoutNotify(new Vector2(minValue, maxValue));
 			}

@@ -1,0 +1,36 @@
+﻿.pirho-trait-message
+{
+	flex-direction: column;
+}
+
+.pirho-trait-message--side
+{
+	flex-direction: row;
+}
+
+.pirho-trait-message--side > *
+{
+	flex-grow: 1;
+}
+
+.pirho-trait-message__message-box
+{
+}
+
+.pirho-trait-message__message-box--above
+{
+}
+
+.pirho-trait-message__message-box--below
+{
+}
+
+.pirho-trait-message__message-box--left
+{
+	margin-right: 0px;
+}
+
+.pirho-trait-message__message-box--right
+{
+	margin-left: 0px;
+}

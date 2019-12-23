@@ -2,11 +2,19 @@
 {
 	public class MaximumLengthAttribute : PropertyTraitAttribute
 	{
-		public int Length { get; private set; }
+		public int MaximumLength { get; private set; }
+		public string MaximumLengthSource { get; private set; }
+		public bool AutoUpdate { get; private set; }
 
-		public MaximumLengthAttribute(int length) : base(ValidatePhase, 1)
+		public MaximumLengthAttribute(int maximumLength) : base(ValidatePhase, 1)
 		{
-			Length = length;
+			MaximumLength = maximumLength;
+		}
+
+		public MaximumLengthAttribute(string maximumLengthSource, bool autoUpdate = true) : base(ValidatePhase, 1)
+		{
+			MaximumLengthSource = maximumLengthSource;
+			AutoUpdate = autoUpdate;
 		}
 	}
 }

@@ -30,6 +30,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 				var field = new ListField();
 				field.SetProxy(proxy, referenceType, true);
+				field.IsCollapsable = listAttribute.IsCollapsable;
 				field.bindingPath = property.propertyPath;
 				// TODO: other stuff from ConfigureField
 
@@ -59,22 +60,20 @@ namespace PiRhoSoft.Utilities.Editor
 			if (field.AllowAdd)
 			{
 				if (!string.IsNullOrEmpty(listAttribute.AllowAdd))
-				{
-					proxy.CanAddCallback = ReflectionHelper.CreateValueSourceFunction(property, field, declaringType, listAttribute.AllowAdd, true, nameof(ListAttribute), nameof(ListAttribute.AllowAdd));
-				}
+					proxy.CanAddCallback = ReflectionHelper.CreateValueSourceFunction(listAttribute.AllowAdd, property, field, declaringType, true);
 
 				if (!string.IsNullOrEmpty(listAttribute.AddCallback))
 				{
 					if (!isReference)
 					{
-						var addCallback = ReflectionHelper.CreateActionCallback(property, declaringType, listAttribute.AddCallback, nameof(ListAttribute), nameof(ListAttribute.AddCallback));
+						var addCallback = ReflectionHelper.CreateActionCallback(listAttribute.AddCallback, declaringType, property);
 						if (addCallback != null)
 						{
 							field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallback.Invoke());
 						}
 						else
 						{
-							var addCallbackIndex = ReflectionHelper.CreateActionCallback<int>(property, declaringType, listAttribute.AddCallback, nameof(ListAttribute), nameof(ListAttribute.AddCallback));
+							var addCallbackIndex = ReflectionHelper.CreateActionCallback<int>(listAttribute.AddCallback, declaringType, property);
 							if (addCallbackIndex != null)
 								field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallbackIndex.Invoke(evt.Index));
 							else
@@ -83,14 +82,14 @@ namespace PiRhoSoft.Utilities.Editor
 					}
 					else
 					{
-						var addCallback = ReflectionHelper.CreateActionCallback(property, declaringType, listAttribute.AddCallback, nameof(ListAttribute), nameof(ListAttribute.AddCallback));
+						var addCallback = ReflectionHelper.CreateActionCallback(listAttribute.AddCallback, declaringType, property);
 						if (addCallback != null)
 						{
 							field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallback.Invoke());
 						}
 						else
 						{
-							var addCallbackIndex = ReflectionHelper.CreateActionCallback<int>(property, declaringType, listAttribute.AddCallback, nameof(ListAttribute), nameof(ListAttribute.AddCallback));
+							var addCallbackIndex = ReflectionHelper.CreateActionCallback<int>(listAttribute.AddCallback, declaringType, property);
 							if (addCallbackIndex != null)
 								field.RegisterCallback<ListField.ItemAddedEvent>(evt => addCallbackIndex.Invoke(evt.Index));
 							else
@@ -107,25 +106,25 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				if (!string.IsNullOrEmpty(listAttribute.AllowRemove))
 				{
-					proxy.CanRemoveCallback = ReflectionHelper.CreateFunctionCallback<int, bool>(property, declaringType, listAttribute.AllowRemove, nameof(ListAttribute), nameof(ListAttribute.AllowRemove));
+					proxy.CanRemoveCallback = ReflectionHelper.CreateFunctionCallback<int, bool>(listAttribute.AllowRemove, declaringType, property);
 
 					if (proxy.CanRemoveCallback == null)
 					{
-						var canRemove = ReflectionHelper.CreateValueSourceFunction(property, field, declaringType, listAttribute.AllowRemove, true, nameof(ListAttribute), nameof(ListAttribute.AllowRemove));
+						var canRemove = ReflectionHelper.CreateValueSourceFunction(listAttribute.AllowRemove, property, field, declaringType, true);
 						proxy.CanRemoveCallback = index => canRemove();
 					}
 				}
 
 				if (!string.IsNullOrEmpty(listAttribute.RemoveCallback))
 				{
-					var removeCallback = ReflectionHelper.CreateActionCallback(property, declaringType, listAttribute.RemoveCallback, nameof(ListAttribute), nameof(ListAttribute.RemoveCallback));
+					var removeCallback = ReflectionHelper.CreateActionCallback(listAttribute.RemoveCallback, declaringType, property);
 					if (removeCallback != null)
 					{
 						field.RegisterCallback<ListField.ItemRemovedEvent>(evt => removeCallback.Invoke());
 					}
 					else
 					{
-						var removeCallbackIndex = ReflectionHelper.CreateActionCallback<int>(property, declaringType, listAttribute.RemoveCallback, nameof(ListAttribute), nameof(ListAttribute.RemoveCallback));
+						var removeCallbackIndex = ReflectionHelper.CreateActionCallback<int>(listAttribute.RemoveCallback, declaringType, property);
 						if (removeCallbackIndex != null)
 							field.RegisterCallback<ListField.ItemRemovedEvent>(evt => removeCallbackIndex.Invoke(evt.Index));
 						else
@@ -141,14 +140,14 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				if (!string.IsNullOrEmpty(listAttribute.ReorderCallback))
 				{
-					var reorderCallback = ReflectionHelper.CreateActionCallback(property, declaringType, listAttribute.ReorderCallback, nameof(ListAttribute), nameof(ListAttribute.ReorderCallback));
+					var reorderCallback = ReflectionHelper.CreateActionCallback(listAttribute.ReorderCallback, declaringType, property);
 					if (reorderCallback != null)
 					{
 						field.RegisterCallback<ListField.ItemReorderedEvent>(evt => reorderCallback.Invoke());
 					}
 					else
 					{
-						var reorderCallbackFromTo = ReflectionHelper.CreateActionCallback<int, int>(property, declaringType, listAttribute.ReorderCallback, nameof(ListAttribute), nameof(ListAttribute.ReorderCallback));
+						var reorderCallbackFromTo = ReflectionHelper.CreateActionCallback<int, int>(listAttribute.ReorderCallback, declaringType, property);
 						if (reorderCallbackFromTo != null)
 							field.RegisterCallback<ListField.ItemReorderedEvent>(evt => reorderCallbackFromTo.Invoke(evt.FromIndex, evt.ToIndex));
 						else
@@ -162,7 +161,7 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			if (!string.IsNullOrEmpty(listAttribute.ChangeCallback))
 			{
-				var changeCallback = ReflectionHelper.CreateActionCallback(property, declaringType, listAttribute.ChangeCallback, nameof(ListAttribute), nameof(ListAttribute.AllowRemove));
+				var changeCallback = ReflectionHelper.CreateActionCallback(listAttribute.ChangeCallback, declaringType, property);
 				if (changeCallback != null)
 					field.RegisterCallback<ListField.ItemsChangedEvent>(evt => changeCallback.Invoke());
 				else

@@ -8,6 +8,7 @@ namespace PiRhoSoft.Utilities.Editor
 	class PlaceholderDrawer : PropertyDrawer
 	{
 		private const string _invalidDrawerWarning = "(PUPDID) invalid drawer for PlaceholderAttribute on field '{0}': Placeholder can only be applied to fields with TextField drawers";
+		private const string _invalidSourceError = "(PUPDIS) invalid value source for PlaceholderAttribute on field '{0}': a string field, method, or property named '{1}' could not be found";
 
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -20,7 +21,10 @@ namespace PiRhoSoft.Utilities.Editor
 				var placeholder = new Placeholder();
 				placeholder.AddToField(textField);
 
-				ReflectionHelper.SetupValueSourceCallback(placeholderAttribute.TextSource, property, placeholder, fieldInfo.DeclaringType, placeholderAttribute.Text, placeholderAttribute.AutoUpdate, nameof(PlaceholderAttribute), nameof(PlaceholderAttribute.TextSource), value => placeholder.text = value);
+				void setText(string value) => placeholder.text = value;
+
+				if (!ReflectionHelper.SetupValueSourceCallback(placeholderAttribute.TextSource, fieldInfo.DeclaringType, property, element, placeholderAttribute.Text, placeholderAttribute.AutoUpdate, setText))
+					Debug.LogWarningFormat(_invalidSourceError, property.propertyPath, placeholderAttribute.TextSource);
 
 				return element;
 			}
