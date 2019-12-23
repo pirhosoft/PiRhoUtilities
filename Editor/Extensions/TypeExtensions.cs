@@ -95,6 +95,17 @@ namespace PiRhoSoft.Utilities.Editor
 			return includeAbstract ? types : types.Where(type => !type.IsAbstract);
 		}
 
+		public static bool ImplementsInterface<InterfaceType>(this Type type)
+		{
+			return type.ImplementsInterface(typeof(InterfaceType));
+		}
+
+		public static bool ImplementsInterface(this Type type, Type interfaceType)
+		{
+			var interfaces = type.GetInterfaces();
+			return interfaces != null && interfaces.Contains(interfaceType);
+		}
+
 		#endregion
 
 		#region Serialization

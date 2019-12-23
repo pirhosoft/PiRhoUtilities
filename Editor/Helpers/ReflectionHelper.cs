@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -92,6 +93,7 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			needsSchedule = true;
 
+			if (!typeof(FieldType).ImplementsInterface<IList>()) // Don't uses List SerializedProperties because binding against them doesn't work
 			{ // Property
 				var changeTrigger = GetSerializedPropertyTrigger(sourceName, property, updateAction);
 				if (changeTrigger != null)
