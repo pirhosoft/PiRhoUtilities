@@ -3,6 +3,12 @@ using System.Linq;
 
 namespace PiRhoSoft.Utilities
 {
+	public class PopupValues<T>
+	{
+		public List<T> Values;
+		public List<string> Options;
+	}
+
 	public class PopupAttribute : PropertyTraitAttribute
 	{
 		public List<int> IntValues { get; private set; }
@@ -10,7 +16,6 @@ namespace PiRhoSoft.Utilities
 		public List<string> StringValues { get; private set; }
 		public List<string> Options { get; private set; }
 		public string ValuesSource { get; private set; }
-		public string OptionsSource { get; private set; }
 		public bool AutoUpdate { get; private set; }
 
 		public PopupAttribute(string[] values, string[] options = null) : base(ControlPhase, 0)
@@ -31,10 +36,9 @@ namespace PiRhoSoft.Utilities
 			Options = options?.ToList();
 		}
 
-		public PopupAttribute(string valuesSource, string optionsSource = null, bool autoUpdate = true) : base(ControlPhase, 0)
+		public PopupAttribute(string valuesSource, bool autoUpdate = true) : base(ControlPhase, 0)
 		{
 			ValuesSource = valuesSource;
-			OptionsSource = optionsSource;
 			AutoUpdate = autoUpdate;
 		}
 	}
