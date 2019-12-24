@@ -32,14 +32,14 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			var popup = new PopupField<T>();
 
-			void setValues(List<T> values) => popup.Values = values;
-			void setOptions(List<string> options) => popup.Options = options;
-
-			if (!ReflectionHelper.SetupValueSourceCallback(popupAttribute.ValuesSource, fieldInfo.DeclaringType, property, popup, defaultValues, popupAttribute.AutoUpdate, setValues))
-				Debug.LogWarningFormat(_invalidValuesSourceError, property.propertyPath, nameof(T), popupAttribute.ValuesSource);
-
-			if (!ReflectionHelper.SetupValueSourceCallback(popupAttribute.OptionsSource, fieldInfo.DeclaringType, property, popup, popupAttribute.Options, popupAttribute.AutoUpdate, setOptions))
-				Debug.LogWarningFormat(_invalidOptionsSourceError, property.propertyPath, popupAttribute.OptionsSource);
+			//void setValues(List<T> values) => popup.Values = values;
+			//void setOptions(List<string> options) => popup.Options = options;
+			//
+			//if (!ReflectionHelper.SetupValueSourceCallback(popupAttribute.ValuesSource, fieldInfo.DeclaringType, property, popup, defaultValues, popupAttribute.AutoUpdate, setValues))
+			//	Debug.LogWarningFormat(_invalidValuesSourceError, property.propertyPath, nameof(T), popupAttribute.ValuesSource);
+			//
+			//if (!ReflectionHelper.SetupValueSourceCallback(popupAttribute.OptionsSource, fieldInfo.DeclaringType, property, popup, popupAttribute.Options, popupAttribute.AutoUpdate, setOptions))
+			//	Debug.LogWarningFormat(_invalidOptionsSourceError, property.propertyPath, popupAttribute.OptionsSource);
 
 			return popup.ConfigureProperty(property);
 		}
