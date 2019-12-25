@@ -8,7 +8,7 @@ namespace PiRhoSoft.Utilities.Samples
 	{
 		public override void Create(VisualElement root)
 		{
-			var picker = new ObjectPickerField("Texture", typeof(Texture2D));
+			var picker = new ObjectPickerField("Uxml", typeof(VisualTreeAsset));
 			picker.RegisterValueChangedCallback(e => Debug.Log($"Selected {e.newValue.name}"));
 			root.Add(picker);
 		}

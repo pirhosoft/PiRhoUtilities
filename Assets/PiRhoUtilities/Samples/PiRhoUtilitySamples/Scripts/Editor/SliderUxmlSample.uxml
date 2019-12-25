@@ -5,4 +5,7 @@
 	xmlns:pirho="PiRhoSoft.Utilities.Editor"
 	xsi:noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
 	xsi:schemaLocation="UnityEngine.UIElements ../UIElementsSchema/UnityEngine.UIElements.xsd">
+
+	<pirho:SliderFloatField label="Rating" minimum="-10" maximum="10"></pirho:SliderFloatField>
+	<pirho:MinMaxSliderField label="Range" minimum-limit="-100" maximum-limit="100"></pirho:MinMaxSliderField>
 </UXML>
