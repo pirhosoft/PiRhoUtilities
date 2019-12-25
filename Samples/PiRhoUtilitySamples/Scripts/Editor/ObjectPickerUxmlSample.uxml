@@ -5,4 +5,6 @@
 	xmlns:pirho="PiRhoSoft.Utilities.Editor"
 	xsi:noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
 	xsi:schemaLocation="UnityEngine.UIElements ../UIElementsSchema/UnityEngine.UIElements.xsd">
+
+	<pirho:ObjectPickerField label="Uxml" type="UnityEngine.UIElements.VisualTreeAsset, UnityEngine.UIElementsModule"></pirho:ObjectPickerField>
 </UXML>

@@ -219,7 +219,7 @@ namespace PiRhoSoft.Utilities.Editor
 				var typeName = _type.GetValueFromBag(bag, cc);
 
 				if (!string.IsNullOrEmpty(typeName))
-					field.Type = Type.GetType(typeName, false);
+					field.Type = TypeHelper.FindType(typeName);
 
 				field.ShowAbstract = _showAbstract.GetValueFromBag(bag, cc);
 
