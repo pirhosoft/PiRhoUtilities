@@ -427,10 +427,12 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void CheckElement(int index)
 		{
-			var item = _itemsContainer[index];
-			var current = GetKey(item);
+			// TODO: tracking by index doesn't work since indices change (unlike keys in a dictionary) - need some other way to associate elements with items
 
-			if (index != current)
+			var item = _itemsContainer[index];
+			//var current = GetKey(item);
+
+			//if (index != current)
 			{
 				item.RemoveAt(1);
 				UpdateContent(item, index);
@@ -439,7 +441,6 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void UpdateContent(VisualElement item, int index)
 		{
-			SetKey(item, index);
 			item.EnableInClassList(ItemEvenUssClassName, index % 2 == 0);
 			item.EnableInClassList(ItemOddUssClassName, index % 2 != 0);
 
@@ -455,16 +456,6 @@ namespace PiRhoSoft.Utilities.Editor
 		private int GetIndex(VisualElement element)
 		{
 			return element.parent.IndexOf(element);
-		}
-
-		private int GetKey(VisualElement element)
-		{
-			return element.userData is int i ? i : -1;
-		}
-
-		private void SetKey(VisualElement element, int key)
-		{
-			element.userData = key;
 		}
 
 		private void DoAdd()
@@ -493,32 +484,33 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			if (_allowAdd && _proxy.CanAdd() && _proxy.CanAdd(selected))
 			{
-				if (!_proxy.AddItem(selected))
+				if (_proxy.AddItem(selected))
+				{
+					CreateElement(_proxy.Count - 1);
+
+					using (var e = ItemAddedEvent.GetPooled(_proxy.Count - 1))
+					{
+						e.target = this;
+						SendEvent(e);
+					}
+				}
+				else
 				{
 					Debug.LogErrorFormat(_failedAddError, selected != null ? selected.FullName : _unspecifiedType);
-					return;
-				}
-
-				UpdateItemsWithoutNotify();
-
-				using (var e = ItemAddedEvent.GetPooled(_proxy.Count - 1))
-				{
-					e.target = this;
-					SendEvent(e);
 				}
 			}
 		}
 
 		private void RemoveItem(VisualElement item)
 		{
-			var key = GetKey(item);
+			var index = GetIndex(item);
 
-			if (_allowRemove && _proxy.CanRemove(key))
+			if (_allowRemove && _proxy.CanRemove(index))
 			{
-				Proxy.RemoveItem(key);
-				UpdateItemsWithoutNotify();
+				item.RemoveFromHierarchy();
+				Proxy.RemoveItem(index);
 
-				using (var e = ItemRemovedEvent.GetPooled(key))
+				using (var e = ItemRemovedEvent.GetPooled(index))
 				{
 					e.target = this;
 					SendEvent(e);
@@ -528,8 +520,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void ReorderItem(int from, int to)
 		{
+			// dragging functionality has already handled element reordering
 			Proxy.ReorderItem(from, to);
-			UpdateItemsWithoutNotify();
 
 			using (var e = ItemReorderedEvent.GetPooled(from, to))
 			{

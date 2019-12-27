@@ -108,7 +108,7 @@ namespace PiRhoSoft.Utilities.Samples
 			_codeView.Clear();
 			_uxmlView.Clear();
 
-			_uxmlView.AddUxml(RootPath, $"{sample.Name}UxmlSample.uxml");
+			_uxmlView.AddUxml(RootPath, $"{sample.Name}/{sample.Name}UxmlSample.uxml");
 
 			sample.Code.Create(_codeView);
 			sample.Uxml.Setup(_uxmlView);
@@ -120,17 +120,17 @@ namespace PiRhoSoft.Utilities.Samples
 
 		private string GetCodeText(string name)
 		{
-			return File.ReadAllText($"{RootPath}{name}CodeSample.cs");
+			return File.ReadAllText($"{RootPath}{name}/{name}CodeSample.cs");
 		}
 
 		private string GetUxmlText(string name)
 		{
-			return File.ReadAllText($"{RootPath}{name}UxmlSample.uxml");
+			return File.ReadAllText($"{RootPath}{name}/{name}UxmlSample.uxml");
 		}
 
 		private string GetUxmlCodeText(string name)
 		{
-			return File.ReadAllText($"{RootPath}{name}UxmlSample.cs");
+			return File.ReadAllText($"{RootPath}{name}/{name}UxmlSample.cs");
 		}
 	}
 }
