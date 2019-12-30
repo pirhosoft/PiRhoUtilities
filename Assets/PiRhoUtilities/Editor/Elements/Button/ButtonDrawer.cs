@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -31,11 +32,7 @@ namespace PiRhoSoft.Utilities.Editor
 				container.AddToClassList(UssClassName);
 				container.Add(element);
 
-				var button = new Button(method)
-				{
-					text = buttonAttribute.Label,
-					tooltip = buttonAttribute.Tooltip
-				};
+				var button = CreateButton(buttonAttribute.Label, buttonAttribute.Icon, method, buttonAttribute.Tooltip);
 
 				button.AddToClassList(ButtonUssClassName);
 
@@ -70,6 +67,31 @@ namespace PiRhoSoft.Utilities.Editor
 			}
 
 			return element;
+		}
+
+		private VisualElement CreateButton(string label, ButtonIcon icon, Action method, string tooltip)
+		{
+			if (string.IsNullOrEmpty(label))
+			{
+				var button = new IconButton(method)
+				{
+					image = null,
+					tooltip = tooltip
+				};
+
+				button.SetIcon(icon.ToString());
+				button.style.width = button.image.width;
+				button.style.height = button.image.height;
+				return button;
+			}
+			else
+			{
+				return new Button(method)
+				{
+					text = label,
+					tooltip = tooltip
+				};
+			}
 		}
 	}
 }

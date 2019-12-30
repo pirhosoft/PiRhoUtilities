@@ -12,25 +12,25 @@ namespace PiRhoSoft.Utilities.Samples
 			container.style.flexDirection = FlexDirection.Row;
 			container.style.alignItems = Align.Center;
 
-			container.Add(new IconButton(Icon.Add.Texture, "Add", () => Debug.Log("Add Pressed")));
-			container.Add(new IconButton(Icon.CustomAdd.Texture, "CustomAdd", () => Debug.Log("CustomAdd Pressed")));
-			container.Add(new IconButton(Icon.Remove.Texture, "Remove", () => Debug.Log("Remove Pressed")));
-			container.Add(new IconButton(Icon.Inspect.Texture, "Inspect", () => Debug.Log("Inspect Pressed")));
-			container.Add(new IconButton(Icon.Expanded.Texture, "Expanded", () => Debug.Log("Expanded Pressed")));
-			container.Add(new IconButton(Icon.Collapsed.Texture, "Collapsed", () => Debug.Log("Collapsed Pressed")));
-			container.Add(new IconButton(Icon.Refresh.Texture, "Refresh", () => Debug.Log("Refresh Pressed")));
-			container.Add(new IconButton(Icon.Load.Texture, "Load", () => Debug.Log("Load Pressed")));
-			container.Add(new IconButton(Icon.Unload.Texture, "Unload", () => Debug.Log("Unload Pressed")));
-			container.Add(new IconButton(Icon.Close.Texture, "Close", () => Debug.Log("Close Pressed")));
-			container.Add(new IconButton(Icon.LeftArrow.Texture, "LeftArrow", () => Debug.Log("LeftArrow Pressed")));
-			container.Add(new IconButton(Icon.RightArrow.Texture, "RightArrow", () => Debug.Log("RightArrow Pressed")));
-			container.Add(new IconButton(Icon.Info.Texture, "Info", () => Debug.Log("Info Pressed")));
-			container.Add(new IconButton(Icon.Warning.Texture, "Warning", () => Debug.Log("Warning Pressed")));
-			container.Add(new IconButton(Icon.Error.Texture, "Error", () => Debug.Log("Error Pressed")));
-			container.Add(new IconButton(Icon.Settings.Texture, "Settings", () => Debug.Log("Settings Pressed")));
-			container.Add(new IconButton(Icon.View.Texture, "View", () => Debug.Log("View Pressed")));
-			container.Add(new IconButton(Icon.Locked.Texture, "Locked", () => Debug.Log("Locked Pressed")));
-			container.Add(new IconButton(Icon.Unlocked.Texture, "Unlocked", () => Debug.Log("Unlocked Pressed")));
+			container.Add(new IconButton(() => Debug.Log("Add Pressed")) { image = Icon.Add.Texture, tooltip = "Add" });
+			container.Add(new IconButton(() => Debug.Log("CustomAdd Pressed")) { image = Icon.CustomAdd.Texture, tooltip = "CustomAdd" });
+			container.Add(new IconButton(() => Debug.Log("Remove Pressed")) { image = Icon.Remove.Texture, tooltip = "Remove" });
+			container.Add(new IconButton(() => Debug.Log("Inspect Pressed")) { image = Icon.Inspect.Texture, tooltip = "Inspect" });
+			container.Add(new IconButton(() => Debug.Log("Expanded Pressed")) { image = Icon.Expanded.Texture, tooltip = "Expanded" });
+			container.Add(new IconButton(() => Debug.Log("Collapsed Pressed")) { image = Icon.Collapsed.Texture, tooltip = "Collapsed" });
+			container.Add(new IconButton(() => Debug.Log("Refresh Pressed")) { image = Icon.Refresh.Texture, tooltip = "Refresh" });
+			container.Add(new IconButton(() => Debug.Log("Load Pressed")) { image = Icon.Load.Texture, tooltip = "Load" });
+			container.Add(new IconButton(() => Debug.Log("Unload Pressed")) { image = Icon.Unload.Texture, tooltip = "Unload" });
+			container.Add(new IconButton(() => Debug.Log("Close Pressed")) { image = Icon.Close.Texture, tooltip = "Close" });
+			container.Add(new IconButton(() => Debug.Log("LeftArrow Pressed")) { image = Icon.LeftArrow.Texture, tooltip = "LeftArrow" });
+			container.Add(new IconButton(() => Debug.Log("RightArrow Pressed")) { image = Icon.RightArrow.Texture, tooltip = "RightArrow" });
+			container.Add(new IconButton(() => Debug.Log("Info Pressed")) { image = Icon.Info.Texture, tooltip = "Info" });
+			container.Add(new IconButton(() => Debug.Log("Warning Pressed")) { image = Icon.Warning.Texture, tooltip = "Warning" });
+			container.Add(new IconButton(() => Debug.Log("Error Pressed")) { image = Icon.Error.Texture, tooltip = "Error" });
+			container.Add(new IconButton(() => Debug.Log("Settings Pressed")) { image = Icon.Settings.Texture, tooltip = "Settings" });
+			container.Add(new IconButton(() => Debug.Log("View Pressed")) { image = Icon.View.Texture, tooltip = "View" });
+			container.Add(new IconButton(() => Debug.Log("Locked Pressed")) { image = Icon.Locked.Texture, tooltip = "Locked" });
+			container.Add(new IconButton(() => Debug.Log("Unlocked Pressed")) { image = Icon.Unlocked.Texture, tooltip = "Unlocked" });
 
 			root.Add(container);
 		}
