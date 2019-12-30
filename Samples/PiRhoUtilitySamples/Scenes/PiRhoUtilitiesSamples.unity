@@ -1214,6 +1214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5a49eee3d6dbc94b820bc0cd2d9c663, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Picker: {fileID: 0}
 --- !u!1 &872240352
 GameObject:
   m_ObjectHideFlags: 0
@@ -3114,3 +3115,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d5bd2503b748ea4b9fe184e5a8f6521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Picker: 

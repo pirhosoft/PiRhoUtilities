@@ -99,7 +99,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public IconButton AddHeaderButton(Texture icon, string tooltip, string ussClassName, Action action)
 		{
-			var button = new IconButton(icon, tooltip, action);
+			var button = new IconButton(action) { image = icon, tooltip = tooltip };
 			button.AddToClassList(HeaderButtonUssClassName);
 
 			if (!string.IsNullOrEmpty(ussClassName))
@@ -166,7 +166,7 @@ namespace PiRhoSoft.Utilities.Editor
 			Header.AddToClassList(HeaderUssClassName);
 			hierarchy.Add(Header);
 
-			_collapseButton = new IconButton(CollapseIcon.Texture, CollapseTooltip, () => IsCollapsed = !IsCollapsed);
+			_collapseButton = new IconButton(() => IsCollapsed = !IsCollapsed) { image = CollapseIcon.Texture, tooltip = CollapseTooltip };
 			_collapseButton.AddToClassList(CollapseButtonUssClassName);
 			Header.Add(_collapseButton);
 

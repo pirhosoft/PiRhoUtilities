@@ -75,7 +75,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			public ObjectPickerControl()
 			{
-				_inspect = new IconButton(Icon.Inspect.Texture, "View this object in the inspector", Inspect);
+				_inspect = new IconButton(Inspect) { image = Icon.Inspect.Texture, tooltip = "View this object in the inspector" };
 				_inspect.AddToClassList(InspectUssClassName);
 				_inspect.SetEnabled(false);
 

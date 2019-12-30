@@ -10,7 +10,7 @@ namespace PiRhoSoft.Utilities.Samples
 		{
 			root.Query<IconButton>().ForEach(button =>
 			{
-				button.SetAction(() => Debug.Log($"{button.image.name} Pressed"));
+				button.Clicked += () => Debug.Log($"{button.image.name} Pressed");
 			});
 		}
 	}
