@@ -50,8 +50,7 @@ namespace PiRhoSoft.Utilities.Editor
 			_comboBox.AddToClassList(InputUssClassName);
 			_comboBox.RegisterCallback<ChangeEvent<string>>(evt =>
 			{
-				base.value = evt.newValue;
-				evt.StopImmediatePropagation();
+				SetValueWithoutNotify(evt.newValue);
 			});
 
 			labelElement.AddToClassList(LabelUssClassName);
