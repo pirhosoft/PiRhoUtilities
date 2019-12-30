@@ -456,7 +456,7 @@ namespace PiRhoSoft.Utilities.Editor
 			dragHandle.RegisterCallback((MouseDownEvent e) => StartDrag(e, item));
 			item.Add(dragHandle);
 
-			var remove = new IconButton(_removeIcon.Texture, _removeTooltip, () => RemoveItem(item));
+			var remove = new IconButton(() => RemoveItem(item)) { image = _removeIcon.Texture, tooltip = _removeTooltip };
 			remove.AddToClassList(RemoveButtonUssClassName);
 			item.Add(remove);
 
