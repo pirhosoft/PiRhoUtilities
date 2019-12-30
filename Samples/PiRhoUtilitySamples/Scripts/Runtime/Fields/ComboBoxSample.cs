@@ -11,8 +11,8 @@ namespace PiRhoSoft.Utilities
 		[ComboBox(new string[] { "One Fish", "Two Fish", "Red Fish", "Blue Fish" })]
 		public string HardCodedOptions;
 
-		public List<string> PropertyField = new List<string> { "Field Option One", "Field Option Two", "Field Option Three" };
-		[ComboBox(nameof(PropertyField))]
+		public List<string> FieldOptions = new List<string> { "Field Option One", "Field Option Two", "Field Option Three" };
+		[ComboBox(nameof(FieldOptions))]
 		public string FromField = "I can be any value or a predefined option";
 
 		public List<string> PropertyOptions = new List<string> { "Property Option One", "Property Option Two", "Property Option Three" };

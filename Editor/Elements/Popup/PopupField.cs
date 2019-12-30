@@ -123,7 +123,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void DestroyPopup()
 		{
-			_popup.RemoveFromHierarchy();
+			_popup?.RemoveFromHierarchy();
 			_popup = null;
 		}
 
