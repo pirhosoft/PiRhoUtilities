@@ -702,6 +702,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef5df98d683316e4da1eddcc2673557f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedOptions: {x: 1, y: 5.5959597}
+  FieldMinimum: 0
+  FieldMaximum: 4
+  FromField: {x: 2.8888886, y: 3.5151515}
+  PropertyMinimum: 0
+  PropertyMaximum: 7
+  FromProperty: {x: 0.69696975, y: 4.7373734}
+  MethodMinimum: 0
+  MethodMaximum: 5
+  FromMethod: {x: 2.5252526, y: 3.9393942}
 --- !u!1 &565950087
 GameObject:
   m_ObjectHideFlags: 0
@@ -1247,6 +1257,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 356b5a1643b708f4ebbff2571a35551f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedOptions: 4
+  FieldMinimum: 4
+  FieldMaximum: 5
+  FromField: 4
+  PropertyMinimum: 0
+  PropertyMaximum: 15
+  FromProperty: 4
+  MethodMinimum: 4
+  MethodMaximum: 10
+  FromMethod: 4
 --- !u!1 &873610722
 GameObject:
   m_ObjectHideFlags: 0
@@ -1782,6 +1802,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1a0437d43621446aecd56ce16c7695, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedOptions: 4.3253965
+  FieldMinimum: 0
+  FieldMaximum: 10
+  FromField: 3.1746032
+  PropertyMinimum: 0
+  PropertyMaximum: 10
+  FromProperty: 3.6507938
+  MethodMinimum: 0
+  MethodMaximum: 10
+  FromMethod: 2.34127
 --- !u!1 &1151496622
 GameObject:
   m_ObjectHideFlags: 0
