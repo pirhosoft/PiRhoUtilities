@@ -56,38 +56,48 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public void SetValues(List<T> values, List<string> options = null)
 		{
-			DestroyPopup();
-
-			_options = options;
-			_values = values;
-
-			if (_values != null && _values.Count > 0)
+			if (values != _values || options != _options)
 			{
-				if (!_values.Contains(value))
+				DestroyPopup();
+
+				_options = options;
+				_values = values;
+
+				if (_values != null && _values.Count > 0)
 				{
-					base.value = _values[0];
-					Debug.LogWarningFormat(_missingValueWarning);
+					if (!ValidateValue(value))
+						base.value = _values[0];
+
+					CreatePopup();
+				}
+				else
+				{
+					_values = null;
+					Debug.LogErrorFormat(_invalidValuesError);
 				}
 
-				CreatePopup();
-			}
-			else
-			{
-				_values = null;
-				Debug.LogErrorFormat(_invalidValuesError);
-			}
-
-			if (_options != null && _values != null && _options.Count != _values.Count)
-			{
-				_options = null;
-				Debug.LogWarningFormat(_invalidOptionsWarning);
+				if (_options != null && _values != null && _options.Count != _values.Count)
+				{
+					_options = null;
+					Debug.LogWarningFormat(_invalidOptionsWarning);
+				}
 			}
 		}
 
 		public override void SetValueWithoutNotify(T newValue)
 		{
-			base.SetValueWithoutNotify(newValue);
-			_popup?.SetValueWithoutNotify(newValue);
+			if (ValidateValue(newValue))
+			{
+				base.SetValueWithoutNotify(newValue);
+				_popup?.SetValueWithoutNotify(newValue);
+			}
+			else
+			{
+				if (_values != null)
+					base.SetValueWithoutNotify(_values[0]);
+
+				Debug.LogWarningFormat(_missingValueWarning);
+			}
 		}
 
 		#endregion
@@ -123,6 +133,11 @@ namespace PiRhoSoft.Utilities.Editor
 				return value.ToString();
 
 			return _options[index];
+		}
+
+		private bool ValidateValue(T value)
+		{
+			return _values != null && _values.Contains(value);
 		}
 
 		#endregion

@@ -642,7 +642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HardCodedOptions: 
-  PropertyField:
+  FieldOptions:
   - Field Option One
   - Field Option Two
   - Field Option Three
@@ -946,6 +946,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff2adaec7205004a8b1b596fb4ac221, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedOptions: 1
+  FieldValues: 0100000002000000040000000800000010000000
+  FromField: 1
+  PropertyValues: 0100000002000000040000000800000010000000
+  FromProperty: 1
+  MethodValues: 0100000002000000040000000800000010000000
+  FromMethod: 1
 --- !u!1 &779269444
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,6 +996,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2351c283fa83b2499df009e14346109, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedOptions: 0
+  FieldValues:
+  - 0
+  - 0.25
+  - 0.5
+  - 0.75
+  - 1
+  FromField: 0
+  PropertyValues:
+  - 0
+  - 0.25
+  - 0.5
+  - 0.75
+  - 1
+  FromProperty: 0
+  MethodValues:
+  - 0
+  - 0.25
+  - 0.5
+  - 0.75
+  - 1
+  FromMethod: 0
 --- !u!1 &782938047
 GameObject:
   m_ObjectHideFlags: 0
@@ -1083,6 +1112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99c655b1e87eb5b46baf030628f2462d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NormalButtons: 0
+  FlagsButton: 0
 --- !u!1 &803738740
 GameObject:
   m_ObjectHideFlags: 0
@@ -2590,6 +2621,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5985d4a15446978448e3997b58264d10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HardCodedOptions: One Fish
+  PropertyField:
+  - Field Option One
+  - Field Option Two
+  - Field Option Three
+  FromField: Field Option One
+  PropertyOptions:
+  - Property Option One
+  - Property Option Two
+  - Property Option Three
+  FromProperty: Property Option One
+  MethodOptions:
+  - Method Option One
+  - Method Option Two
+  - Method Option Three
+  FromMethod: Method Option One
 --- !u!1 &1805389432
 GameObject:
   m_ObjectHideFlags: 0
