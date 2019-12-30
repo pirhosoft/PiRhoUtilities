@@ -30,12 +30,17 @@ namespace PiRhoSoft.Utilities.Editor
 		private VisualElement CreatePopup<T>(SerializedProperty property, PopupAttribute popupAttribute, List<T> defaultValues)
 		{
 			var popup = new PopupField<T>();
-			var defaultOptions = new PopupValues<T> { Values = defaultValues, Options = popupAttribute.Options };
 
-			void setOptions(PopupValues<T> options) => popup.SetValues(options.Values, options.Options);
+			void setValues(List<T> values) => popup.SetValues(values);
+			void setValuesWithOptions(PopupValues<T> options) => popup.SetValues(options.Values, options.Options);
 
-			if (!ReflectionHelper.SetupValueSourceCallback(popupAttribute.ValuesSource, fieldInfo.DeclaringType, property, popup, defaultOptions, popupAttribute.AutoUpdate, setOptions))
-				Debug.LogWarningFormat(_invalidValuesSourceError, property.propertyPath, nameof(PopupValues<T>), popupAttribute.ValuesSource);
+			if (!ReflectionHelper.SetupValueSourceCallback(popupAttribute.ValuesSource, fieldInfo.DeclaringType, property, popup, defaultValues, popupAttribute.AutoUpdate, setValues))
+			{
+				var defaultOptions = new PopupValues<T> { Values = defaultValues, Options = popupAttribute.Options };
+
+				if (!ReflectionHelper.SetupValueSourceCallback(popupAttribute.ValuesSource, fieldInfo.DeclaringType, property, popup, defaultOptions, popupAttribute.AutoUpdate, setValuesWithOptions))
+					Debug.LogWarningFormat(_invalidValuesSourceError, property.propertyPath, nameof(PopupValues<T>), popupAttribute.ValuesSource);
+			}
 
 			return popup.ConfigureProperty(property);
 		}

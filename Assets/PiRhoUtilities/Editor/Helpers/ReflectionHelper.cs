@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -93,7 +92,6 @@ namespace PiRhoSoft.Utilities.Editor
 		{
 			needsSchedule = true;
 
-			if (!typeof(FieldType).ImplementsInterface<IList>()) // Don't uses List SerializedProperties because binding against them doesn't work
 			{ // Property
 				var changeTrigger = GetSerializedPropertyTrigger(sourceName, property, updateAction);
 				if (changeTrigger != null)
@@ -127,10 +125,15 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private static ChangeTrigger<FieldType> GetSerializedPropertyTrigger<FieldType>(string sourceName, SerializedProperty property, Action<FieldType> updateAction)
 		{
-			var sibling = property.GetSibling(sourceName);
+			var propertyType = SerializedPropertyExtensions.GetPropertyType<FieldType>();
+			
+			if (propertyType != SerializedPropertyType.Generic && propertyType != SerializedPropertyType.ManagedReference && propertyType != SerializedPropertyType.ExposedReference && propertyType != SerializedPropertyType.FixedBufferSize)
+			{
+				var sibling = property.GetSibling(sourceName);
 
-			if (sibling != null)
-				return new ChangeTrigger<FieldType>(sibling, (changedProperty, oldValue, newValue) => updateAction?.Invoke(newValue));
+				if (sibling != null && sibling.propertyType != SerializedPropertyType.Generic)
+					return new ChangeTrigger<FieldType>(sibling, (changedProperty, oldValue, newValue) => updateAction?.Invoke(newValue));
+			}
 
 			return null;
 		}
@@ -286,10 +289,10 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private static void SetupSchedule(VisualElement element, Action action, bool autoUpdate)
 		{
+			action.Invoke();
+
 			if (autoUpdate)
 				element.schedule.Execute(action).Every(100);
-			else
-				action.Invoke();
 		}
 	}
 }
