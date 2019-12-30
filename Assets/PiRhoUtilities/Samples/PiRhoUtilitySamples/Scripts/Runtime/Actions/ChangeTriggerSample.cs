@@ -53,7 +53,8 @@ namespace PiRhoSoft.Utilities
 		[ChangeTrigger(nameof(AnimationChanged))] public AnimationCurve AnimationCurve;
 		[ChangeTrigger(nameof(GradientChanged))] public Gradient Gradient;
 		[ChangeTrigger(nameof(QuaternionChanged))] public Quaternion Quaternion;
-		[ChangeTrigger(nameof(ReferenceChanged))] [SerializeReference] [Reference] public IAnimal ManagedReference = new Dog();
+		[ChangeTrigger(nameof(ReferenceChanged))] [SerializeReference] [Reference] public IAnimal ManagedReference1 = new Dog();
+		[ChangeTrigger(nameof(ReferenceChanged))] [SerializeReference] [Reference] public IAnimal ManagedReference2 = new Cat(); // At least two references are required for bindings to work due to a Unity bug
 
 		[ChangeTrigger(nameof(PublicStaticParameterlessChanged))] public int PublicStaticParameterless;
 		[ChangeTrigger(nameof(PublicStaticOneParameterChanged))] public int PublicStaticOneParameter;

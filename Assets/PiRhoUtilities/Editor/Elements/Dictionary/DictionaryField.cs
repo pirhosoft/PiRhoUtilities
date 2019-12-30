@@ -465,10 +465,12 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void CheckElement(int index, string key)
 		{
-			var item = _itemsContainer[index];
-			var current = GetKey(item);
+			//  All items needs to be rebuilt because any bindings will sometimes become invalid
 
-			if (key != current)
+			var item = _itemsContainer[index];
+			//var current = GetKey(item);
+
+			//if (key != current)
 			{
 				item.RemoveAt(1);
 				UpdateContent(item, index, key);
