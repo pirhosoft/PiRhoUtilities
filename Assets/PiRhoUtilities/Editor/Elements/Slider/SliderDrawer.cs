@@ -20,7 +20,7 @@ namespace PiRhoSoft.Utilities.Editor
 			else if (property.propertyType == SerializedPropertyType.Float)
 				return CreateSlider(new SliderFloatField(), sliderAttribute, property, sliderAttribute.Minimum, sliderAttribute.Maximum);
 			else if (property.propertyType == SerializedPropertyType.Vector2)
-				return CreateSlider(new MinMaxSliderField(), sliderAttribute, property, new Vector2(sliderAttribute.Minimum, property.vector2Value.x), new Vector2(property.vector2Value.y, sliderAttribute.Maximum));
+				return CreateMinMaxSlider(new MinMaxSliderField(), sliderAttribute, property,sliderAttribute.Minimum, sliderAttribute.Maximum);
 			else
 				Debug.LogWarningFormat(property.serializedObject.targetObject, _invalidTypeWarning, property.propertyPath);
 
@@ -37,6 +37,20 @@ namespace PiRhoSoft.Utilities.Editor
 
 			if (!ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MaximumSource, fieldInfo.DeclaringType, property, slider, defaultMaximum, sliderAttribute.AutoUpdate, setMax))
 				Debug.LogWarningFormat(_invalidMaximumSourceError, property.propertyPath, nameof(T), sliderAttribute.MaximumSource);
+
+			return slider.ConfigureProperty(property);
+		}
+
+		private VisualElement CreateMinMaxSlider(MinMaxSliderField slider, SliderAttribute sliderAttribute, SerializedProperty property, float defaultMinimum, float defaultMaximum)
+		{
+			void setMin(float value) => slider.MinimumLimit = value;
+			void setMax(float value) => slider.MaximumLimit = value;
+
+			if (!ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MinimumSource, fieldInfo.DeclaringType, property, slider, defaultMinimum, sliderAttribute.AutoUpdate, setMin))
+				Debug.LogWarningFormat(_invalidMinimumSourceError, property.propertyPath, "float", sliderAttribute.MinimumSource);
+
+			if (!ReflectionHelper.SetupValueSourceCallback(sliderAttribute.MaximumSource, fieldInfo.DeclaringType, property, slider, defaultMaximum, sliderAttribute.AutoUpdate, setMax))
+				Debug.LogWarningFormat(_invalidMaximumSourceError, property.propertyPath, "float", sliderAttribute.MaximumSource);
 
 			return slider.ConfigureProperty(property);
 		}
