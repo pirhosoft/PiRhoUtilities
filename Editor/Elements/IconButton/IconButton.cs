@@ -56,6 +56,14 @@ namespace PiRhoSoft.Utilities.Editor
 			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
 		}
 
+		public void SetIcon(string iconName)
+		{
+			if (_icons.TryGetValue(iconName, out var icon))
+				image = icon.Texture;
+			else
+				Debug.LogWarningFormat(_missingIconWarning, iconName);
+		}
+
 		#endregion
 
 		#region UXML Support
@@ -86,7 +94,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public new class UxmlFactory : UxmlFactory<IconButton, UxmlTraits> { }
 		public new class UxmlTraits : Image.UxmlTraits
 		{
-			private readonly UxmlStringAttributeDescription _icon = new UxmlStringAttributeDescription { name = "icon", defaultValue = "Add" };
+			private readonly UxmlStringAttributeDescription _icon = new UxmlStringAttributeDescription { name = "icon", use = UxmlAttributeDescription.Use.Required };
 
 			public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
 			{
@@ -95,15 +103,7 @@ namespace PiRhoSoft.Utilities.Editor
 				var button = ve as IconButton;
 				var name = _icon.GetValueFromBag(bag, cc);
 
-				if (_icons.TryGetValue(name, out var icon))
-				{
-					button.image = icon.Texture;
-				}
-				else
-				{
-					Debug.LogWarningFormat(_missingIconWarning, name);
-					button.image = Icon.Add.Texture;
-				}
+				button.SetIcon(name);
 			}
 		}
 
