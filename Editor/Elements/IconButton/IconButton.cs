@@ -22,35 +22,38 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Private Members
 
-		private IManipulator _manipulator;
+		private Clickable _clickable;
 
 		#endregion
 
 		#region Public Interface
 
-		public IconButton() : this(null, null, null)
+		public event Action Clicked
+		{
+			add
+			{
+				if (_clickable == null)
+					_clickable = new Clickable(value);
+				else
+					_clickable.clicked += value;
+			}
+			remove
+			{
+				if (_clickable != null)
+					_clickable.clicked -= value;
+			}
+		}
+
+		public IconButton() : this(null)
 		{
 		}
 
-		public IconButton(Texture image, string tooltip, Action action)
+		public IconButton(Action clickEvent)
 		{
-			this.image = image;
-			this.tooltip = tooltip;
-			SetAction(action);
+			Clicked += clickEvent;
 
 			AddToClassList(UssClassName);
 			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
-		}
-
-		public void SetAction(Action action)
-		{
-			if (_manipulator != null)
-				this.RemoveManipulator(_manipulator);
-
-			_manipulator = action != null ? new Clickable(action) : null;
-
-			if (_manipulator != null)
-				this.AddManipulator(_manipulator);
 		}
 
 		#endregion
