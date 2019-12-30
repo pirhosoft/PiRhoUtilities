@@ -33,17 +33,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Public Interface
 
-		public List<T> Values
-		{
-			get => _values;
-			set => SetValues(value);
-		}
-
-		public List<string> Options
-		{
-			get => _options;
-			set => SetValues(_values, value);
-		}
+		public List<T> Values => _values;
+		public List<string> Options => _options;
 
 		public PopupField() : this(null)
 		{
@@ -65,29 +56,25 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public void SetValues(List<T> values, List<string> options = null)
 		{
+			DestroyPopup();
+
 			_options = options;
+			_values = values;
 
-			if (_values != values)
+			if (_values != null && _values.Count > 0)
 			{
-				DestroyPopup();
-
-				_values = values;
-
-				if (_values != null && _values.Count > 0)
+				if (!_values.Contains(value))
 				{
-					if (!_values.Contains(value))
-					{
-						base.value = _values[0];
-						Debug.LogWarningFormat(_missingValueWarning);
-					}
+					base.value = _values[0];
+					Debug.LogWarningFormat(_missingValueWarning);
+				}
 
-					CreatePopup();
-				}
-				else
-				{
-					_values = null;
-					Debug.LogErrorFormat(_invalidValuesError);
-				}
+				CreatePopup();
+			}
+			else
+			{
+				_values = null;
+				Debug.LogErrorFormat(_invalidValuesError);
 			}
 
 			if (_options != null && _values != null && _options.Count != _values.Count)
@@ -109,12 +96,13 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void CreatePopup()
 		{
-			_popup?.RemoveFromHierarchy();
 			_popup = new UnityEditor.UIElements.PopupField<T>(_values, value, Format, Format);
 			_popup.AddToClassList(InputUssClassName);
 			_popup.RegisterCallback<ChangeEvent<T>>(evt =>
 			{
-				base.value = evt.newValue;
+				if (_values.Contains(evt.newValue)) // ChangeEvent<string> is posted by _popup's TextElement but target is still _popup for some reason
+					base.value = evt.newValue;
+
 				evt.StopImmediatePropagation();
 			});
 
@@ -144,17 +132,24 @@ namespace PiRhoSoft.Utilities.Editor
 		public class UxmlTraits<AttributeType> : BaseFieldTraits<T, AttributeType> where AttributeType : TypedUxmlAttributeDescription<T>, new()
 		{
 			private readonly UxmlStringAttributeDescription _options = new UxmlStringAttributeDescription { name = "options" };
+			private readonly UxmlStringAttributeDescription _values = new UxmlStringAttributeDescription { name = "values" };
 
 			public override void Init(VisualElement element, IUxmlAttributes bag, CreationContext cc)
 			{
 				base.Init(element, bag, cc);
 
 				var field = element as PopupField<T>;
-				var options = _options.GetValueFromBag(bag, cc);
+				var options = _options.GetValueFromBag(bag, cc).Split(',');
+				var values = _values.GetValueFromBag(bag, cc).Split(',');
 
-				field.Options = options.Split(',').ToList();
+				var optionsList = options.ToList();
+				var valuesList = field.ParseValues(values);
+
+				field.SetValues(valuesList, optionsList);
 			}
 		}
+
+		protected virtual List<T> ParseValues(string[] from) { return null; }
 
 		#endregion
 	}
@@ -168,20 +163,11 @@ namespace PiRhoSoft.Utilities.Editor
 		public PopupIntField(string label, List<int> values, List<string> options = null) : base(label, values, options) { }
 		public PopupIntField(List<int> values, List<string> options = null) : base(values, options) { }
 
-		public new class UxmlFactory : UxmlFactory<PopupIntField, UxmlTraits> { }
-		public new class UxmlTraits : UxmlTraits<UxmlIntAttributeDescription>
+		public new class UxmlFactory : UxmlFactory<PopupIntField, UxmlTraits<UxmlIntAttributeDescription>> { }
+
+		protected override List<int> ParseValues(string[] from)
 		{
-			private readonly UxmlStringAttributeDescription _values = new UxmlStringAttributeDescription { name = "values" };
-
-			public override void Init(VisualElement element, IUxmlAttributes bag, CreationContext cc)
-			{
-				base.Init(element, bag, cc);
-
-				var field = element as PopupIntField;
-				var values = _values.GetValueFromBag(bag, cc);
-
-				field.Values = values.Split(',').Where(value => int.TryParse(value, out var _)).Select(value => int.Parse(value)).ToList();
-			}
+			return from.Select(f => int.TryParse(f, out var value) ? value : default).ToList();
 		}
 	}
 
@@ -192,20 +178,11 @@ namespace PiRhoSoft.Utilities.Editor
 		public PopupFloatField(string label, List<float> values, List<string> options = null) : base(label, values, options) { }
 		public PopupFloatField(List<float> values, List<string> options = null) : base(values, options) { }
 
-		public new class UxmlFactory : UxmlFactory<PopupFloatField, UxmlTraits> { }
-		public new class UxmlTraits : UxmlTraits<UxmlFloatAttributeDescription>
+		public new class UxmlFactory : UxmlFactory<PopupFloatField, UxmlTraits<UxmlFloatAttributeDescription>> { }
+
+		protected override List<float> ParseValues(string[] from)
 		{
-			private readonly UxmlStringAttributeDescription _values = new UxmlStringAttributeDescription { name = "values" };
-
-			public override void Init(VisualElement element, IUxmlAttributes bag, CreationContext cc)
-			{
-				base.Init(element, bag, cc);
-
-				var field = element as PopupFloatField;
-				var values = _values.GetValueFromBag(bag, cc);
-
-				field.Values = values.Split(',').Where(value => float.TryParse(value, out var _)).Select(value => float.Parse(value)).ToList();
-			}
+			return from.Select(f => float.TryParse(f, out var value) ? value : default).ToList();
 		}
 	}
 
@@ -216,20 +193,11 @@ namespace PiRhoSoft.Utilities.Editor
 		public PopupStringField(string label, List<string> values, List<string> options = null) : base(label, values, options) { }
 		public PopupStringField(List<string> values, List<string> options = null) : base(values, options) { }
 
-		public new class UxmlFactory : UxmlFactory<PopupStringField, UxmlTraits> { }
-		public new class UxmlTraits : UxmlTraits<UxmlStringAttributeDescription>
+		public new class UxmlFactory : UxmlFactory<PopupStringField, UxmlTraits<UxmlStringAttributeDescription>> { }
+
+		protected override List<string> ParseValues(string[] from)
 		{
-			private readonly UxmlStringAttributeDescription _values = new UxmlStringAttributeDescription { name = "values" };
-
-			public override void Init(VisualElement element, IUxmlAttributes bag, CreationContext cc)
-			{
-				base.Init(element, bag, cc);
-
-				var field = element as PopupStringField;
-				var values = _values.GetValueFromBag(bag, cc);
-
-				field.Values = values.Split(',').ToList();
-			}
+			return from.ToList();
 		}
 	}
 

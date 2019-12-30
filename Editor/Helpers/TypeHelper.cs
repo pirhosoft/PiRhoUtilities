@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEditor;
+using Object = UnityEngine.Object;
 
 namespace PiRhoSoft.Utilities.Editor
 {
@@ -112,6 +112,10 @@ namespace PiRhoSoft.Utilities.Editor
 			// search in default editor assembly
 			if (type == null)
 				type = Type.GetType($"{name}, Assembly-CSharp-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null");
+
+			// search in Unity
+			if (type == null)
+				type = typeof(Object).Assembly.GetType(name);
 
 			return type;
 		}

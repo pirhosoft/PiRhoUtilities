@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UXML
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="UnityEngine.UIElements"
+	xmlns:pirho="PiRhoSoft.Utilities.Editor"
+	xsi:noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
+	xsi:schemaLocation="UnityEngine.UIElements ../UIElementsSchema/UnityEngine.UIElements.xsd">
+
+	<pirho:PopupStringField label="Constant Symbols" values="\\u03C0,\\u03D5,e" options="Pi,Phi,Euler"></pirho:PopupStringField>
+	<pirho:PopupFloatField label="Constant Values" values="3.14159,1.61803,2.71828" options="Pi,Phi,Euler"></pirho:PopupFloatField>
+</UXML>
