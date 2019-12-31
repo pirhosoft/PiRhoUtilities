@@ -378,8 +378,10 @@ MonoBehaviour:
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
   Quaternion: {x: 0, y: 2, z: 0, w: 0}
-  ManagedReference:
+  ManagedReference1:
     id: 0
+  ManagedReference2:
+    id: 1
   PublicStaticParameterless: 0
   PublicStaticOneParameter: 0
   PublicStaticTwoParameters: 0
@@ -396,6 +398,10 @@ MonoBehaviour:
     version: 1
     00000000:
       type: {class: ChangeTriggerSample/Dog, ns: PiRhoSoft.Utilities, asm: Assembly-CSharp}
+      data:
+        Value: 0
+    00000001:
+      type: {class: ChangeTriggerSample/Cat, ns: PiRhoSoft.Utilities, asm: Assembly-CSharp}
       data:
         Value: 0
 --- !u!1 &112579357
@@ -2166,6 +2172,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 737f5cff799848449aff88b234e58e06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Int1: 0
+  Float1: 0
+  Float2: 0
+  Bool1: 0
+  Bool2: 0
+  Int2: 0
 --- !u!1 &1559421163
 GameObject:
   m_ObjectHideFlags: 0
@@ -2954,6 +2966,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60404027490682f4aa823db7045979aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Int1: 0
+  Float1: 0
+  Float2: 0
+  Bool1: 0
+  Bool2: 0
+  Int2: 0
 --- !u!1 &1929257456
 GameObject:
   m_ObjectHideFlags: 0

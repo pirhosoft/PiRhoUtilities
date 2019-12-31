@@ -22,10 +22,16 @@ namespace PiRhoSoft.Utilities.Editor
 				{
 					if (tabs != null)
 					{
-						var page = new TabPage(siblingAttribute.Tab);
+						var page = tabs.GetPage(siblingAttribute.Tab);
+
+						if (page == null)
+						{
+							page = new TabPage(siblingAttribute.Tab);
+							tabs.Add(page);
+						}
+
 						var element = PropertyDrawerExtensions.CreateNextElement(field, siblingAttribute, sibling);
 						page.Add(element);
-						tabs.Add(page);
 					}
 					else if (SerializedProperty.EqualContents(property, sibling))
 					{

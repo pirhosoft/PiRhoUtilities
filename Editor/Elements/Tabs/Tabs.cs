@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
@@ -27,9 +26,9 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Public Interface
 
-		public VisualElement Header { get; private set; }
-		public VisualElement Content { get; private set; }
-		public IEnumerable<TabPage> Pages => Content.Children().Cast<TabPage>().Where(page => page != null);
+		public VisualElement Header { get; }
+		public VisualElement Content { get; }
+		public UQueryState<TabPage> Pages { get; }
 		public TabPage ActivePage => _activePage;
 
 		public override VisualElement contentContainer => Content;
@@ -42,11 +41,26 @@ namespace PiRhoSoft.Utilities.Editor
 			Content = new VisualElement();
 			Content.AddToClassList(ContentUssClassName);
 
+			Pages = Content.Query<TabPage>().Build();
+
 			hierarchy.Add(Header);
 			hierarchy.Add(Content);
 
 			AddToClassList(UssClassName);
 			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+		}
+
+		public TabPage GetPage(string name)
+		{
+			TabPage found = null;
+
+			Pages.ForEach(page =>
+			{
+				if (page.Label == name)
+					found = page;
+			});
+
+			return found;
 		}
 
 		public void UpdateTabs()
@@ -56,23 +70,23 @@ namespace PiRhoSoft.Utilities.Editor
 			_activePage = null;
 			Header.Clear();
 
-			foreach (var page in pages)
+			Pages.ForEach(page =>
 			{
 				Header.Add(page.Button);
 
 				if (page.IsActive && _activePage == null)
 					_activePage = page;
-			}
+			});
 
 			if (_activePage == null && Content.childCount > 0)
 				_activePage = Content[0] as TabPage;
 
-			foreach (var page in pages)
+			Pages.ForEach(page =>
 			{
 				page.IsActive = page == _activePage;
 				page.EnableInClassList(PageSelectedUssClassName, page.IsActive);
 				page.Button.EnableInClassList(TabSelectedUssClassName, page.IsActive);
-			}
+			});
 		}
 
 		#endregion
