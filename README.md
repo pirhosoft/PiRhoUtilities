@@ -6,7 +6,7 @@ A suite of [UIElements](https://docs.unity3d.com/Manual/UIElements.html) based a
 - In your Unity project open the Package Manager ('Window -> Package Manager')
 - Click on the 'Add' (+) button in the top left and choose "Add package from git URL..."
 - Enter the URL, https://github.com/pirhosoft/PiRhoUtilities.git#upm in the popup box and click 'Add'
-- To import samples into your project, find and select the installed package in the Package and click on 'Import into Project' next to the PiRho Utilities Samples listing. The samples project comes with a scene containing objects with an example of each attribute as well as a sample window showing how to create controls through C# and UXML
+- To import samples into your project, find and select the installed package in the Package and click on 'Import into Project' next to the PiRho Utilities Samples listing. The samples project comes with a scene containing objects with an example of each attribute as well as a sample window (Window > PiRhoUtiilities > UI Samples) showing how to create controls through C# and UXML
 
 ## Updating
 
