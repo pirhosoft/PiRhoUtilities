@@ -6,7 +6,7 @@ A suite of [UIElements](https://docs.unity3d.com/Manual/UIElements.html) based a
 - In your Unity project open the Package Manager ('Window -> Package Manager')
 - Click on the 'Add' (+) button in the top left and choose "Add package from git URL..."
 - Enter the URL, https://github.com/pirhosoft/PiRhoUtilities.git#upm in the popup box and click 'Add'
-- To import samples into your project, find and select the installed package in the Package and click on 'Import into Project' next to the PiRho Utilities Samples listing
+- To import samples into your project, find and select the installed package in the Package and click on 'Import into Project' next to the PiRho Utilities Samples listing. The samples project comes with a scene containing objects with an example of each attribute as well as a sample window (Window > PiRhoUtiilities > UI Samples) showing how to create controls through C# and UXML
 
 ## Updating
 
@@ -14,15 +14,20 @@ A suite of [UIElements](https://docs.unity3d.com/Manual/UIElements.html) based a
 - At the bottom in a property named "lock", remove the object entry titled "com.pirho.utilties"
 - Save and return to Unity and it will automatically reimport the updated version from the repository
 
+## Known Issues
+
+- https://github.com/pirhosoft/PiRhoUtilities/issues
+- Working with [SerializedReference] and the [Reference] attribute is still experimental
+
 ## Usage
 
 ### Property Drawer Attributes
 
-These attributes are added to serializable fields in editable classes (*MonoBehaviours* or *ScriptableObjects*) to enable custom drawing for the field. Only a single one of these can be applied to a field as it handles the final control creation. All attributes are in the ```PiRhoSoft.Utilities``` namespace.
+These attributes are added to serializable fields in editable classes (*MonoBehaviours* or *ScriptableObjects*) to enable custom drawing for the field. Most attributes can have their properties retrieved from another field, property, or method through reflection by specifying the associated string name. All attributes are in the ```PiRhoSoft.Utilities``` namespace.
 
 #### List
 
-Add this to a *SerializedList* or *SerializedArray* derived type to show a much more user friendly list editor than Unity's default with custom callbacks and constraints for adding, removing, and reordering. Any additional PropertyTraits will be applied to each item in the list individually.
+Add this to a *SerializedList* or *SerializedArray* derived type to show a much more user friendly list editor than Unity's default with custom callbacks and constraints for adding, removing, and reordering. Any additional PropertyTraitAttributes will be applied to each item in the list individually.
 
 ```c#
 [Serializable] public class TestList : SerializedList<int> { }
@@ -31,7 +36,7 @@ Add this to a *SerializedList* or *SerializedArray* derived type to show a much 
 [List(AllowAdd = nameof(ListCanAdd))]
 public TestList List;
 
-[List(AllowAdd = ListAttribute.Never, AllowRemove = ListAttribute.Never, AllowReorder = ListAttribute.Never)]
+[List(AllowAdd = ListAttribute.Never, AllowRemove = ListAttribute.Never, AllowReorder = false)]
 public TestArray Array = new TestArray(4);
 
 private bool ListCanAdd()
@@ -43,12 +48,14 @@ private bool ListCanAdd()
 | Property			| Description	| Default	|
 | ----------------- | ------------- | --------- |
 | EmptyLabel		| When the list is empty display this text - use an empty string to hide the label - `null` will show the default text, "The list is empty"	| `null`	|
-| AllowAdd			| The string name of a bool returning method (parameterless) that enables/disables adding items to the list. If adding is not conditional, use `ListAttribute.Always` or `ListAttribute.Never`	| `Always`	|
-| AllowRemove		| The string name of a bool returning method (parameterless) or (int index) that enables/disables removing items from the list. If removing is not conditional, use `ListAttribute.Always` or `ListAttribute.Never` | `Always`	|
-| AllowReorder		| The string name of a bool returning method (parameterless) or (int to) or (int from, int to) that enables/disables reording items in the list. If reordering is not conditional, use `ListAttribute.Always` or `ListAttribute.Never`	| `Always`	|
+| AllowAdd			| The string name of a bool returning method (parameterless), field, or property, that enables/disables adding items to the list. If adding is not conditional, use `ListAttribute.Always` or `ListAttribute.Never`	| `Always`	|
+| AllowRemove		| The string name of a bool returning method (parameterless) or (int index), field, or property, that enables/disables removing items from the list. If removing is not conditional, use `ListAttribute.Always` or `ListAttribute.Never` | `Always`	|
+| AllowReorder		| Enables/disables reording items in the list.	| `true`	|
+| IsCollapsable		| Whether or not the List is collapsible to save space | `true`	|
 | AddCallback		| The string name of a method (parameterless) to call when an item has been added to the list	| `null`	|
 | RemoveCallback	| The string name of a method (parameterless) or (int index) to call when an item is about to be removed from the list	| `null`	|
 | ReorderCallback	| The string name of a method (parameterless) or (int to) or (int from, int to) to call when an item has been reordered in the list	| `null`	|
+| ChangeCallback	| The string name of a method (parameterless) to call when the list changes	| `null`	|
 
 #### Dictionary
 
@@ -74,155 +81,31 @@ private void DictionaryItemRemoved(string key)
 | Property			| Description	| Default	|
 | ----------------- | ------------- | --------- |
 | EmptyLabel		| When the dictionary is empty display this text - use an empty string to hide the label - `null` will show the default text, "The dictionary is empty"	| `null`	|
-| AllowAdd			| The string name of a bool returning method (parameterless) or (string key) that enables/disables adding items to the dictionary. If adding is not conditional, use `DictionaryAttribute.Always` or `DictionaryAttribute.Never`	| `Always`	|
-| AllowRemove		| The string name of a bool returning method (parameterless) or (string key) that enables/disables removing items from the dictionary. If removing is not conditional, use `DictionaryAttribute.Always` or `DictionaryAttribute.Never` | `Always`	|
-| AllowReorder		| The string name of a bool returning method (parameterless) or (string key) that enables/disables reording items in the dictionary. If reordering is not conditional, use `DictionaryAttribute.Always` or `DictionaryAttribute.Never`	| `Never`	|
+| AddPlaceholder	| The string to display in the add area	| `null`	|
+| AllowAdd			| The string name of a bool returning method (parameterless) or (string key), field, or property, that enables/disables adding items to the dictionary. If adding is not conditional, use `DictionaryAttribute.Always` or `DictionaryAttribute.Never`	| `Always`	|
+| AllowRemove		| The string name of a bool returning method (parameterless) or (string key), field, or property, that enables/disables removing items from the dictionary. If removing is not conditional, use `DictionaryAttribute.Always` or `DictionaryAttribute.Never` | `Always`	|
+| AllowReorder		| Enables/disables reording items in the list.	| `true`	|
+| IsCollapsable		| Whether or not the List is collapsible to save space | `true`	|
 | AddCallback		| The string name of a method (parameterless) or (string key) to call when an item has been added to the dictionary	| `null`	|
 | RemoveCallback	| The string name of a method (parameterless) or (string key) to call when an item is about to be removed from the dictionary	| `null`	|
 | ReorderCallback	| The string name of a method (parameterless) or (string key) to call when an item has been reordered in the dictionary	| `null`	|
 
 > **NOTE:** Normally dictionaries don't have defined ordering, however, serializing dictionaries requires the key/value pairs to be stored in lists and are thus ordered.
 
-#### ObjectPicker
-
-Add this to a UnityEngine.Object derived field to show a searchable popup listing (like the *AddComponent*window') of the available objects of the correct type instead of the default object picker This will list assets based on their structure in the project folder, and Components/GameObjects by their hierarchy in the scene.
-
-```c#
-[ObjectPicker]
-public ScriptableObject Asset;
-```
-
-| Parameter		| Description	| Default	|
-| ------------- | ------------- | --------- |
-| BaseType		| The type to use as the BaseType of valid types - if `null` then the field's type will be used | `null`	|
-
-#### ScenePicker
-
-Similar to the ObjectPicker in that it shows a searchable popup of Scenes to assign. This attribute utilizes Unity's new [Addressables](https://docs.unity3d.com/Packages/com.unity.addressables@0.4/manual/index.html) package and must be applied to a field of type ```AssetReference``` contained in the ```UnityEngine.AddressableAssets``` namespace;
-
-```c#
-[ScenePicker(nameof(CreateScene)]
-public AssetReference Scene;
-
-private void CreateScene()
-{
-	Debug.Log("Scene Created");
-}
-```
-
-| Parameter		| Description	| Default	|
-| ------------- | ------------- | --------- |
-| CreateMethod	| The string name of a method to call when the create scene button is clicked. Useful to create any relevant defaults for a scene assigned to this field | `null`	|
-
-#### TypePicker
-
-Add this to a string field to show a searchable popup listing (like the 'AddComponent window') of types derived from the selected type. Since the *Type* class itself is not serializable this will store the selected type's [AssemmblyQualifiedName](https://docs.microsoft.com/en-us/dotnet/api/system.type.assemblyqualifiedname?view=netframework-4.8) so that the desired type can be looked up with ```Type.GetType(assemblyQualifiedName)``` method.
-
-```c#
-[TypePicker(typeof(MonoBehaviour), false)]
-public string Type;
-```
-
-| Parameter		| Description	| Default	|
-| ------------- | ------------- | --------- |
-| BaseType		| The type to use as the BaseType to select from 	| required	|
-| ShowAbstract	| Whether to display abstract types in the picker	| `false`	|
-
-#### Popup
-
-Add this to an int, float, or string field to show a popup instead of the default text box. The constructor takes two parameters: an array of floats/ints/strings/ that are the values to select and assign, and an optional array of strings that are shown as the labels for each value.
-
-```c#
-[Popup(new int[] { 0, 1, 2, 3, 4 }, new string[] { "Zero", "One", "Two", "Three", "Four" })]
-public int IntPopup;
-
-[Popup(new float[] { 0.0f, 0.1f, 0.2f, 0.4f, 0.8f, 1.6f })]
-public float FloatPopup;
-
-[Popup(new string[] { "", "Hello", "Hola", "Bonjour" })]
-public string StringPopup;
-```
-
 #### ComboBox
 
-Add this to a string field to display a ComboBox control in which you can select from dropdown list of values or enter your own custom value. The constructor takes an array of strings that will appear in the dropdown.
+Add this to a string field to display a ComboBox control in which you can select from dropdown list of values or enter your own custom value.
 
 ```c#
 [ComboBox(new string[] { "One Fish", "Two Fish", "Red Fish", "Blue Fish" })]
 public string ComboBox;
 ```
 
-#### Group
-
-Add this attribute to any number of fields to display them together as a group with the header label specified in the constructor despite being defined out of order in the class. The group can optionally be displayed as a collapsible rollout.
-
-```c#
-[Group("One", Style = GroupStyle.Rollout)] public int Int1;
-[Group("One")] public float Float1;
-[Group("Two")] [Maximum(100)] public float Float2;
-[Group("One")] public bool Bool1;
-[Group("Two")] public bool Bool2;
-[Group("Two")] public int Int2;
-```
-
-#### Rollout
-
-Add this to a class or struct type with a *Serializable* attribute to show the fields of the class in a collapsible rollout style which looks much better than Unity's default.
-
-```c#
-
-[Serializable]
-public class Subclass
-{
-	public bool Bool;
-	public int Int;
-	public float Float;
-	public string String;
-}
-
-[Rollout]
-public Subclass Rollout;
-```
-
-#### Inline
-
-Add this to a class or struct type with a *Serializable* attribute to show the fields of the class or struct inline rather than in the default foldout.
-
-```c#
-[Serializable]
-public class WrapperClass
-{
-	public int Value;
-}
-
-[Inline]
-public WrapperClass Wrapper;
-```
-
-| Parameter		| Description	| Default	|
-| ------------- | ------------- | --------- |
-| ShowMemberLabels	| Whether the label of the owning field should be used rather than the label for each of the fields in the class or struct (useful for wrapper classes with a single field)	| `true`	|
-
-#### Euler
-
-A simple attribute to apply to a *Quaternion* field to display and assign the *Quaternion* in Euler angles (like the default *Transform* inspector does).
-
-```c#
-[Euler]
-public Quaternion Euler;
-```
-
-#### Slider
-
-Apply to an *int*, *float*, or *Vector2* field to display the value as a slider with a minimum and maximum. Applying this to a *Vector2* displays a MinMaxSlider corresponding to the x and y values repectively.
-
-```c#
-[Slider(0, 10)]
-public int Slider;
-
-[Slider(0, 10)]
-public Vector2 MinMaxSlider;
-```
+| Property			| Description	| Default	|
+| ----------------- | ------------- | --------- |
+| Options		| A predefined list of options to show in the dropdown	| `null`	|
+| OptionsSource	| The string name of a List<string> returning method (parameterless), field, or property, that defines the list of options	| `null`	|
+| AutoUpdate	| Whether the options should automatically update if the values change (may affect performance)	| `true`	|
 
 #### EnumButtons
 
@@ -249,25 +132,183 @@ public TestEnum Flags;
 | ------------- | ------------- | --------- |
 | Flags			| Whether multiple options can be selected as a flags enum	| `true` if enum class has the *Flags* attribute, `false` otherwise	|
 
-### Property Trait Attributes
+#### Euler
 
-These attributes are added to serializable fields in editable classes (*MonoBehaviours* or *ScriptableObjects*) to enable custom validation display and execution for the field. Unlike normal property attributes in Unity, multiple of these can be applied to a single field. All attributes are in the ```PiRhoSoft.Utilities``` namespace.
-
-#### Conditional
-
-Add this to any field to only display the field based on the specfied rules. The constructor takes the string name of a sibling *SerializableProperty* (default), a sibling field, a sibling property, or a sibling method that returns the dependent value. The dependent value can be a string, enum, int, float, bool, or Unity Object. If it is an Object, the field is tested as a bool based on whether the Object is null or not and if it is an Enum the object is tested based on the int value of the Enum.
+A simple attribute to apply to a *Quaternion* field to display and assign the *Quaternion* in Euler angles (like the default *Transform* inspector does).
 
 ```c#
-public bool ShowConditional = true;
+[Euler]
+public Quaternion Euler;
+```
 
-[Conditional(nameof(ShowConditional), BoolValue = true)]
-public string ConditionalString;
+#### Frame
+
+Add this to a class or struct type with a *Serializable* attribute to show the fields of the class in a collapsible frame style which looks much better than Unity's default.
+
+```c#
+[Serializable]
+public class Subclass
+{
+	public bool Bool;
+	public int Int;
+	public float Float;
+	public string String;
+}
+
+[Frame]
+public Subclass Frame;
 ```
 
 | Parameter		| Description	| Default	|
 | ------------- | ------------- | --------- |
-| Source	| The source to retreived the tested value from: `Sibling` retreives the value based on the *SerializedProperty* value of the field. `Field` means test a non Serializable sibling field. `Property` means test a sibling property value. `Method` means test the return value of a sibling method.	| `Sibling`	|
-| Test		| The method used to test the source value against: `Equal`, `Inequal`, `LessThan`, `GreaterThan`, `LessThanOrEqual`, `GreaterThanOrEqual`	| `Equal`	|
+| IsCollapsable	| Whether the frame can be collapsed or not	| `true`	|
+
+#### Group
+
+Add this attribute to any number of fields to display them together as a group with the header label specified in the constructor despite being defined out of order in the class.
+
+```c#
+[Group("One")] public int Int1;
+[Group("One")] public float Float1;
+[Group("Two")] [Maximum(100)] public float Float2;
+[Group("One")] public bool Bool1;
+[Group("Two")] public bool Bool2;
+[Group("Two")] public int Int2;
+```
+
+#### Inline
+
+Add this to a class or struct type with a *Serializable* attribute to show the fields of the class or struct inline rather than in the default foldout. Member labels can be optionally shown which is useful if the class has one value field.
+
+```c#
+[Serializable]
+public class WrapperClass
+{
+	public int Value;
+}
+
+[Inline]
+public WrapperClass Wrapper;
+```
+
+| Parameter		| Description	| Default	|
+| ------------- | ------------- | --------- |
+| ShowMemberLabels	| Whether the label of the owning field should be used rather than the label for each of the fields in the class or struct (useful for wrapper classes with a single field)	| `true`	|
+
+#### ObjectPicker
+
+Add this to a UnityEngine.Object derived field to show a searchable popup listing (like the *AddComponent* window) of the available objects of the correct type instead of the default object picker. This will list assets based on their structure in the project folder, and Components/GameObjects by their hierarchy in the scene.
+
+```c#
+[ObjectPicker]
+public ScriptableObject Asset;
+```
+
+#### TypePicker
+
+Add this to a string field to show a searchable popup listing (like the 'AddComponent window') of types derived from the selected type. Since the *Type* class itself is not serializable this will store the selected type's [AssemmblyQualifiedName](https://docs.microsoft.com/en-us/dotnet/api/system.type.assemblyqualifiedname?view=netframework-4.8) so that the desired type can be looked up with ```Type.GetType(assemblyQualifiedName)``` method.
+
+```c#
+[TypePicker(typeof(MonoBehaviour), false)]
+public string Type;
+```
+
+| Parameter		| Description	| Default	|
+| ------------- | ------------- | --------- |
+| BaseType		| The type to use as the base type to select from 	| required	|
+| ShowAbstract	| Whether to display abstract types in the picker	| `false`	|
+
+#### Popup
+
+Add this to an int, float, or string field to show a popup instead of the default text box. The constructor takes two parameters: an array of floats/ints/strings that are the values to select and assign, and an optional array of strings that are shown as the labels for each value. These can also be retreived from a method, property, or field returning a List&lt;T&gt; or a PopupValues&lt;T&gt; if string option names are desired.
+
+```c#
+[Popup(new int[] { 0, 1, 2, 3, 4 }, new string[] { "Zero", "One", "Two", "Three", "Four" })]
+public int IntPopup;
+
+[Popup(new float[] { 0.0f, 0.1f, 0.2f, 0.4f, 0.8f, 1.6f })]
+public float FloatPopup;
+
+[Popup(new string[] { "", "Hello", "Hola", "Bonjour" })]
+public string StringPopup;
+```
+
+#### Reference
+
+Add this attribte to a field in addition to Unity's *[SerializeReference]* attribute to enable creating and editing of any valid subtype for the field.
+
+```c#
+public interface IReferenceType
+{
+}
+
+[Serializable]
+public class ReferenceTypeOne : IReferenceType
+{
+	public bool Value;
+}
+
+[Serializable]
+public class ReferenceTypeTwo : IReferenceType
+{
+	public int Value;
+}
+
+[SerializeReference] [Reference]
+public IReferenceType Reference;
+```
+
+#### Tabs
+
+Add this attribute to any number of fields to display them together in a tab like view. The first parameter specifies the group of fields to display together and the second is the title of the tab to display the field on.
+
+```c#
+[Tabs("Tabs", "One")] public int Int1;
+[Tabs("Tabs", "One")] public float Float1;
+[Tabs("Tabs", "Two")] [Maximum(100)] public float Float2;
+[Tabs("Tabs", "One")] public bool Bool1;
+[Tabs("Tabs", "Two")] public bool Bool2;
+[Tabs("Tabs", "Two")] public int Int2;
+```
+
+#### Slider
+
+Apply to an *int*, *float*, or *Vector2* field to display the value as a slider with a minimum and maximum. Applying this to a *Vector2* displays a MinMaxSlider corresponding to the x and y values repectively. The minimum and maximum values can also be retreived from a method, property, or field of the corresponding type.
+
+```c#
+[Slider(0, 10)]
+public int Slider;
+
+[Slider(0, 10)]
+public float SliderFloat
+
+[Slider(0, 10)]
+public Vector2 MinMaxSlider;
+```
+
+### Property Trait Attributes
+
+These attributes are added to serializable fields in editable classes (*MonoBehaviours* or *ScriptableObjects*) to enable custom validation display and execution for the field. Unlike normal property attributes in Unity, multiple of these can be applied to a single field. Most attributes can have their properties retrieved from another field, property, or method through reflection by specifying the associated string name. All attributes are in the ```PiRhoSoft.Utilities``` namespace.
+
+#### Button
+
+Apply this to a field to display a button next to this field's control. Clicking the button will call the method defined by the passed in string name. Either a label or icon can be specified to show.
+
+```c#
+[Button(nameof(Clicked), "Click")]
+public bool Toggle;
+
+[Button(nameof(Clicked), ButtonIcon.Inspect, Location = TraitLocation.Right)]
+public GameObject Inspect;
+
+private void Clicked() => Debug.Log("Clicked");
+```
+| Parameter		| Description	| Default	|
+| ------------- | ------------- | --------- |
+| Label		| The label of the button	| `null`	|
+| Icon		| The icon of the button	| `Add`		|
+| Tooltip	| The tooltip of the button	| `null`	|
+| Location	| The location of the button: `Above`, `Below`, `Left`, or `Right` | `Above`	|
 
 #### ChangeTrigger
 
@@ -277,92 +318,27 @@ Apply this to a field and pass in the string name of a method to call when the v
 [ChangeTrigger(nameof(Changed))]
 public bool Toggle;
 
-private void Changed(bool oldValue, bool newValue) => Debug.Log($"Changed from {oldValue} to {newValue}", this);
+private void Changed(bool oldValue, bool newValue) => Debug.Log($"Changed from {oldValue} to {newValue}");
 ```
 
-#### InspectTrigger
+#### Conditional
 
-Apply this to a field and pass in the string name of a method to call when the object is initially selected in the inspector. This is useful for updating and validating values prior to inspecting.
+Add this to a field to only display the field based on the specfied rules. The constructor takes the string name of a sibling method, field, or property that returns the dependent value and how to test agaist that value. The dependent value can be a string, enum, int, float, bool, or UnityObject.
 
 ```c#
-[InspectTrigger(nameof(Inspect))]
-public bool Toggle;
+public bool ShowConditional = true;
 
-private void Inspect() => Debug.Log("Object selected", this);
+[Conditional(nameof(ShowConditional), BoolTest.ShowIfTrue)]
+public string ConditionalString;
 ```
 
-#### Required
+#### CustomLabel
 
-Apply this to a *string* or *UnityEngine.Object* derived type to display a message box warning if they are `null`.
-
-```c#
-[Required("A string must be entered")]
-public string RequiredString;
-
-[Required("An object must be selected")]
-public GameObject RequiredObject;
-```
-
-#### Validate
-
-Apply this to a field to call a bool returning method determining whether or not the specified value is valid. If not a message box with a waring will displayed.
+Add this to any field to change the display of the label. This is useful to give more info in the inspector without changing the name of the field to something over verbose or invalid in code. The label can also be retreived from a string method, field, or property.
 
 ```c#
-[Validate(nameof(IsOdd), "An odd number must be entered")]
-public int OddInt;
-private bool IsOdd() => OddInt % 2 != 0;
-```
-
-#### Button
-
-Apply this to a field to display a button next to this field's control. Clicking the button will call the method defined by the passed in string name.
-
-```c#
-[Button(nameof(Clicked), Label = "Click")]
-public bool Toggle;
-
-private void Clicked() => Debug.Log("Clicked", this);
-```
-| Parameter		| Description	| Default	|
-| ------------- | ------------- | --------- |
-| Label		| The label of the button	| `null`	|
-| Tooltip	| The tooltip of thh button	| `null`	|
-| Location	| The location of the button: `Before`, `After`, `Left`, or `Right` | `Before`	|
-
-#### Minimum
-
-Add this to an *int* or *float* field to disallow selecting of a value lower than a specified value. Set the minimum value in the attribute constructor. The string name of a method, field, or property can instead be specified to retrieve the maximum value from.
-
-```c#
-[Minimum(0.0f)]
-public float MinimumFloat;
-```
-
-#### Maximum
-
-Add this to an *int* or *float* field to disallow selecting of a value higher than a specified value. Set the maximum value in the attribute constructor. The string name of a method, field, or property can instead be specified to retrieve the maximum value from.
-
-```c#
-[Maximum(100.0f)]
-public float MaximumFloat;
-```
-
-#### Snap
-
-Add this to an *int* or *float* field to round the selected value to be a multiple of a specified value. Set the snap value in the attribute constructor. The string name of a method, field, or property can be instead be specified to retreive the snap value from.
-
-```c#
-[Snap(0.5f)]
-public float SnapFloat;
-```
-
-#### Placeholder
-
-Apply this to a *string*, field to display a placeholder label in the text field when the the string is empty.
-
-```c#
-[Placeholder("placeholder")]
-public string Placeholder;
+[CustomLabel("Speed (m/s)")]
+public float Speed;
 ```
 
 #### Delay
@@ -372,7 +348,45 @@ public string Placeholder;
 public string DelayValidation;
 ```
 
-Apply this to a *string*, *int*, or *float* field to delay the value being applied until enter is pressed.
+Apply this to a any field that uses text input to edit its value to delay the value being applied until enter is pressed.
+
+#### InspectTrigger
+
+Apply this to a field and pass in the string name of a method to call when the object is initially selected in the inspector. This is useful for updating and validating values prior to inspecting.
+
+```c#
+[InspectTrigger(nameof(Inspect))]
+public bool Toggle;
+
+private void Inspect() => Debug.Log("Object selected");
+```
+
+#### Maximum
+
+Add this to an *int* or *float* field to disallow selecting of a value higher than a specified value. The maximum can also be retreived from a method, field, or property of the corresponding type.
+
+```c#
+[Maximum(100.0f)]
+public float MaximumFloat;
+```
+
+#### Minimum
+
+Add this to an *int* or *float* field to disallow selecting of a value lower than a specified value. The minimum can also be retreived from a method, field, or property of the corresponding type.
+
+```c#
+[Minimum(0.0f)]
+public float MinimumFloat;
+```
+
+#### MaximumLength
+
+Apply this to a *string* field to constrain it to a maximum length of characters. The maximum can also be retreived from a method, field, or property.
+
+```c#
+[MaximumLength(5)]
+public string MaximumString;
+```
 
 #### Multiline
 
@@ -383,13 +397,31 @@ Apply this to a *string* field to display it as a multiline text box.
 public string MultilineText;
 ```
 
-#### MaximumLength
+#### MessageBox
 
-Apply this to a *string* field to constrain it to a maximum length of characters.
+Apply this to any field to display a MessageBox that can provide useful warnings or info.
 
 ```c#
-[MaximumLength(5)]
-public string MaximumString;
+[MessageBox("ALERT: ALL OUR BASE ARE BELONG TO US", MesasgeBoxType.Info)]
+public string Message = "A message is above me";
+```
+
+#### NoLabel
+
+Add this to any field to make it display in the inspector without a label.
+
+```c#
+[NoLabel]
+public string NoLabel = "I don't have a label";
+```
+
+#### Placeholder
+
+Apply this to a *string*, field to display a placeholder label in the text field when the the string is empty. The placeholder can also be retreived from a string method, field, or property.
+
+```c#
+[Placeholder("placeholder")]
+public string Placeholder;
 ```
 
 #### ReadOnly
@@ -401,31 +433,45 @@ Add this to any field to disable editing of the field (while still showing it) i
 public float Disabled;
 ```
 
+#### Required
+
+Apply this to a *string*, *UnityEngine.Object* derived type, or *[SerializeReference]* field to display a message box warning if they are empty or `null`.
+
+```c#
+[Required("A string must be entered")]
+public string RequiredString;
+
+[Required("An object must be selected")]
+public GameObject RequiredObject;
+```
+
+#### Snap
+
+Add this to any number field (*int*, *float*, *Vector2*, etc) to round the selected value to be a multiple of a specified value. The snapped value can also be retreived from a method, field, or property that returns the corresponding type.
+
+```c#
+[Snap(0.5f)]
+public float SnapFloat;
+```
+
 #### Stretch
 
 Apply this to any field to display its control below the label instead of next to it. This is useful for controls that can take advantage of the extra space normally taken up by the label.
 
 ```c#
 [Stretch]
+[Multiline]
 public string MultilineStretch;
 ```
 
-#### CustomLabel
+#### Validate
 
-Add this to any field to change the display of the label. This is useful to give more info in the inspector without changing the name of the field to something over verbose or invalid in code. The name of a string method, field, or property can be specified as the _resolve_ parameter to retreive the label from the resolved value
-
-```c#
-[CustomLabel("Speed (m/s)")]
-public float Speed;
-```
-
-#### NoLabel
-
-Add this to any field to make it display in the inspector without a label.
+Apply this to a field to call a bool returning method determining whether or not the specified value is valid. If not a MessageBox will be displayed.
 
 ```c#
-[NoLabel]
-public string NoLabel = "I don't have a label";
+[Validate(nameof(IsOdd), "An odd number must be entered")]
+public int OddInt;
+private bool IsOdd() => OddInt % 2 != 0;
 ```
 
 ### Wrapper Classes
