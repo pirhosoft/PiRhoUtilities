@@ -26,12 +26,14 @@ namespace PiRhoSoft.Utilities.Editor
 				var declaringType = fieldInfo.DeclaringType;
 				var listAttribute = attribute as ListAttribute;
 				var drawer = this.GetNextDrawer();
-				var proxy = new PropertyListProxy(property, drawer);
+				var proxy = new PropertyListProxy(items, drawer);
 
-				var field = new ListField();
-				field.SetProxy(proxy, referenceType, true);
-				field.IsCollapsable = listAttribute.IsCollapsable;
-				field.bindingPath = property.propertyPath;
+				var field = new ListField
+				{
+					IsCollapsable = listAttribute.IsCollapsable,
+					bindingPath = items.propertyPath,
+					Label = property.displayName
+				};
 				// TODO: other stuff from ConfigureField
 
 				if (!string.IsNullOrEmpty(listAttribute.EmptyLabel))
@@ -45,6 +47,8 @@ namespace PiRhoSoft.Utilities.Editor
 				SetupRemove(listAttribute, proxy, field, property, declaringType);
 				SetupReorder(listAttribute, field, property, declaringType);
 				SetupChange(listAttribute, field, property, declaringType);
+
+				field.SetProxy(proxy, referenceType, true);
 
 				return field;
 			}

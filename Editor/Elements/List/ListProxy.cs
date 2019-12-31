@@ -117,7 +117,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		public PropertyListProxy(SerializedProperty property, PropertyDrawer drawer)
 		{
-			_property = property.FindPropertyRelative(SerializedList<int>.ItemsProperty);
+			_property = property;
 			_drawer = drawer;
 		}
 

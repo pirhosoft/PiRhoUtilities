@@ -805,6 +805,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07a4946a6adebf84ba752b556a2fa63b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ints:
+    _keys:
+    - Can't Remove This
+    - This is removable
+    _values: 0000000000000000
 --- !u!1 &662326013
 GameObject:
   m_ObjectHideFlags: 0
@@ -2928,6 +2933,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f9a0231b0da7e34eb3b2570cd4ef6bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Strings:
+    _items:
+    - Hello,
+    - Good
+    - Morning!
+  Ints:
+    _items: 0100000005000000050000000000000000000000
 --- !u!1 &1929119039
 GameObject:
   m_ObjectHideFlags: 0
