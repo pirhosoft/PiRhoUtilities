@@ -8,11 +8,13 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
-			var attribute = this.attribute as FrameAttribute;
-			var frame = new Frame();
+			var frameAttribute = attribute as FrameAttribute;
+			var frame = new Frame
+			{
+				IsCollapsable = frameAttribute.IsCollapsable,
+				bindingPath = property.propertyPath
+			};
 
-			frame.IsCollapsable = attribute.IsCollapsable;
-			frame.bindingPath = property.propertyPath;
 			// TODO: other stuff from ConfigureField
 
 			return frame;
