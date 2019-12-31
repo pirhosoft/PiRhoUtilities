@@ -33,9 +33,14 @@ namespace PiRhoSoft.Utilities.Editor
 			add
 			{
 				if (_clickable == null)
+				{
 					_clickable = new Clickable(value);
+					this.AddManipulator(_clickable);
+				}
 				else
+				{
 					_clickable.clicked += value;
+				}
 			}
 			remove
 			{
