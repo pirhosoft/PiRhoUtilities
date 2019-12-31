@@ -10,6 +10,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 ### Changed
 
+## [2.0.0] - 2019-12-31
+> This is a large, non backwards compatible API update. Most fields and attributes have been changed or have had additional functionality added and not all changes/fixes are listed below.
+### Added
+- Ability to use reflection sources for most properties on attributes including auto-updating them or binding to their SerializedProperty value
+- UXML support for most controls
+- Better samples for each of the Attributes
+- Code and UXML example window
+### Removed
+- RolloutAttribute in favor of "IsCollapsable" on Frame
+### Changed
+- All "Control" classes have now been merged into their respective field classes to more match Unity's internal API.
+- Fixed drag and drop for pickers
+- Better history window/styling
+- Popup now wraps Unity's to handle awkward setting of values that are not in the list without throwing exceptions and breaking the inspector
+
 ## [1.2.0] - 2019-12-11
 ### Added
 - Added the ability to specify a method, property, or field as the values and options for PopupAttribute
