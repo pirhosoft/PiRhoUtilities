@@ -1906,6 +1906,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 608c248751518484ab00ac5aab83d2a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Frame:
+    Bool: 0
+    Int: 0
+    Float: 0
+    String: 
 --- !u!1 &1307815188
 GameObject:
   m_ObjectHideFlags: 0
@@ -3047,6 +3052,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4a13d73b04ac34ca4db62431a05517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AnimalReference:
+    id: 0
+  AnimalReference2:
+    id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: , ns: , asm: }
 --- !u!1 &2008059562
 GameObject:
   m_ObjectHideFlags: 0
@@ -3090,6 +3103,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ebac324473e906458d7ce2a09d3b569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Members:
+    Member1: 0
+    Member2: 0
+    Member3: 0
+    Member4: 
+  Wrapper:
+    Value: 0
 --- !u!1 &2009678266
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,6 +17,7 @@ A suite of [UIElements](https://docs.unity3d.com/Manual/UIElements.html) based a
 ## Known Issues
 
 - https://github.com/pirhosoft/PiRhoUtilities/issues
+- Working with [SerializedReference] and the [Reference] attribute is still experimental
 
 ## Usage
 
@@ -177,7 +178,7 @@ Add this attribute to any number of fields to display them together as a group w
 
 #### Inline
 
-Add this to a class or struct type with a *Serializable* attribute to show the fields of the class or struct inline rather than in the default foldout.
+Add this to a class or struct type with a *Serializable* attribute to show the fields of the class or struct inline rather than in the default foldout. Member labels can be optionally shown which is useful if the class has one value field.
 
 ```c#
 [Serializable]
@@ -234,7 +235,7 @@ public string StringPopup;
 
 #### Reference
 
-Add this attribte to a field in addition to Unity's *[SerializeReference]* attribute to enable creating and editing of any valid type for the field.
+Add this attribte to a field in addition to Unity's *[SerializeReference]* attribute to enable creating and editing of any valid subtype for the field.
 
 ```c#
 public interface IReferenceType
