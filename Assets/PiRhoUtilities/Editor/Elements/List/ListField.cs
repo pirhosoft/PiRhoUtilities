@@ -405,6 +405,11 @@ namespace PiRhoSoft.Utilities.Editor
 
 				button.SetEnabled(removable);
 			});
+
+			var validAdd = _proxy.CanAdd();
+			var validType = _allowDerived || _proxy.CanAdd(_itemType);
+
+			_addButton.SetEnabled(validAdd && validType);
 		}
 
 		private void CreateElement(int index)

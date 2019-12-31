@@ -29,10 +29,12 @@ namespace PiRhoSoft.Utilities.Editor
 				var drawer = this.GetNextDrawer();
 				var proxy = new PropertyDictionaryProxy(property, keys, values, drawer);
 
-				var field = new DictionaryField();
-				field.SetProxy(proxy, referenceType, true);
-				field.IsCollapsable = dictionaryAttribute.IsCollapsable;
-				field.bindingPath = property.propertyPath;
+				var field = new DictionaryField
+				{
+					IsCollapsable = dictionaryAttribute.IsCollapsable,
+					bindingPath = keys.propertyPath
+				};
+
 				// TODO: other stuff from ConfigureField
 
 				if (!string.IsNullOrEmpty(dictionaryAttribute.AddPlaceholder))
@@ -49,6 +51,8 @@ namespace PiRhoSoft.Utilities.Editor
 				SetupRemove(dictionaryAttribute, proxy, field, property, declaringType);
 				SetupReorder(dictionaryAttribute, field, property, declaringType);
 				SetupChange(dictionaryAttribute, field, property, declaringType);
+
+				field.SetProxy(proxy, referenceType, true);
 
 				return field;
 			}
