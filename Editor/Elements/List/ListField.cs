@@ -509,6 +509,7 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				item.RemoveFromHierarchy();
 				Proxy.RemoveItem(index);
+				UpdateItemsWithoutNotify();
 
 				using (var e = ItemRemovedEvent.GetPooled(index))
 				{
@@ -520,8 +521,8 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void ReorderItem(int from, int to)
 		{
-			// dragging functionality has already handled element reordering
 			Proxy.ReorderItem(from, to);
+			UpdateItemsWithoutNotify();
 
 			using (var e = ItemReorderedEvent.GetPooled(from, to))
 			{
