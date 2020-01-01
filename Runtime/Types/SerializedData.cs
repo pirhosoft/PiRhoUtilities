@@ -108,8 +108,8 @@ namespace PiRhoSoft.Utilities
 			// updating any bindings
 
 			var index = Data.AddReference(obj);
-			Writer.Write(obj.GetInstanceID());
 			Writer.Write(index);
+			Writer.Write(obj.GetInstanceID());
 		}
 
 		public void SaveInstance<T>(T obj)
