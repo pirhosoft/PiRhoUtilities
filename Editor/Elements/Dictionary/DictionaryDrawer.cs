@@ -32,7 +32,8 @@ namespace PiRhoSoft.Utilities.Editor
 				var field = new DictionaryField
 				{
 					IsCollapsable = dictionaryAttribute.IsCollapsable,
-					bindingPath = keys.propertyPath
+					bindingPath = keys.propertyPath,
+					Label = property.displayName
 				};
 
 				// TODO: other stuff from ConfigureField

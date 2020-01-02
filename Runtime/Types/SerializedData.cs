@@ -105,11 +105,11 @@ namespace PiRhoSoft.Utilities
 		public void SaveReference(Object obj)
 		{
 			// the instance id is written to force the content string to change when the object changes, thus properly
-			// updating any bindings
+			// updating any bindings. GetHashCode() returns the instance id but is threadsafe at runtime.
 
 			var index = Data.AddReference(obj);
 			Writer.Write(index);
-			Writer.Write(obj.GetInstanceID());
+			Writer.Write(obj.GetHashCode());
 		}
 
 		public void SaveInstance<T>(T obj)
