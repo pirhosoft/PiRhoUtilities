@@ -49,12 +49,12 @@
 	display: none;
 }
 
-.pirho-dictionary-field--add-key-valid .pirho-dictionary-field__key-text > .unity-text-field__input
+.pirho-dictionary-field--add-key-valid > .pirho-frame__header > .pirho-dictionary-field__key-text > .unity-text-field__input
 {
 	background-color: #99FF99;
 }
 
-.pirho-dictionary-field--add-key-invalid .pirho-dictionary-field__key-text > .unity-text-field__input
+.pirho-dictionary-field--add-key-invalid > .pirho-frame__header > .pirho-dictionary-field__key-text > .unity-text-field__input
 {
 	background-color: #FF9999;
 }
