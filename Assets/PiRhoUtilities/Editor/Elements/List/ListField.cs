@@ -332,6 +332,11 @@ namespace PiRhoSoft.Utilities.Editor
 			}
 		}
 
+		private void UpdateEmptyState()
+		{
+			EnableInClassList(EmptyUssClassName, _proxy.Count == 0);
+		}
+
 		private void UpdateEmptyLabel()
 		{
 			_emptyText.text = _emptyLabel;
@@ -385,7 +390,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void UpdateItemsWithoutNotify()
 		{
-			EnableInClassList(EmptyUssClassName, _proxy.Count == 0);
+			UpdateEmptyState();
 
 			while (_itemsContainer.childCount > _proxy.Count)
 				_itemsContainer.RemoveAt(_itemsContainer.childCount - 1);
@@ -492,6 +497,7 @@ namespace PiRhoSoft.Utilities.Editor
 				if (_proxy.AddItem(selected))
 				{
 					CreateElement(_proxy.Count - 1);
+					UpdateEmptyState();
 
 					using (var e = ItemAddedEvent.GetPooled(_proxy.Count - 1))
 					{
