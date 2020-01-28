@@ -34,6 +34,7 @@ namespace PiRhoSoft.Utilities.Editor
 					bindingPath = items.propertyPath,
 					Label = property.displayName
 				};
+
 				// TODO: other stuff from ConfigureField
 
 				if (!string.IsNullOrEmpty(listAttribute.EmptyLabel))

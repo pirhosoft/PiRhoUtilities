@@ -157,7 +157,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			private string GetLabel()
 			{
-				return _value ? _value.name : $"None ({Type?.Name ?? "Typeless"})";
+				return _value ? $"{_value.name} ({Type?.Name ?? "Typeless"})" : $"None ({Type?.Name ?? "Typeless"})";
 			}
 
 			private void OnSelected(Object selected)
