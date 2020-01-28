@@ -1,16 +1,16 @@
 {
 	"name": "com.pirho.utilities",
 	"displayName": "PiRho Utilities",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"unity": "2019.3",
 	"description": "A suite of UIElement based attributes, drawers, and controls to expedite the creation of object inspectors without the need of additional custom editors",
-	"keywords": [ "editor utilities" ],
-	"category": "Editory Utilities",
+	"keywords": [ "editor", "utilities", "extensions" ],
+	"category": "Editor Extensions",
 	"samples": [
 		{
 			"displayName": "PiRhoUtility Samples",
 			"description": "Sample scene and scripts to show how PiRhoUtilities can be used",
-			"path": "Samples~/PiRhoUtiltySamples"
+			"path": "Samples~/PiRhoUtilitySamples"
 		}
 	]
 }

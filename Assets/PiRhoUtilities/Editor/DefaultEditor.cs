@@ -8,6 +8,7 @@ namespace PiRhoSoft.Utilities.Editor
 	// This class exists until Unity updates UIElements to work with property drawers
 
 	[CustomEditor(typeof(Object), true, isFallback = true)]
+	[CanEditMultipleObjects]
 	public class DefaultEditor : UnityEditor.Editor
 	{
 		public override VisualElement CreateInspectorGUI()

@@ -9,6 +9,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		#region Class Names
 
+		public const string Stylesheet = "Popup/PopupStyle.uss";
 		public const string UssClassName = "pirho-popup-field";
 		public const string LabelUssClassName = UssClassName + "__label";
 		public const string InputUssClassName = UssClassName + "__input";

@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 ### Changed
 
+## [2.1.0] - 2020-1-28
+### Changed
+- Upgraded project to be compatible with the final release of Unity 2019.3
+
 ## [2.0.0] - 2019-12-31
 > This is a large, non backwards compatible API update. Most fields and attributes have been changed or have had additional functionality added and not all changes/fixes are listed below.
 ### Added
