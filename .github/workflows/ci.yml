@@ -13,10 +13,6 @@ jobs:
         fetch-depth: 0
     - name: split upm branch
       run: |
-        if [[ -d "Documentation~" ]]; then
-          cp -r Documentation~ "$PKG_ROOT"/
-          cp README.md "$PKG_ROOT"/README.md
-        fi
         git branch -d upm &> /dev/null || echo upm branch not found
         git subtree split -P "$PKG_ROOT" -b upm
         git checkout upm
