@@ -33,9 +33,5 @@ namespace PiRhoSoft.Utilities
 		[SerializeReference]
 		[Reference]
 		public IAnimal AnimalReference;
-
-		[SerializeReference]
-		[Reference]
-		public IAnimal AnimalReference2;
 	}
 }
