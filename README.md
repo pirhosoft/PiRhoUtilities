@@ -57,6 +57,8 @@ private bool ListCanAdd()
 | ReorderCallback	| The string name of a method (parameterless) or (int to) or (int from, int to) to call when an item has been reordered in the list	| `null`	|
 | ChangeCallback	| The string name of a method (parameterless) to call when the list changes	| `null`	|
 
+![List](/Documentation~/images/list.png)
+
 #### Dictionary
 
 Add this to a SerializedDictionary derived type to show a dictionary editor (by default dictionary editing is unsupported by Unity). This has similar features/functionality as ListAttribute.
@@ -92,6 +94,8 @@ private void DictionaryItemRemoved(string key)
 
 > **NOTE:** Normally dictionaries don't have defined ordering, however, serializing dictionaries requires the key/value pairs to be stored in lists and are thus ordered.
 
+![Dictionary](/Documentation~/images/dictionary.png)
+
 #### ComboBox
 
 Add this to a string field to display a ComboBox control in which you can select from dropdown list of values or enter your own custom value.
@@ -106,6 +110,8 @@ public string ComboBox;
 | Options		| A predefined list of options to show in the dropdown	| `null`	|
 | OptionsSource	| The string name of a List<string> returning method (parameterless), field, or property, that defines the list of options	| `null`	|
 | AutoUpdate	| Whether the options should automatically update if the values change (may affect performance)	| `true`	|
+
+![Combo Box](/Documentation~/images/combo-box.png)
 
 #### EnumButtons
 
@@ -131,6 +137,8 @@ public TestEnum Flags;
 | Parameter		| Description	| Default	|
 | ------------- | ------------- | --------- |
 | Flags			| Whether multiple options can be selected as a flags enum	| `true` if enum class has the *Flags* attribute, `false` otherwise	|
+
+![Enum Buttons](/Documentation~/images/enum-buttons.png)
 
 #### Euler
 
@@ -163,18 +171,22 @@ public Subclass Frame;
 | ------------- | ------------- | --------- |
 | IsCollapsable	| Whether the frame can be collapsed or not	| `true`	|
 
+![Frame](/Documentation~/images/frame.png)
+
 #### Group
 
 Add this attribute to any number of fields to display them together as a group with the header label specified in the constructor despite being defined out of order in the class.
 
 ```c#
-[Group("One")] public int Int1;
-[Group("One")] public float Float1;
-[Group("Two")] [Maximum(100)] public float Float2;
-[Group("One")] public bool Bool1;
-[Group("Two")] public bool Bool2;
-[Group("Two")] public int Int2;
+[Group("Group One")] public int Int1;
+[Group("Group One")] public float Float1;
+[Group("Group Two")] [Maximum(100)] public float Float2;
+[Group("Group One")] public bool Bool1;
+[Group("Group Two")] public bool Bool2;
+[Group("Group Two")] public int Int2;
 ```
+
+![Group](/Documentation~/images/group.png)
 
 #### Inline
 
@@ -204,6 +216,8 @@ Add this to a UnityEngine.Object derived field to show a searchable popup listin
 public ScriptableObject Asset;
 ```
 
+![Object Picker](/Documentation~/images/object-picker.png)
+
 #### TypePicker
 
 Add this to a string field to show a searchable popup listing (like the 'AddComponent window') of types derived from the selected type. Since the *Type* class itself is not serializable this will store the selected type's [AssemmblyQualifiedName](https://docs.microsoft.com/en-us/dotnet/api/system.type.assemblyqualifiedname?view=netframework-4.8) so that the desired type can be looked up with ```Type.GetType(assemblyQualifiedName)``` method.
@@ -217,6 +231,8 @@ public string Type;
 | ------------- | ------------- | --------- |
 | BaseType		| The type to use as the base type to select from 	| required	|
 | ShowAbstract	| Whether to display abstract types in the picker	| `false`	|
+
+![Type Picker](/Documentation~/images/type-picker.png)
 
 #### Popup
 
@@ -232,6 +248,8 @@ public float FloatPopup;
 [Popup(new string[] { "", "Hello", "Hola", "Bonjour" })]
 public string StringPopup;
 ```
+
+![Popup](/Documentation~/images/popup.png)
 
 #### Reference
 
@@ -258,6 +276,8 @@ public class ReferenceTypeTwo : IReferenceType
 public IReferenceType Reference;
 ```
 
+![Reference](/Documentation~/images/reference.png)
+
 #### Tabs
 
 Add this attribute to any number of fields to display them together in a tab like view. The first parameter specifies the group of fields to display together and the second is the title of the tab to display the field on.
@@ -270,6 +290,8 @@ Add this attribute to any number of fields to display them together in a tab lik
 [Tabs("Tabs", "Two")] public bool Bool2;
 [Tabs("Tabs", "Two")] public int Int2;
 ```
+
+![Tabs](/Documentation~/images/tabs.png)
 
 #### Slider
 
@@ -285,6 +307,9 @@ public float SliderFloat
 [Slider(0, 10)]
 public Vector2 MinMaxSlider;
 ```
+
+![Slider](/Documentation~/images/slider.png)
+![Min Max Slider](/Documentation~/images/min-max-slider.png)
 
 ### Property Trait Attributes
 
