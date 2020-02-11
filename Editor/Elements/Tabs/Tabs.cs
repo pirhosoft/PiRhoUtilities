@@ -7,7 +7,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		#region Class Names
 
-		public const string Stylesheet = "Tabs/Tabs.uss";
+		public const string Stylesheet = "Tabs.uss";
 		public const string UssClassName = "pirho-tabs";
 		public const string HeaderUssClassName = UssClassName + "__header";
 		public const string ContentUssClassName = UssClassName + "__content";
@@ -47,7 +47,7 @@ namespace PiRhoSoft.Utilities.Editor
 			hierarchy.Add(Content);
 
 			AddToClassList(UssClassName);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			this.AddStyleSheet(Stylesheet);
 		}
 
 		public TabPage GetPage(string name)

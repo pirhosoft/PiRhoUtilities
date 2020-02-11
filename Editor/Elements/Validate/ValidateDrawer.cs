@@ -9,7 +9,7 @@ namespace PiRhoSoft.Utilities.Editor
 	[CustomPropertyDrawer(typeof(ValidateAttribute))]
 	class ValidateDrawer : PropertyDrawer
 	{
-		public const string Stylesheet = "Validate/ValidateStyle.uss";
+		public const string Stylesheet = "ValidateStyle.uss";
 		public const string UssClassName = "pirho-validate";
 		public const string SideUssClassName = UssClassName + "--side";
 		public const string MessageUssClassName = UssClassName + "__message";
@@ -34,7 +34,7 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				var container = new VisualElement();
 				container.AddToClassList(UssClassName);
-				container.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+				container.AddStyleSheet(Stylesheet);
 				container.Add(element);
 				container.Add(change);
 

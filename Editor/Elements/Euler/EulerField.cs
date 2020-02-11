@@ -8,7 +8,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		#region Class Names
 
-		public const string Stylesheet = "Euler/EulerStyle.uss";
+		public const string Stylesheet = "EulerStyle.uss";
 		public const string UssClassName = "pirho-euler-field";
 		public const string LabelUssClassName = UssClassName + "__label";
 		public const string InputUssClassName = UssClassName + "__input";
@@ -41,7 +41,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			AddToClassList(UssClassName);
 			this.SetVisualInput(_vectorField);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			this.AddStyleSheet(Stylesheet);
 		}
 
 		public override void SetValueWithoutNotify(Quaternion newValue)

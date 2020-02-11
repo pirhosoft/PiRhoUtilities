@@ -11,7 +11,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		#region Class Names
 
-		public const string Stylesheet = "ComboBox/ComboBoxStyle.uss";
+		public const string Stylesheet = "ComboBoxStyle.uss";
 		public const string UssClassName = "pirho-combo-box-field";
 		public const string LabelUssClassName = UssClassName + "__label";
 		public const string InputUssClassName = UssClassName + "__input";
@@ -57,7 +57,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			AddToClassList(UssClassName);
 			this.SetVisualInput(_comboBox);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			this.AddStyleSheet(Stylesheet);
 		}
 
 		public ComboBoxField() : this(null, null)

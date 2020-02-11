@@ -1,56 +1,77 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace PiRhoSoft.Utilities
 {
-	public interface IPoolable
+	public class ClassPoolInfo
 	{
-		void Reset();
+		public Type Type;
+		public bool IsRegistered;
+		public int ReservedCount;
+		public int FreeCount;
 	}
 
-	public interface IPoolInfo
+	public static class ClassPool
 	{
-		int Size { get; }
-		int Growth { get; }
+		public const int DefaultCapacity = 10;
+		public const int DefaultGrowth = 5;
 	}
 
-	public interface IClassPool<T> where T : IPoolable
+	public class ClassPool<Type>
 	{
-		void Grow();
-		T Reserve();
-		void Release(T value);
-	}
+		private int _growth;
+		private Stack<Type> _freeList;
+		private Func<Type> _creator;
+		private int _reservedCount;
 
-	public class ClassPool<T, I> : IClassPool<T> where T : IPoolable, new() where I : IPoolInfo, new()
-	{
-		private static IPoolInfo _info = new I();
-		private Stack<T> _freeList;
+		public int ReservedCount => _reservedCount;
+		public int FreeCount => _freeList.Count;
 
-		public ClassPool()
+		public ClassPool(Func<Type> creator, int capacity = ClassPool.DefaultCapacity, int growth = ClassPool.DefaultGrowth)
 		{
-			_freeList = new Stack<T>(_info.Size);
+			_growth = growth;
+			_freeList = new Stack<Type>(capacity);
+			_creator = creator;
+			_reservedCount = 0;
 
-			for (var i = 0; i < _info.Size; i++)
-				Release(new T());
+			for (var i = 0; i < capacity; i++)
+				Release(_creator());
 		}
 
-		public void Grow()
-		{
-			for (var i = 0; i < _info.Growth; i++)
-				Release(new T());
-		}
-
-		public T Reserve()
+		public Type Reserve()
 		{
 			if (_freeList.Count == 0)
-				Grow();
+			{
+				if (_growth > 0)
+				{
+					for (var i = 0; i < _growth; i++)
+						Release(_creator());
+				}
+				else
+				{
+					return default;
+				}
+			}
 
+			_reservedCount++;
 			return _freeList.Pop();
 		}
 
-		public void Release(T value)
+		public void Release(Type item)
 		{
-			value.Reset();
-			_freeList.Push(value);
+			_reservedCount--;
+			_freeList.Push(item);
+		}
+
+		public ClassPoolInfo GetPoolInfo()
+		{
+			return new ClassPoolInfo
+			{
+				Type = typeof(Type),
+				IsRegistered = true,
+				ReservedCount = ReservedCount,
+				FreeCount = FreeCount
+			};
 		}
 	}
 }

@@ -74,10 +74,10 @@ namespace PiRhoSoft.Utilities.Samples
 		private void OnEnable()
 		{
 			if (string.IsNullOrEmpty(RootPath))
-				RootPath = AssetHelper.FindEditorPath(nameof(SamplesWindow), "PiRhoUtilitySamples/Scripts/Editor/", "");
+				RootPath = AssetHelper.GetScriptPath();
 
-			rootVisualElement.AddUxml(RootPath, Uxml);
-			rootVisualElement.AddStyleSheet(RootPath, Stylesheet);
+			rootVisualElement.AddUxml(Uxml);
+			rootVisualElement.AddStyleSheet(Stylesheet);
 
 			_sampleList = rootVisualElement.Query<ListView>("sample-list");
 			_sampleList.makeItem = () => new Label();
@@ -108,7 +108,7 @@ namespace PiRhoSoft.Utilities.Samples
 			_codeView.Clear();
 			_uxmlView.Clear();
 
-			_uxmlView.AddUxml(RootPath, $"{sample.Name}/{sample.Name}UxmlSample.uxml");
+			_uxmlView.AddUxml($"{sample.Name}/{sample.Name}UxmlSample.uxml");
 
 			sample.Code.Create(_codeView);
 			sample.Uxml.Setup(_uxmlView);

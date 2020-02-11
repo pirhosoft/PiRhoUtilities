@@ -14,7 +14,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Class Names
 
-		public const string Stylesheet = "MessageBox/MessageBox.uss";
+		public const string Stylesheet = "MessageBox.uss";
 		public const string UssClassName = "pirho-message-box";
 		public const string ImageUssClassName = UssClassName + "__image";
 		public const string LabelUssClassName = UssClassName + "__label";
@@ -75,7 +75,7 @@ namespace PiRhoSoft.Utilities.Editor
 			Add(_image);
 			Add(_label);
 
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			this.AddStyleSheet(Stylesheet);
 			AddToClassList(UssClassName);
 		}
 

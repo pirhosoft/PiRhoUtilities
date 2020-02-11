@@ -8,7 +8,7 @@ namespace PiRhoSoft.Utilities.Editor
 	[CustomPropertyDrawer(typeof(ButtonAttribute))]
 	class ButtonDrawer : PropertyDrawer
 	{
-		public const string Stylesheet = "Button/ButtonStyle.uss";
+		public const string Stylesheet = "ButtonStyle.uss";
 		public const string UssClassName = "pirho-trait-button";
 		public const string SideUssClassName = UssClassName + "--side";
 		public const string ButtonUssClassName = UssClassName + "__button";
@@ -28,7 +28,7 @@ namespace PiRhoSoft.Utilities.Editor
 			if (method != null)
 			{
 				var container = new VisualElement();
-				container.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+				container.AddStyleSheet(Stylesheet);
 				container.AddToClassList(UssClassName);
 				container.Add(element);
 

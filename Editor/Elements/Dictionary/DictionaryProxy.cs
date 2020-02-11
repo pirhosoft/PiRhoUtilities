@@ -132,9 +132,16 @@ namespace PiRhoSoft.Utilities.Editor
 			if (string.IsNullOrEmpty(key))
 				key = " "; // An empty label will cause the label to be removed
 
-			field.SetFieldLabel(key); // TODO: for references this should include the type name
-
-			return field;
+			if (field.SetFieldLabel(key)) // TODO: for references this should include the type name
+			{
+				return field;
+			}
+			else
+			{
+				var container = new FieldContainer(key);
+				container.Add(field);
+				return container;
+			}
 		}
 
 		public int Count => _keysProperty.arraySize;

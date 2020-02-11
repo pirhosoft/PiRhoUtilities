@@ -15,7 +15,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Class Names
 
-		public const string Stylesheet = "IconButton/IconButton.uss";
+		public const string Stylesheet = "IconButton.uss";
 		public const string UssClassName = "pirho-icon-button";
 
 		#endregion
@@ -58,7 +58,7 @@ namespace PiRhoSoft.Utilities.Editor
 			Clicked += clickEvent;
 
 			AddToClassList(UssClassName);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			this.AddStyleSheet(Stylesheet);
 		}
 
 		public void SetIcon(string iconName)

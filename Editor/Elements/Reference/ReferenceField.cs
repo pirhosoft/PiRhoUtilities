@@ -21,7 +21,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Class Names
 
-		public const string Stylesheet = "Reference/Reference.uss";
+		public const string Stylesheet = "Reference.uss";
 		public const string UssClassName = "pirho-reference-field";
 		public const string SetUssClassName = UssClassName + "--set";
 		public const string NullUssClassName = UssClassName + "--null";
@@ -182,7 +182,7 @@ namespace PiRhoSoft.Utilities.Editor
 			Add(_frame);
 
 			AddToClassList(UssClassName);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			this.AddStyleSheet(Stylesheet);
 		}
 
 		private void Rebuild()

@@ -8,7 +8,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		#region Class Names
 
-		public const string Stylesheet = "EnumButtons/EnumButtonsStyle.uss";
+		public const string Stylesheet = "EnumButtonsStyle.uss";
 		public const string UssClassName = "pirho-enum-buttons-field";
 		public const string LabelUssClassName = UssClassName + "__label";
 		public const string InputUssClassName = UssClassName + "__input";
@@ -64,7 +64,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 			AddToClassList(UssClassName);
 			this.SetVisualInput(_control);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			this.AddStyleSheet(Stylesheet);
 		}
 
 		public override void SetValueWithoutNotify(Enum newValue)

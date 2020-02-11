@@ -33,7 +33,6 @@ namespace PiRhoSoft.Utilities.Editor
 		static SerializedPropertyExtensions()
 		{
 			var createFieldFromPropertyMethod = typeof(PropertyField).GetMethod(_createFieldFromPropertyName, BindingFlags.Instance | BindingFlags.NonPublic);
-			var createFieldFromPropertyParameters = createFieldFromPropertyMethod?.GetParameters();
 
 			if (createFieldFromPropertyMethod != null && createFieldFromPropertyMethod.HasSignature(typeof(VisualElement), typeof(SerializedProperty)))
 			{
@@ -124,6 +123,14 @@ namespace PiRhoSoft.Utilities.Editor
 				return null;
 
 			return ParseType(property.managedReferenceFullTypename);
+		}
+
+		public static bool HasManagedReferenceValue(this SerializedProperty property)
+		{
+			if (property.propertyType != SerializedPropertyType.ManagedReference)
+				return false;
+
+			return !string.IsNullOrEmpty(property.managedReferenceFullTypename);
 		}
 
 		private static Regex _unityType = new Regex(@"(\S+) ([^/]+)(?:/(.+))?", RegexOptions.Compiled);

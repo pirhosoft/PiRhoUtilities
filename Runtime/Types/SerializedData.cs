@@ -12,73 +12,52 @@ namespace PiRhoSoft.Utilities
 		void Load(SerializedDataReader reader);
 	}
 
-	public abstract class SerializedData
+	[Serializable]
+	public class SerializedData
 	{
-		[SerializeField] public List<Object> _references = new List<Object>();
+		[SerializeField] private string _content = string.Empty;
+		[SerializeField] private List<Object> _references = new List<Object>();
 
-		public void SetData(byte[] data)
+		public bool IsEmpty => string.IsNullOrEmpty(_content);
+
+		internal void SetData(byte[] data)
 		{
-			var content = Convert.ToBase64String(data);
-			SetContent(content);
+			_content = Convert.ToBase64String(data);
 		}
 
-		public byte[] GetData(int index)
+		internal byte[] GetData()
 		{
-			var content = GetContent(index);
-			return Convert.FromBase64String(content);
+			return Convert.FromBase64String(_content);
 		}
 
-		public int AddReference(Object o)
+		internal int AddReference(Object o)
 		{
 			_references.Add(o);
 			return _references.Count - 1;
 		}
 
-		public Object GetReference(int index)
+		internal Object GetReference(int index)
 		{
 			return index >= 0 && index < _references.Count
 				? _references[index]
 				: null;
 		}
 
-		public void Clear()
+		#region Editor Access
+
+		public string EditorContent
 		{
-			_references.Clear();
-			ClearContent();
+			get => _content;
+			set => _content = value;
 		}
 
-		#region Abstract Interface
-
-		protected abstract void ClearContent();
-		protected abstract void SetContent(string content);
-		protected abstract string GetContent(int index);
+		public List<Object> EditorReferences
+		{
+			get => _references;
+			set => _references = value;
+		}
 
 		#endregion
-	}
-
-	[Serializable]
-	public class SerializedDataItem : SerializedData
-	{
-		public const string ContentProperty = nameof(_content);
-
-		[SerializeField] private string _content = string.Empty;
-
-		protected override void ClearContent() => _content = string.Empty;
-		protected override void SetContent(string content) => _content = content;
-		protected override string GetContent(int index) => _content;
-	}
-
-	[Serializable]
-	public class SerializedDataList : SerializedData
-	{
-		public const string ContentProperty = nameof(_content);
-
-		[SerializeField] private List<string> _content = new List<string>();
-
-		public int Count => _content.Count;
-		protected override void ClearContent() => _content.Clear();
-		protected override void SetContent(string content) => _content.Add(content);
-		protected override string GetContent(int index) => index >= 0 && index < _content.Count ? _content[index] : string.Empty;
 	}
 
 	public class SerializedDataWriter : IDisposable
@@ -104,12 +83,12 @@ namespace PiRhoSoft.Utilities
 
 		public void SaveReference(Object obj)
 		{
-			// the instance id is written to force the content string to change when the object changes, thus properly
-			// updating any bindings. GetHashCode() returns the instance id but is threadsafe at runtime.
+			// The instance id is written to force the content string to change when the object changes, thus properly
+			// updating any bindings.
 
 			var index = Data.AddReference(obj);
+			Writer.Write(obj.GetInstanceID());
 			Writer.Write(index);
-			Writer.Write(obj.GetHashCode());
 		}
 
 		public void SaveInstance<T>(T obj)
@@ -133,7 +112,6 @@ namespace PiRhoSoft.Utilities
 			}
 		}
 
-
 		public void SaveType(Type type)
 		{
 			var name = type != null ? type.AssemblyQualifiedName : string.Empty;
@@ -143,7 +121,7 @@ namespace PiRhoSoft.Utilities
 		public void SaveEnum(Enum e)
 		{
 			// Saving as a string is the simplest way of handling enums with non Int32 underlying type. It also allows
-			// reordering/adding/removing of enum values without affecting saved data.
+			// reordering/adding/removing (but not renaming) of enum values without affecting saved data.
 
 			SaveType(e.GetType());
 			Writer.Write(e.ToString());
@@ -156,18 +134,9 @@ namespace PiRhoSoft.Utilities
 		public BinaryReader Reader;
 		public SerializedData Data;
 
-		public SerializedDataReader(SerializedDataItem data)
+		public SerializedDataReader(SerializedData data)
 		{
-			var bytes = data.GetData(0);
-
-			Stream = new MemoryStream(bytes);
-			Reader = new BinaryReader(Stream);
-			Data = data;
-		}
-
-		public SerializedDataReader(SerializedDataList data, int index)
-		{
-			var bytes = data.GetData(index);
+			var bytes = data.GetData();
 
 			Stream = new MemoryStream(bytes);
 			Reader = new BinaryReader(Stream);
@@ -182,8 +151,8 @@ namespace PiRhoSoft.Utilities
 
 		public Object LoadReference()
 		{
-			var index = Reader.ReadInt32();
 			var id = Reader.ReadInt32();
+			var index = Reader.ReadInt32();
 			return Data.GetReference(index);
 		}
 

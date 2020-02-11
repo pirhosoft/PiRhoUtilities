@@ -9,7 +9,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		#region Class Names
 
-		public const string Stylesheet = "Picker/PickerStyle.uss";
+		public const string Stylesheet = "PickerStyle.uss";
 		public const string UssClassName = "pirho-picker-field";
 		public const string InputUssClassName = UssClassName + "__input";
 		public const string LabelUssClassName = UssClassName + "__label";
@@ -43,7 +43,7 @@ namespace PiRhoSoft.Utilities.Editor
 			labelElement.AddToClassList(LabelUssClassName);
 
 			AddToClassList(UssClassName);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			this.AddStyleSheet(Stylesheet);
 		}
 
 		public override void SetValueWithoutNotify(ValueType newValue)
