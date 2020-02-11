@@ -6,7 +6,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		#region Class Names
 
-		public const string Stylesheet = "Slider/SliderStyle.uss";
+		public const string Stylesheet = "SliderStyle.uss";
 		public const string UssClassName = "pirho-slider-field";
 		public const string LabelUssClassName = UssClassName + "__label";
 		public const string InputUssClassName = UssClassName + "__input";
@@ -46,7 +46,7 @@ namespace PiRhoSoft.Utilities.Editor
 			labelElement.AddToClassList(LabelUssClassName);
 
 			AddToClassList(UssClassName);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			this.AddStyleSheet(Stylesheet);
 		}
 
 		public override void SetValueWithoutNotify(ValueType newValue)

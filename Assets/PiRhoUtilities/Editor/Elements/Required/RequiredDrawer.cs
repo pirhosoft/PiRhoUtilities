@@ -9,7 +9,7 @@ namespace PiRhoSoft.Utilities.Editor
 	[CustomPropertyDrawer(typeof(RequiredAttribute))]
 	class RequiredDrawer : PropertyDrawer
 	{
-		public const string Stylesheet = "Required/RequiredDrawer.uss";
+		public const string Stylesheet = "RequiredDrawer.uss";
 		public const string UssClassName = "pirho-required";
 		public const string MessageBoxUssClassName = UssClassName + "__message-box";
 
@@ -23,7 +23,7 @@ namespace PiRhoSoft.Utilities.Editor
 			{
 				var requiredAttribute = attribute as RequiredAttribute;
 				var required = new VisualElement();
-				required.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+				required.AddStyleSheet(Stylesheet);
 				required.AddToClassList(UssClassName);
 
 				var message = new MessageBox((MessageBoxType)(int)requiredAttribute.Type, requiredAttribute.Message);

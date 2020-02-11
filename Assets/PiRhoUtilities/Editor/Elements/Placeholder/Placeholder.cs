@@ -7,7 +7,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		#region Class Names
 
-		public const string Stylesheet = "Placeholder/PlaceholderStyle.uss";
+		public const string Stylesheet = "PlaceholderStyle.uss";
 		public const string UssClassName = "pirho-placeholder";
 
 		#endregion
@@ -36,7 +36,7 @@ namespace PiRhoSoft.Utilities.Editor
 			pickingMode = PickingMode.Ignore;
 
 			AddToClassList(UssClassName);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			this.AddStyleSheet(Stylesheet);
 
 			RegisterCallback<AttachToPanelEvent>(OnAttached);
 		}

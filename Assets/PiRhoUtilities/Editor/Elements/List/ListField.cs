@@ -114,7 +114,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Class Names
 
-		public new const string Stylesheet = "List/ListStyle.uss";
+		public new const string Stylesheet = "ListStyle.uss";
 		public new const string UssClassName = "pirho-list-field";
 		public const string EmptyUssClassName = UssClassName + "--empty";
 		public const string AddDisabledUssClassName = UssClassName + "--add-disabled";
@@ -275,7 +275,7 @@ namespace PiRhoSoft.Utilities.Editor
 		private void BuildUi()
 		{
 			AddToClassList(UssClassName);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			this.AddStyleSheet(Stylesheet);
 
 			_addButton = AddHeaderButton(_addIcon.Texture, _addTooltip, AddButtonUssClassName, DoAdd);
 			_removeButtons = Content.Query<IconButton>(className: RemoveButtonUssClassName).Build();

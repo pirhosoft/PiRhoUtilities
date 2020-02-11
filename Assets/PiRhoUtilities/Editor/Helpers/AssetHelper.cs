@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -224,25 +227,29 @@ namespace PiRhoSoft.Utilities.Editor
 			return prefix;
 		}
 
-		public static string FindEditorPath(string typename, string editorFolder, string packagePath)
+		private static Regex _assetPathExpression = new Regex(@".*/(Assets/.*/)[^/]+", RegexOptions.Compiled);
+		private static Regex _packagePathExpression = new Regex(@".*/PackageCache(/[^/]+)@[^/]+(/.*/)[^/]+", RegexOptions.Compiled);
+		private static string _packageFormat = "Packages{0}{1}";
+		private static string _unknownPath = "UNKNOWN";
+
+		public static string GetScriptPath([CallerFilePath] string filename = "")
 		{
-			// Packages might be added as a subfolder of a different project so this determines the
-			// actual path to the editor scripts by finding the asset representing the desired script file
-			// If they cannot be found in the AssetDatabase it likely means that they are in a embedded package
-			// so return the given path to that instead.
+			return GetAssetPath(filename);
+		}
 
-			var ids = AssetDatabase.FindAssets(typename);
+		public static string GetAssetPath(string fullPath)
+		{
+			var normalized = fullPath.Replace('\\', '/');
 
-			foreach (var id in ids)
-			{
-				var path = AssetDatabase.GUIDToAssetPath(id);
-				var index = path.IndexOf(editorFolder);
+			var assetMatch = _assetPathExpression.Match(normalized);
+			if (assetMatch.Success)
+				return assetMatch.Groups[1].Value;
 
-				if (index >= 0)
-					return path.Substring(0, index) + editorFolder;
-			}
+			var packageMatch = _packagePathExpression.Match(normalized);
+			if (packageMatch.Success)
+				return string.Format(_packageFormat, packageMatch.Groups[1].Value, packageMatch.Groups[2].Value);
 
-			return packagePath;
+			return _unknownPath;
 		}
 
 		#endregion

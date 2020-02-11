@@ -11,7 +11,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		#region Class Names
 
-		public const string Stylesheet = "History/HistoryStyle.uss";
+		public const string Stylesheet = "HistoryStyle.uss";
 		public const string UssClassName = "pirho-history";
 		public const string HeaderUssClassName = UssClassName + "__header";
 		public const string HeaderButtonUssClassName = HeaderUssClassName + "__button";
@@ -87,7 +87,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void OnEnable()
 		{
-			rootVisualElement.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			rootVisualElement.AddStyleSheet(Stylesheet);
 			rootVisualElement.AddToClassList(UssClassName);
 
 			var header = new VisualElement();

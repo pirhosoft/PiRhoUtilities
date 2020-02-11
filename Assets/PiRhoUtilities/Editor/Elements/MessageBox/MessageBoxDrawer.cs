@@ -6,7 +6,7 @@ namespace PiRhoSoft.Utilities.Editor
 	[CustomPropertyDrawer(typeof(MessageBoxAttribute))]
 	class MessageBoxDrawer : PropertyDrawer
 	{
-		public const string Stylesheet = "MessageBox/MessageBoxStyle.uss";
+		public const string Stylesheet = "MessageBoxStyle.uss";
 		public const string UssClassName = "pirho-trait-message";
 		public const string SideUssClassName = UssClassName + "--side";
 		public const string MessageUssClassName = UssClassName + "__message-box";
@@ -21,7 +21,7 @@ namespace PiRhoSoft.Utilities.Editor
 			var element = this.CreateNextElement(property);
 			var container = new VisualElement();
 
-			container.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			container.AddStyleSheet(Stylesheet);
 			container.AddToClassList(UssClassName);
 			container.Add(element);
 

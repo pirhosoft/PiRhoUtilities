@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -63,26 +64,26 @@ namespace PiRhoSoft.Utilities.Editor
 		private const string _missingStylesheetError = "(PUEHMS) failed to load stylesheet: the asset '{0}' could not be found";
 		private const string _missingUxmlError = "(PUEHMU) failed to load uxml: the asset '{0}' could not be found";
 
-		public static void AddStyleSheet(this VisualElement element, string editorPath, string path)
+		public static void AddStyleSheet(this VisualElement element, string filename, [CallerFilePath] string callerFilename = "")
 		{
-			var fullPath = Path.Combine(editorPath, path);
-			var stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(fullPath);
+			var path = AssetHelper.GetAssetPath(callerFilename) + filename;
+			var stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(path);
 
 			if (stylesheet != null)
 				element.styleSheets.Add(stylesheet);
 			else
-				Debug.LogErrorFormat(_missingStylesheetError, fullPath);
+				Debug.LogErrorFormat(_missingStylesheetError, path);
 		}
 
-		public static void AddUxml(this VisualElement element, string editorPath, string path)
+		public static void AddUxml(this VisualElement element, string filename, [CallerFilePath] string callerFilename = "")
 		{
-			var fullPath = Path.Combine(editorPath, path);
-			var uxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(fullPath);
+			var path = AssetHelper.GetAssetPath(callerFilename) + filename;
+			var uxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(path);
 
 			if (uxml != null)
 				uxml.CloneTree(element);
 			else
-				Debug.LogErrorFormat(_missingUxmlError, fullPath);
+				Debug.LogErrorFormat(_missingUxmlError, path);
 		}
 
 		public static VisualElement GetRootElement(this VisualElement element)
@@ -123,7 +124,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private const string _labelName = "label";
 
-		public static void SetFieldLabel(this VisualElement field, string label)
+		public static bool SetFieldLabel(this VisualElement field, string label)
 		{
 			if (field is PropertyField propertyField)
 			{
@@ -138,17 +139,21 @@ namespace PiRhoSoft.Utilities.Editor
 					{
 						propertyField.label = label;
 						var baseField = field.Q(className: BaseFieldExtensions.UssClassName);
-						baseField.SetFieldLabel(label);
+						baseField?.SetFieldLabel(label);
 					}).StartingIn(0);
 				}
+
+				return true;
 			}
 			else if (field is FieldContainer fieldContainer)
 			{
 				fieldContainer.SetLabel(label);
+				return true;
 			}
 			else if (field is ImGuiDrawer imgui)
 			{
 				imgui.Label = label;
+				return true;
 			}
 			else if (field is Foldout foldout)
 			{
@@ -160,11 +165,17 @@ namespace PiRhoSoft.Utilities.Editor
 
 				foldoutLabel.bindingPath = null;
 				foldoutLabel.binding.Release();
+				return true;
 			}
 			else if (field.GetType().InheritsGeneric(typeof(BaseField<>)))
 			{
 				// label is public but this allows access without knowing the generic type of the BaseField
 				field.GetType().GetProperty(_labelName, BindingFlags.Instance | BindingFlags.Public).SetValue(field, label);
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 

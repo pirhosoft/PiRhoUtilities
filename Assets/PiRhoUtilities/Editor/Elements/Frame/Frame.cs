@@ -10,7 +10,7 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		#region Class Names
 
-		public const string Stylesheet = "Frame/Frame.uss";
+		public const string Stylesheet = "Frame.uss";
 		public const string UssClassName = "pirho-frame";
 		public const string HeaderUssClassName = UssClassName + "__header";
 		public const string LabelUssClassName = UssClassName + "__label";
@@ -160,7 +160,7 @@ namespace PiRhoSoft.Utilities.Editor
 		private void BuildUi()
 		{
 			AddToClassList(UssClassName);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			this.AddStyleSheet(Stylesheet);
 
 			Header = new VisualElement();
 			Header.AddToClassList(HeaderUssClassName);

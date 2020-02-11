@@ -114,7 +114,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		#region Class Names
 
-		public new const string Stylesheet = "Dictionary/DictionaryStyle.uss";
+		public new const string Stylesheet = "DictionaryStyle.uss";
 		public new const string UssClassName = "pirho-dictionary-field";
 		public const string EmptyUssClassName = UssClassName + "--empty";
 		public const string AddDisabledUssClassName = UssClassName + "--add-disabled";
@@ -289,7 +289,7 @@ namespace PiRhoSoft.Utilities.Editor
 		private void BuildUi()
 		{
 			AddToClassList(UssClassName);
-			this.AddStyleSheet(Configuration.ElementsPath, Stylesheet);
+			this.AddStyleSheet(Stylesheet);
 
 			_addField = new TextField();
 			_addField.AddToClassList(HeaderKeyTextUssClassName);
@@ -362,7 +362,7 @@ namespace PiRhoSoft.Utilities.Editor
 
 		private void UpdateEmptyState()
 		{
-			EnableInClassList(EmptyUssClassName, _proxy.Count == 0);
+			EnableInClassList(EmptyUssClassName, _proxy == null || _proxy.Count == 0);
 		}
 
 		private void UpdateEmptyLabel()
