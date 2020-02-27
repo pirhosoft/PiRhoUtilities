@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace PiRhoSoft.Utilities.Editor
@@ -10,9 +9,9 @@ namespace PiRhoSoft.Utilities.Editor
 		private const string _referencesPropertyName = "_references";
 
 		private T _value;
-		private SerializedData _data;
-		private SerializedProperty _contentProperty;
-		private SerializedProperty _referencesProperty;
+		private readonly SerializedData _data;
+		private readonly SerializedProperty _contentProperty;
+		private readonly SerializedProperty _referencesProperty;
 
 		public SerializedDataField(SerializedProperty property, T value)
 		{
@@ -58,7 +57,7 @@ namespace PiRhoSoft.Utilities.Editor
 		public void Inject(T value)
 		{
 			_value = value;
-			_data.EditorContent = String.Empty;
+			_data.EditorContent = string.Empty;
 			_data.EditorReferences.Clear();
 
 			using (var writer = new SerializedDataWriter(_data))
@@ -72,6 +71,8 @@ namespace PiRhoSoft.Utilities.Editor
 				_referencesProperty.GetArrayElementAtIndex(i++).objectReferenceValue = reference;
 
 			_contentProperty.serializedObject.ApplyModifiedProperties();
+
+			Update(_value);
 		}
 	}
 }
