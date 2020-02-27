@@ -10,11 +10,6 @@ namespace PiRhoSoft.Utilities.Editor
 	{
 		public SerializedProperty Property { get; private set; }
 
-		public PropertyWatcher()
-		{
-			style.display = DisplayStyle.None;
-		}
-
 		public virtual void Watch(SerializedProperty property)
 		{
 			if (this.IsBound())
